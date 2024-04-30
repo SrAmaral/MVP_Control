@@ -1,5 +1,9 @@
-version: '3.0'
+version: '3.8'
+
 services:
   go:
     image: golang:latest
-    entrypoint: go run main.go
+    working_dir: /go/src/app
+    volumes:
+      - .:/go/src/app
+    command: go run main.go
