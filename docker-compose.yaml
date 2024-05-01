@@ -1,22 +1,14 @@
 version: '3.8'
 
 services:
-  go-backend:
+  backend:
     build:
       context: ./backend
     ports:
       - "8080:8080"
-    depends_on:
-      - postgres
+#    depends_on:
+#      - postgres
 
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: mvpdb
-    ports:
-      - "5432:5432"
 
   frontend:
     build:
