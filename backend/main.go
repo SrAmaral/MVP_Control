@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+    fmt.Printf("Primeiro Log")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w,string("<h1>Teste</h1>"))
 	})
