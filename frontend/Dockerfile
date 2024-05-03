@@ -13,10 +13,10 @@ RUN npm install
 COPY . .
 
 # Build the app
-# RUN npm run build
+ RUN npm run build
 
 # Specify port app runs on
 EXPOSE 3000
 
 # Command to run the app
-# CMD ["npm", "start"]
+ CMD ["npm", "start"]
