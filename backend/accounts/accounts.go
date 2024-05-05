@@ -22,6 +22,6 @@ type AccountsService struct{
 	ClientCrudRepository CrudRepository[Client]
 }
 
-func NewAccountsServiceImpl(UserRepository *CrudRepository[User],ClientCrudRepository *CrudRepository[Client]) *AccountsService{
-	return &AccountsService{UserRepository: *UserRepository,ClientCrudRepository: *ClientCrudRepository}
+func NewAccountsServiceImpl(UserRepository CrudRepository[User],ClientCrudRepository CrudRepository[Client]) *AccountsService{
+	return &AccountsService{UserRepository: UserRepository,ClientCrudRepository: ClientCrudRepository}
 }

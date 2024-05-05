@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"app/accounts"
 )
 
 func main() {
-    fmt.Printf("Primeiro Log")
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w,string("<h1>Teste</h1>"))
-	})
-    http.ListenAndServe(":8082", nil)
+	r := NewHttpServer(":8082", "/v1")
+	r.MountAdapter(accounts.NewAccountsHttpAdapter())
+	r.StartServer()
 }
