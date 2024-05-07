@@ -1,11 +1,21 @@
-//database layer
+// database layer
 package accounts
 
+import "github.com/jmoiron/sqlx"
+
 //ClientDAO
-type ClientRepository struct{
+type ClientRepository struct {
+	DB     *sqlx.DB
+	Schema string
 }
 
-func (r ClientRepository) Create(c Client) Client{
+func NewClientRepository(db *sqlx.DB) *ClientRepository {
+	return &ClientRepository{
+		DB: db,
+	}
+}
+
+func (r ClientRepository) Create(c Client) Client {
 	return c
 }
 
@@ -26,8 +36,15 @@ func (c ClientRepository) FindAll() []Client {
 }
 
 //UserDAO
-type UserRepository struct{
-	
+type UserRepository struct {
+	DB     *sqlx.DB
+	Schema string
+}
+
+func NewUserRepository(db *sqlx.DB) *UserRepository {
+	return &UserRepository{
+		DB: db,
+	}
 }
 
 func (u UserRepository) Create(entity User) User {

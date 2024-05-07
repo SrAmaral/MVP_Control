@@ -19,9 +19,9 @@ type CrudRepository[T any] interface {
 
 type AccountsService struct{
 	UserRepository CrudRepository[User]
-	ClientCrudRepository CrudRepository[Client]
+	ClientRepository CrudRepository[Client]
 }
 
-func NewAccountsServiceImpl(UserRepository CrudRepository[User],ClientCrudRepository CrudRepository[Client]) *AccountsService{
-	return &AccountsService{UserRepository: UserRepository,ClientCrudRepository: ClientCrudRepository}
+func NewAccountsServiceImpl(UserRepository CrudRepository[User],ClientRepository CrudRepository[Client]) *AccountsService{
+	return &AccountsService{UserRepository: UserRepository,ClientRepository: ClientRepository}
 }

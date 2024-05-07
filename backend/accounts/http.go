@@ -2,7 +2,7 @@
 package accounts
 
 import (
-	"fmt"
+	"app/internal"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -13,12 +13,16 @@ type AccountsHttpAdapter struct {
 	path string
 }
 
-func NewAccountsHttpAdapter() *AccountsHttpAdapter {
+func NewAccountsHttpAdapter(db *internal.DBManager) *AccountsHttpAdapter {
+	ur :=NewUserRepository(db.DB)
+	cr := NewClientRepository(db.DB)
+	s:=NewAccountsServiceImpl(ur,cr)
 	return &AccountsHttpAdapter{
-		account_service: *NewAccountsServiceImpl(UserRepository{}, ClientRepository{}),
+		account_service: *s,
 		path: "/accounts",
 	}
 }
+
 func (h AccountsHttpAdapter) MountAdapter() (path string, router chi.Mux){
 	r := chi.NewRouter()
 	//Users
@@ -40,43 +44,42 @@ func (h AccountsHttpAdapter) MountAdapter() (path string, router chi.Mux){
 
 // Users
 func (h AccountsHttpAdapter) getUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getUsers")
-	//h.account_service.UserRepository.FindAll()
+	h.account_service.UserRepository.FindAll()
 }
 
 func (h AccountsHttpAdapter) createUser(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.UserRepository.Create(User{})
 }
 
 func (h AccountsHttpAdapter) getUserById(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.UserRepository.Read(1)
 }
 
 func (h AccountsHttpAdapter) updateUser(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.UserRepository.Update(User{})
 }
 
 func (h AccountsHttpAdapter) deleteUser(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.UserRepository.Delete(1)
 }
 
 // Clients
 func (h AccountsHttpAdapter) getClients(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getAccounts")
+	h.account_service.ClientRepository.FindAll()
 }
 
 func (h AccountsHttpAdapter) createClient(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.ClientRepository.Create(Client{})
 }
 
 func (h AccountsHttpAdapter) getClientById(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.ClientRepository.Read(1)
 }
 
 func (h AccountsHttpAdapter) updateClient(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.ClientRepository.Update(Client{})
 }
 
 func (h AccountsHttpAdapter) deleteClient(w http.ResponseWriter, r *http.Request) {
-
+	h.account_service.ClientRepository.Delete(1)
 }
