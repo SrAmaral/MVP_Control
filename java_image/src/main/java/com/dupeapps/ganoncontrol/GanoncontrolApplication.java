@@ -9,5 +9,4 @@ public class GanoncontrolApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GanoncontrolApplication.class, args);
 	}
-
 }
