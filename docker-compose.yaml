@@ -15,3 +15,9 @@ services:
       context: ./frontend
     ports:
       - "3000:3000"
+  
+  java_image:
+    build:
+      context: ./java_image
+    ports:
+      - "8017:8017"
