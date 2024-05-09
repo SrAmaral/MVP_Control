@@ -1,5 +1,5 @@
 "use client";
-import { LayoutProvider } from "@/layout/context/layoutcontext";
+import { LayoutProvider } from "../layout/context/layoutcontext";
 
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";

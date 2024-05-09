@@ -7,11 +7,16 @@ const AppMenu = () => {
             label: "Dashboard",
             items: [
                 {
+                    label: "Home",
+                    icon: "pi pi-home",
+                    to: "/",
+                },
+                {
                     label: "Clientes",
                     icon: "pi pi-user",
-                    to: "/",
-                }
-            ]
+                    to: "/clients",
+                },
+            ],
         },
         {
             label: "Template",
@@ -481,10 +486,10 @@ const AppMenu = () => {
                                 },
                             ],
                         },
-                    ]
-                }
-            ]
-        }
+                    ],
+                },
+            ],
+        },
     ];
 
     return <AppSubMenu model={model} />;

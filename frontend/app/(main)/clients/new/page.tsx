@@ -91,11 +91,11 @@ const ClientNewPage = () => {
     ];
 
     return (
-        <div className="grid col-12 card h-full">
+        <div className="grid col-12 card h-full p-0">
             <div className="card w-full">
                 <div className="flex justify-content-between">
                     <h1>Novo Cliente</h1>
-                    <Link href="/">
+                    <Link href="/clients">
                         <Button
                             label="Voltar"
                             outlined
