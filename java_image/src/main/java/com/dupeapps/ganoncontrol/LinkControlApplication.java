@@ -4,9 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GanoncontrolApplication {
-
+public class LinkControlApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(GanoncontrolApplication.class, args);
+		SpringApplication.run(LinkControlApplication.class, args);
 	}
 }

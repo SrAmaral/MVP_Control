@@ -1,4 +1,4 @@
-package com.dupeapps.ganoncontrol.accounts.user;
+package com.dupeapps.ganoncontrol.accounts.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

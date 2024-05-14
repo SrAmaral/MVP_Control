@@ -1,8 +1,8 @@
-package com.dupeapps.ganoncontrol.accounts.client;
+package com.dupeapps.ganoncontrol.accounts.app;
 
-import com.dupeapps.ganoncontrol.accounts.client.Client;
-import com.dupeapps.ganoncontrol.accounts.client.ClientRepository;
-import com.dupeapps.ganoncontrol.accounts.client.ClientService;
+import com.dupeapps.ganoncontrol.accounts.domain.client.Client;
+import com.dupeapps.ganoncontrol.accounts.domain.client.ClientRepository;
+import com.dupeapps.ganoncontrol.accounts.domain.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
