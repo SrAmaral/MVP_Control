@@ -1,6 +1,4 @@
-package com.dupeapps.ganoncontrol.accounts.client;
-
-import com.dupeapps.ganoncontrol.accounts.client.Client;
+package com.dupeapps.ganoncontrol.accounts.domain.client;
 
 import java.util.List;
 

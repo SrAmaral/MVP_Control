@@ -1,22 +1,28 @@
-package com.dupeapps.ganoncontrol.accounts;
+package com.dupeapps.ganoncontrol.accounts.http.client;
 
-import com.dupeapps.ganoncontrol.accounts.client.Client;
-import com.dupeapps.ganoncontrol.accounts.client.ClientService;
+import com.dupeapps.ganoncontrol.accounts.domain.client.Client;
+import com.dupeapps.ganoncontrol.accounts.domain.client.ClientService;
+import com.dupeapps.ganoncontrol.accounts.http.client.response.ClientListItem;
+import com.dupeapps.ganoncontrol.accounts.http.client.response.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/accounts/clients")
+@CrossOrigin
 public class ClientController {
 
     @Autowired
     private ClientService clientService;
 
     @GetMapping
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
+    public ResponseEntity<List<ClientListItem>> getAllClients() {
+        List<Client> c = clientService.getAllClients();
+        List<ClientListItem> ncr = ClientResponse.getAllClientsResponse(c);
+        return new ResponseEntity<>(ncr, null, 200);
     }
 
     @GetMapping("/{id}")

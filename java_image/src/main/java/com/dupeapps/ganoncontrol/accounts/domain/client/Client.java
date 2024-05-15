@@ -1,7 +1,9 @@
-package com.dupeapps.ganoncontrol.accounts.client;
+package com.dupeapps.ganoncontrol.accounts.domain.client;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -36,13 +38,16 @@ public class Client {
 
     private String files;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
 
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_visit")
     private Date lastVisit;

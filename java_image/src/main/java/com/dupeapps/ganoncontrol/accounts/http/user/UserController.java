@@ -1,14 +1,15 @@
-package com.dupeapps.ganoncontrol.accounts;
+package com.dupeapps.ganoncontrol.accounts.http.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.dupeapps.ganoncontrol.accounts.user.User;
-import com.dupeapps.ganoncontrol.accounts.user.UserService;
+import com.dupeapps.ganoncontrol.accounts.domain.user.User;
+import com.dupeapps.ganoncontrol.accounts.domain.user.UserService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/accounts/users")
+@CrossOrigin
 public class UserController {
 
     @Autowired
