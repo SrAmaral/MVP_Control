@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import {
     ClientInterface,
     ClientInterfaceSetup,
-} from "@/app/(control)/clients/new/(Components)/clientInterface";
+} from "@/components/clients/new/clientInterface";
 import Link from "next/link";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -13,7 +13,6 @@ import { Calendar } from "primereact/calendar";
 import { InputSwitch } from "primereact/inputswitch";
 import { FileUpload, FileUploadSelectEvent } from "primereact/fileupload";
 import { SplitButton } from "primereact/splitbutton";
-import { json } from "node:stream/consumers";
 
 export default function AddClientForm() {
     const [formData, setFormData] =

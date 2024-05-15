@@ -1,4 +1,5 @@
-import AddClientForm from "@/app/(control)/clients/new/(Components)/addClientForm";
+import AddClientForm from "@/components/clients/new/addClientForm";
+
 
 export const metadata = {
     title: "Adicionar",
