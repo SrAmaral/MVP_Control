@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     ClientInterface,
     ClientInterfaceSetup,
@@ -14,20 +14,21 @@ import { InputSwitch } from "primereact/inputswitch";
 import { FileUpload } from "primereact/fileupload";
 import { SplitButton } from "primereact/splitbutton";
 import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-export default function AddClientForm() {
+export default function EditClientForm() {
     const [formData, setFormData] =
         useState<ClientInterface>(ClientInterfaceSetup);
     const [submitted, setSubmitted] = useState(false);
     const toast = useRef<Toast>(null);
     const router = useRouter();
+    const { clientId } = useParams();
 
     const showSuccess = () => {
         toast.current?.show({
             severity: "success",
             summary: "Sucesso",
-            detail: "O cliente foi cadastrado com sucesso",
+            detail: "O cliente foi editado com sucesso",
             life: 3000,
         });
     };
@@ -40,16 +41,32 @@ export default function AddClientForm() {
         });
     };
 
+    useEffect(() => {
+        fetch(
+            `http://askg80w.82.197.94.212.sslip.io/accounts/clients/${clientId}`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setFormData(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [clientId]);
+    console.log(formData);
     const sendForm = (redirect: boolean = false) => {
         setSubmitted(true);
 
-        fetch("http://askg80w.82.197.94.212.sslip.io/accounts/clients", {
-            method: "POST",
-            body: JSON.stringify(formData),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        fetch(
+            `http://askg80w.82.197.94.212.sslip.io/accounts/clients/${clientId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(formData),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        )
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -82,14 +99,6 @@ export default function AddClientForm() {
     //     }
     // };
 
-    const items = [
-        {
-            label: "Criar e um novo",
-            icon: "pi pi-id-card",
-            command: () => sendForm(false),
-        },
-    ];
-
     const convertData = (unformatedDate: Date): Date | string => {
         let date = new Date(unformatedDate);
         let isoDateStr = date.toISOString();
@@ -101,7 +110,7 @@ export default function AddClientForm() {
             <Toast ref={toast} />
             <div className="card w-full">
                 <div className="flex justify-content-between">
-                    <h1>Novo Cliente</h1>
+                    <h1>Visualizar Cliente</h1>
                     <Link href="/clients">
                         <Button
                             label="Voltar"
@@ -331,12 +340,11 @@ export default function AddClientForm() {
                     </div>
                 </div>
                 <div className="flex gap-6 col-12 mt-6 ">
-                    <SplitButton
+                    <Button
                         onClick={() => sendForm(true)}
-                        label="Criar"
+                        label="Salvar"
                         icon="pi pi-check"
-                        model={items}
-                    ></SplitButton>
+                    ></Button>
                 </div>
             </div>
         </div>

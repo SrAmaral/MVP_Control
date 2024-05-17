@@ -7,10 +7,10 @@ export interface ClientInterface {
     description: string | undefined | Nullable<string>;
     contactEmail: string;
     contactNumber: string | undefined | Nullable<string>;
-    files: File[];
+    // files: File[];
     lastVisit: Date | Nullable<Date>;
     client: boolean;
-    dockNumber: string;
+    dockId: number;
 }
 
 export const ClientInterfaceSetup = {
@@ -20,8 +20,8 @@ export const ClientInterfaceSetup = {
     description: "",
     contactEmail: "",
     contactNumber: "",
-    files: [],
+    // files: [],
     lastVisit: null,
     client: false,
-    dockNumber: "",
+    dockId: 0,
 };
