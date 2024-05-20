@@ -8,7 +8,7 @@ services:
       - "3000:3000"
 
   strapi:
-    build: .
+    build: ./strapi
     container_name: strapi
     ports:
       - "1337:1337"
