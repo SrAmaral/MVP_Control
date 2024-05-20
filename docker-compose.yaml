@@ -8,11 +8,12 @@ services:
       - "3000:3000"
 
   strapi:
-    build: ./strapi
+    image: strapi/strapi
     container_name: strapi
+    environment:
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: /srv/app/database/data.db
     ports:
       - "1337:1337"
     volumes:
-      - ./strapi:/usr/src/app/strapi
-    environment:
-      NODE_ENV: development
+      - ./strapi/data:/srv/app/database
