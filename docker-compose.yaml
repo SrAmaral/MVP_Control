@@ -1,23 +1,18 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8082:8082"
-#    depends_on:
-#      - postgres
-
-
   frontend:
     build:
       context: ./frontend
     ports:
       - "3000:3000"
-  
-  java_image:
-    build:
-      context: ./java_image
-    ports:
-      - "8017:8017"
+
+strapi:
+  build: .
+  container_name: strapi
+  ports:
+    - "1337:1337"
+  volumes:
+    - ./strapi:/usr/src/app/strapi
+  environment:
+    NODE_ENV: development
