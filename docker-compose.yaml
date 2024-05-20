@@ -14,6 +14,6 @@ services:
       DATABASE_CLIENT: sqlite
       DATABASE_FILENAME: /srv/app/database/data.db
     ports:
-      - "1337:1337"
+      - "1337:1338"
     volumes:
       - ./strapi/data:/srv/app/database
