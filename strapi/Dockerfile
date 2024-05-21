@@ -5,10 +5,10 @@ FROM node:18
 WORKDIR /app
 
 # Copy package.json to root directory
-COPY package.json .
+COPY package.json ./
 
 # Copy yarn.lock to root directory
-COPY package-lock.json .
+COPY package-lock.json ./
 
 # Install dependencies, but not generate a yarn.lock file and fail if an update is needed
 RUN npm install --frozen-lockfile

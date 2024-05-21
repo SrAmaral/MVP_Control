@@ -3,13 +3,14 @@ version: "3.8"
 services:
   frontend:
     build:
-      context: ./frontend/
+      context: ./frontend
     ports:
       - "3000:3000"
 
   strapi:
     build:
-      context: ./strapi/
+      context: ./strapi
+      dockerfile: Dockerfile
     ports:
       - "1337:1337"
     volumes:
