@@ -1,19 +1,21 @@
 version: "3.8"
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "3000:3000"
 
   strapi:
-    image: strapi/strapi
-    container_name: strapi
+    build:
+      context: ./strapi
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./strapi:/usr/src/app
+      - ./strapi/data:/usr/src/app/data
     environment:
       DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: /srv/app/database/data.db
-    ports:
-      - "1337:1338"
-    volumes:
-      - ./strapi/data:/srv/app/database
+      DATABASE_FILENAME: ./data/data.db
+      NODE_ENV: development
