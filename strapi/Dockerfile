@@ -19,8 +19,6 @@ COPY src/ src/
 COPY public/ public/
 COPY database/ database/
 COPY config/ config/
-COPY .tmp/ .tmp/
-COPY .strapi/ .strapi/  
 # ...
 
 # Build admin panel
