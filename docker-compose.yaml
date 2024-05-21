@@ -10,11 +10,9 @@ services:
   strapi:
     build:
       context: ./strapi
-      dockerfile: Dockerfile
     ports:
       - "1337:1337"
     volumes:
-      - ./strapi:/app/
-    environment:
-      - DATABASE_CLIENT=sqlite
-      - DATABASE_FILENAME=.tmp/data.db
+      - ./strapi:/app
+    tty: true
+    entrypoint: sh -c "npm install && npm run develop"
