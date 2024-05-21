@@ -4,12 +4,14 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 
-RUN npm install
+run npm install -g pnpm
+
+RUN pnpm install
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 
 EXPOSE 1337
 
-CMD ["npm", "rum", "start"]
+CMD ["pnpm", "rum", "start"]
