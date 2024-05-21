@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-COPY . /app
+COPY . .
 
 WORKDIR /app
 

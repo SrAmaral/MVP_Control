@@ -15,4 +15,4 @@ services:
     volumes:
       - ./strapi:/app
     tty: true
-    entrypoint: sh -c "npm install && npm run develop"
+    entrypoint: sh -c "cat package.json && npm install && npm run develop"
