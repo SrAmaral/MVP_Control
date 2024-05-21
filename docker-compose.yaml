@@ -1,19 +1,19 @@
 version: "3.8"
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build:
+  #     context: ./frontend/
+  #   ports:
+  #     - "3000:3000"
 
   strapi:
     build:
-      context: ./strapi
+      context: ./strapi/
     ports:
       - "1337:1337"
     volumes:
-      - ./app:/app
+      - ./strapi/:/app/
     environment:
       - DATABASE_CLIENT=sqlite
       - DATABASE_FILENAME=.tmp/data.db
