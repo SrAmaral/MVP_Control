@@ -13,9 +13,7 @@ services:
     ports:
       - "1337:1337"
     volumes:
-      - ./strapi:/usr/src/app
-      - ./strapi/data:/usr/src/app/data
+      - ./strapi:/app
     environment:
-      DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: ./data/data.db
-      NODE_ENV: development
+      - DATABASE_CLIENT=sqlite
+      - DATABASE_FILENAME=.tmp/data.db

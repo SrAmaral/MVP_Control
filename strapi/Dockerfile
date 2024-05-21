@@ -1,17 +1,8 @@
-FROM node:18-alpine
-
-WORKDIR /usr/src/app
-
-COPY package.json ./
-
-run npm install -g pnpm
-
-RUN pnpm install
-
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
-
-RUN pnpm run build
-
-EXPOSE 1337
-
-CMD ["pnpm", "rum", "start"]
+ENV NODE_ENV development
+RUN npm run build
+CMD ["npm", "start"]
