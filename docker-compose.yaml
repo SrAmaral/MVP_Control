@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3001"
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "3000:3001"
 
   strapi:
     build:
