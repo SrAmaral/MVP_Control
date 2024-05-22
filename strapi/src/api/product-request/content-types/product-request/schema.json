@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_requests",
+  "info": {
+    "singularName": "product-request",
+    "pluralName": "product-requests",
+    "displayName": "Product_request"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "description": {
+      "type": "text"
+    },
+    "deadline": {
+      "type": "datetime"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "new",
+        "approved",
+        "reproved"
+      ],
+      "default": "new"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "product_request"
+      ]
+    },
+    "product_quotations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-quotation.product-quotation",
+      "mappedBy": "product_request"
+    }
+  }
+}

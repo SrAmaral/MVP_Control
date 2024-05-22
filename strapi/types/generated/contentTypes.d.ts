@@ -788,6 +788,150 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiClientClient extends Schema.CollectionType {
+  collectionName: 'clients';
+  info: {
+    singularName: 'client';
+    pluralName: 'clients';
+    displayName: 'Client';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    location: Attribute.Text;
+    email: Attribute.Email;
+    contact_number: Attribute.BigInteger;
+    attachment_files: Attribute.Media;
+    description: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::client.client',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::client.client',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductQuotationProductQuotation
+  extends Schema.CollectionType {
+  collectionName: 'product_quotations';
+  info: {
+    singularName: 'product-quotation';
+    pluralName: 'product-quotations';
+    displayName: 'Product_quotation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    product_request: Attribute.Relation<
+      'api::product-quotation.product-quotation',
+      'manyToOne',
+      'api::product-request.product-request'
+    >;
+    description: Attribute.Text;
+    status: Attribute.Enumeration<['pending_approve', 'approved', 'reproved']>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-quotation.product-quotation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-quotation.product-quotation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductRequestProductRequest extends Schema.CollectionType {
+  collectionName: 'product_requests';
+  info: {
+    singularName: 'product-request';
+    pluralName: 'product-requests';
+    displayName: 'Product_request';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    description: Attribute.Text;
+    deadline: Attribute.DateTime;
+    status: Attribute.Enumeration<['new', 'approved', 'reproved']> &
+      Attribute.DefaultTo<'new'>;
+    type: Attribute.Enumeration<['product_request']>;
+    product_quotations: Attribute.Relation<
+      'api::product-request.product-request',
+      'oneToMany',
+      'api::product-quotation.product-quotation'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-request.product-request',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-request.product-request',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiServiceOrderServiceOrder extends Schema.CollectionType {
+  collectionName: 'service_orders';
+  info: {
+    singularName: 'service-order';
+    pluralName: 'service-orders';
+    displayName: 'Service_order';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    description: Attribute.Text;
+    status: Attribute.Enumeration<['open', 'finished']>;
+    schedule_date: Attribute.Date;
+    type: Attribute.Enumeration<['service_order']>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::service-order.service-order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::service-order.service-order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -806,6 +950,10 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::client.client': ApiClientClient;
+      'api::product-quotation.product-quotation': ApiProductQuotationProductQuotation;
+      'api::product-request.product-request': ApiProductRequestProductRequest;
+      'api::service-order.service-order': ApiServiceOrderServiceOrder;
     }
   }
 }

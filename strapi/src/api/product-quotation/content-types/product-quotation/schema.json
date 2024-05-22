@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_quotations",
+  "info": {
+    "singularName": "product-quotation",
+    "pluralName": "product-quotations",
+    "displayName": "Product_quotation"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "product_request": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-request.product-request",
+      "inversedBy": "product_quotations"
+    },
+    "description": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending_approve",
+        "approved",
+        "reproved"
+      ]
+    }
+  }
+}
