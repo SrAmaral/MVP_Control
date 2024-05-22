@@ -1,20 +1,15 @@
-FROM node:18-slim
+FROM node:18-alpine
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the dependencies file to the working directory
 COPY package.json .
 
-# Install dependencies
-RUN npm install
+RUN yarn install
 
-# Copy the content of the local src directory to the working directory
 COPY . .
 
-# Build the app
- RUN npm run build
+RUN yarn build
 
 EXPOSE 1337
 
-CMD ["npm", "develop"]
+CMD ["yarn", "start"]

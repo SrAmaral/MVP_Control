@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "testes",
+  "info": {
+    "singularName": "teste",
+    "pluralName": "testes",
+    "displayName": "teste"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
+}
