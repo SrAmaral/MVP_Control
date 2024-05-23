@@ -1,26 +1,19 @@
 {
   "kind": "collectionType",
-  "collectionName": "product_requests",
+  "collectionName": "activits",
   "info": {
-    "singularName": "product-request",
-    "pluralName": "product-requests",
-    "displayName": "Product_request"
+    "singularName": "activit",
+    "pluralName": "activits",
+    "displayName": "activits"
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "client": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::client.client"
-    },
-    "type": {
-      "type": "enumeration",
-      "enum": [
-        "manutenção"
-      ]
+    "schedule_date": {
+      "type": "datetime",
+      "required": true
     },
     "description": {
       "type": "blocks"
@@ -33,7 +26,15 @@
       "enum": [
         "new",
         "pending",
+        "started",
         "finished"
+      ],
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "manutenção"
       ]
     }
   }

@@ -7,23 +7,35 @@
     "displayName": "Product_quotation"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "product_request": {
+    "employees": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::product-request.product-request",
-      "inversedBy": "product_quotations"
+      "relation": "oneToMany",
+      "target": "api::employee.employee"
+    },
+    "client": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::client.client"
+    },
+    "type": {
+      "type": "string"
     },
     "description": {
-      "type": "text"
+      "type": "blocks"
+    },
+    "deadline": {
+      "type": "datetime"
     },
     "status": {
       "type": "enumeration",
       "enum": [
-        "pending_approve",
+        "new",
+        "writing",
+        "pending",
         "approved",
         "reproved"
       ]

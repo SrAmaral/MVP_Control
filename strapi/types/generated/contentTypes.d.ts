@@ -788,15 +788,50 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiActivitActivit extends Schema.CollectionType {
+  collectionName: 'activits';
+  info: {
+    singularName: 'activit';
+    pluralName: 'activits';
+    displayName: 'activits';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    schedule_date: Attribute.DateTime & Attribute.Required;
+    description: Attribute.Blocks;
+    deadline: Attribute.DateTime;
+    status: Attribute.Enumeration<['new', 'pending', 'started', 'finished']> &
+      Attribute.Required;
+    type: Attribute.Enumeration<['manuten\u00E7\u00E3o']>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::activit.activit',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::activit.activit',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiClientClient extends Schema.CollectionType {
   collectionName: 'clients';
   info: {
     singularName: 'client';
     pluralName: 'clients';
     displayName: 'Client';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     name: Attribute.String;
@@ -807,7 +842,6 @@ export interface ApiClientClient extends Schema.CollectionType {
     description: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::client.client',
       'oneToOne',
@@ -816,6 +850,116 @@ export interface ApiClientClient extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::client.client',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiEmployeeEmployee extends Schema.CollectionType {
+  collectionName: 'employees';
+  info: {
+    singularName: 'employee';
+    pluralName: 'employees';
+    displayName: 'Employee';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    email: Attribute.Email;
+    password: Attribute.Password;
+    contact_number: Attribute.String;
+    users_permissions_user: Attribute.Relation<
+      'api::employee.employee',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    attachment: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::employee.employee',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::employee.employee',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiEmployerGroupEmployerGroup extends Schema.CollectionType {
+  collectionName: 'employer_groups';
+  info: {
+    singularName: 'employer-group';
+    pluralName: 'employer-groups';
+    displayName: 'Employer_group';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    service_order: Attribute.Relation<
+      'api::employer-group.employer-group',
+      'oneToOne',
+      'api::service-order.service-order'
+    >;
+    employees: Attribute.Relation<
+      'api::employer-group.employer-group',
+      'oneToMany',
+      'api::employee.employee'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::employer-group.employer-group',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::employer-group.employer-group',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiFleetFleet extends Schema.CollectionType {
+  collectionName: 'fleets';
+  info: {
+    singularName: 'fleet';
+    pluralName: 'fleets';
+    displayName: 'Fleet';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    model: Attribute.String & Attribute.Required;
+    license_plate: Attribute.String & Attribute.Required;
+    actual_km: Attribute.Integer & Attribute.Required;
+    description: Attribute.Blocks;
+    attachment: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::fleet.fleet',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::fleet.fleet',
       'oneToOne',
       'admin::user'
     > &
@@ -832,19 +976,27 @@ export interface ApiProductQuotationProductQuotation
     displayName: 'Product_quotation';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    product_request: Attribute.Relation<
+    employees: Attribute.Relation<
       'api::product-quotation.product-quotation',
-      'manyToOne',
-      'api::product-request.product-request'
+      'oneToMany',
+      'api::employee.employee'
     >;
-    description: Attribute.Text;
-    status: Attribute.Enumeration<['pending_approve', 'approved', 'reproved']>;
+    client: Attribute.Relation<
+      'api::product-quotation.product-quotation',
+      'oneToOne',
+      'api::client.client'
+    >;
+    type: Attribute.String;
+    description: Attribute.Blocks;
+    deadline: Attribute.DateTime;
+    status: Attribute.Enumeration<
+      ['new', 'writing', 'pending', 'approved', 'reproved']
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::product-quotation.product-quotation',
       'oneToOne',
@@ -868,22 +1020,20 @@ export interface ApiProductRequestProductRequest extends Schema.CollectionType {
     displayName: 'Product_request';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    description: Attribute.Text;
-    deadline: Attribute.DateTime;
-    status: Attribute.Enumeration<['new', 'approved', 'reproved']> &
-      Attribute.DefaultTo<'new'>;
-    type: Attribute.Enumeration<['product_request']>;
-    product_quotations: Attribute.Relation<
+    client: Attribute.Relation<
       'api::product-request.product-request',
-      'oneToMany',
-      'api::product-quotation.product-quotation'
+      'oneToOne',
+      'api::client.client'
     >;
+    type: Attribute.Enumeration<['manuten\u00E7\u00E3o']>;
+    description: Attribute.Blocks;
+    deadline: Attribute.DateTime;
+    status: Attribute.Enumeration<['new', 'pending', 'finished']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::product-request.product-request',
       'oneToOne',
@@ -899,24 +1049,73 @@ export interface ApiProductRequestProductRequest extends Schema.CollectionType {
   };
 }
 
+export interface ApiProductSaleProductSale extends Schema.CollectionType {
+  collectionName: 'product_sales';
+  info: {
+    singularName: 'product-sale';
+    pluralName: 'product-sales';
+    displayName: 'Product_sale';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    sku: Attribute.String & Attribute.Required;
+    price: Attribute.Decimal;
+    qty: Attribute.Integer;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-sale.product-sale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-sale.product-sale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiServiceOrderServiceOrder extends Schema.CollectionType {
   collectionName: 'service_orders';
   info: {
     singularName: 'service-order';
     pluralName: 'service-orders';
-    displayName: 'Service_order';
+    displayName: 'service_order';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    description: Attribute.Text;
-    status: Attribute.Enumeration<['open', 'finished']>;
-    schedule_date: Attribute.Date;
-    type: Attribute.Enumeration<['service_order']>;
+    schedule_date: Attribute.DateTime;
+    description: Attribute.Blocks;
+    deadline: Attribute.DateTime;
+    status: Attribute.Enumeration<
+      ['new', 'started', 'inprogrees', 'pending', 'approved', 'reproved ']
+    >;
+    employer_group: Attribute.Relation<
+      'api::service-order.service-order',
+      'oneToOne',
+      'api::employer-group.employer-group'
+    >;
+    fleet: Attribute.Relation<
+      'api::service-order.service-order',
+      'oneToOne',
+      'api::fleet.fleet'
+    >;
+    product_sales: Attribute.Relation<
+      'api::service-order.service-order',
+      'oneToMany',
+      'api::product-sale.product-sale'
+    >;
+    type: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::service-order.service-order',
       'oneToOne',
@@ -950,9 +1149,14 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::activit.activit': ApiActivitActivit;
       'api::client.client': ApiClientClient;
+      'api::employee.employee': ApiEmployeeEmployee;
+      'api::employer-group.employer-group': ApiEmployerGroupEmployerGroup;
+      'api::fleet.fleet': ApiFleetFleet;
       'api::product-quotation.product-quotation': ApiProductQuotationProductQuotation;
       'api::product-request.product-request': ApiProductRequestProductRequest;
+      'api::product-sale.product-sale': ApiProductSaleProductSale;
       'api::service-order.service-order': ApiServiceOrderServiceOrder;
     }
   }

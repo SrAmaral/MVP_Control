@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "fleets",
+  "info": {
+    "singularName": "fleet",
+    "pluralName": "fleets",
+    "displayName": "Fleet"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "model": {
+      "type": "string",
+      "required": true
+    },
+    "license_plate": {
+      "type": "string",
+      "required": true
+    },
+    "actual_km": {
+      "type": "integer",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "attachment": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}

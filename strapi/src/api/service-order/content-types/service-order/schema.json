@@ -4,31 +4,51 @@
   "info": {
     "singularName": "service-order",
     "pluralName": "service-orders",
-    "displayName": "Service_order"
+    "displayName": "service_order",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
+    "schedule_date": {
+      "type": "datetime"
+    },
     "description": {
-      "type": "text"
+      "type": "blocks"
+    },
+    "deadline": {
+      "type": "datetime"
     },
     "status": {
       "type": "enumeration",
       "enum": [
-        "open",
-        "finished"
+        "new",
+        "started",
+        "inprogrees",
+        "pending",
+        "approved",
+        "reproved "
       ]
     },
-    "schedule_date": {
-      "type": "date"
+    "employer_group": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::employer-group.employer-group"
+    },
+    "fleet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::fleet.fleet"
+    },
+    "product_sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-sale.product-sale"
     },
     "type": {
-      "type": "enumeration",
-      "enum": [
-        "service_order"
-      ]
+      "type": "string"
     }
   }
 }

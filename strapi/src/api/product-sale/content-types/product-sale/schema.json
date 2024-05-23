@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_sales",
+  "info": {
+    "singularName": "product-sale",
+    "pluralName": "product-sales",
+    "displayName": "Product_sale"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sku": {
+      "type": "string",
+      "required": true
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "qty": {
+      "type": "integer"
+    }
+  }
+}

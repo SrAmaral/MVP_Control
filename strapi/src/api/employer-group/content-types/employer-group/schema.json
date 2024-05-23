@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "employer_groups",
+  "info": {
+    "singularName": "employer-group",
+    "pluralName": "employer-groups",
+    "displayName": "Employer_group",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "service_order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::service-order.service-order"
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::employee.employee"
+    }
+  }
+}
