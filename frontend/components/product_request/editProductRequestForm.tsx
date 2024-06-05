@@ -58,7 +58,7 @@ export default function EditProductRequestForm() {
     };
 
     useEffect(() => {
-        fetch(`http://mvp-api.dupeapps.top/api/product-requests/${requestId}`)
+        fetch(`http://82.197.94.212:1337/api/product-requests/${requestId}`)
             .then((response) => response.json())
             .then((data) => {
                 const request = data.data;
@@ -78,7 +78,7 @@ export default function EditProductRequestForm() {
     const sendForm = (redirect: boolean = false) => {
         // setSubmitted(true);
 
-        fetch(`http://mvp-api.dupeapps.top/api/product-requests/${requestId}`, {
+        fetch(`http://82.197.94.212:1337/api/product-requests/${requestId}`, {
             method: "PUT",
             body: JSON.stringify({ data: formData }),
             headers: {

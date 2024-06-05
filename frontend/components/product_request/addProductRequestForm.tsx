@@ -63,7 +63,7 @@ export default function AddProductRequestForm() {
 
         console.log(formData);
 
-        fetch("http://mvp-api.dupeapps.top/api/product-requests", {
+        fetch("http://82.197.94.212:1337/api/product-requests", {
             method: "POST",
             body: JSON.stringify({ data: formData }),
             headers: {

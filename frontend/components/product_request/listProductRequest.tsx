@@ -50,7 +50,7 @@ export default function ListProductRequest() {
     };
 
     useEffect(() => {
-        fetch("http://mvp-api.dupeapps.top/api/product-requests", {
+        fetch("http://82.197.94.212:1337/api/product-requests", {
             cache: "no-store",
         })
             .then((res) => res.json())
@@ -142,7 +142,7 @@ export default function ListProductRequest() {
 
     const handleDelete = () => {
         fetch(
-            `http://mvp-api.dupeapps.top/api/product-requests/${requestToDelete}`,
+            `http://82.197.94.212:1337/api/product-requests/${requestToDelete}`,
             {
                 method: "DELETE",
             }
