@@ -4,17 +4,14 @@
   "info": {
     "singularName": "activit",
     "pluralName": "activits",
-    "displayName": "activits"
+    "displayName": "activits",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "schedule_date": {
-      "type": "datetime",
-      "required": true
-    },
     "description": {
       "type": "blocks"
     },

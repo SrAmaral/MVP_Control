@@ -4,7 +4,8 @@
   "info": {
     "singularName": "product-request",
     "pluralName": "product-requests",
-    "displayName": "Product_request"
+    "displayName": "Product_request",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -22,9 +23,6 @@
         "manutenção"
       ]
     },
-    "description": {
-      "type": "blocks"
-    },
     "deadline": {
       "type": "datetime"
     },
@@ -35,6 +33,9 @@
         "pending",
         "finished"
       ]
+    },
+    "description": {
+      "type": "json"
     }
   }
 }

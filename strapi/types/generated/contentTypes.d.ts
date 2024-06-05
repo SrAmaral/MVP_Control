@@ -794,12 +794,12 @@ export interface ApiActivitActivit extends Schema.CollectionType {
     singularName: 'activit';
     pluralName: 'activits';
     displayName: 'activits';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    schedule_date: Attribute.DateTime & Attribute.Required;
     description: Attribute.Blocks;
     deadline: Attribute.DateTime;
     status: Attribute.Enumeration<['new', 'pending', 'started', 'finished']> &
@@ -1018,6 +1018,7 @@ export interface ApiProductRequestProductRequest extends Schema.CollectionType {
     singularName: 'product-request';
     pluralName: 'product-requests';
     displayName: 'Product_request';
+    description: '';
   };
   options: {
     draftAndPublish: false;
@@ -1029,9 +1030,9 @@ export interface ApiProductRequestProductRequest extends Schema.CollectionType {
       'api::client.client'
     >;
     type: Attribute.Enumeration<['manuten\u00E7\u00E3o']>;
-    description: Attribute.Blocks;
     deadline: Attribute.DateTime;
     status: Attribute.Enumeration<['new', 'pending', 'finished']>;
+    description: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
