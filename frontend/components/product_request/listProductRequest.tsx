@@ -12,7 +12,7 @@ type ProductRequestType = {
     id: number;
     type: string;
     status: "new" | "pending" | "finished";
-    deadline: string;
+    deadline: string | null;
     client: { disconnect: string[]; connect: string[] };
     qtyRequests: number;
     createdAt: string;
@@ -56,7 +56,7 @@ export default function ListProductRequest() {
             .then((res) => res.json())
             .then((data) => {
                 const reverseData = [...data.data].reverse();
-                const formattedData = reverseData.map(
+                const formattedData: ProductRequestType[] = reverseData.map(
                     (request: ProductRequestStrapiType) => ({
                         id: request.id,
                         type: request.attributes.type,
@@ -70,6 +70,7 @@ export default function ListProductRequest() {
                         updatedAt: request.attributes.updatedAt,
                     })
                 );
+
                 setProductRequests(formattedData);
             });
     }, []);
