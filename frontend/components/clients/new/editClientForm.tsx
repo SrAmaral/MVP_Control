@@ -53,7 +53,6 @@ export default function EditClientForm() {
                 console.error(error);
             });
     }, [clientId]);
-    console.log(formData);
     const sendForm = (redirect: boolean = false) => {
         setSubmitted(true);
 

@@ -21,6 +21,11 @@ const AppMenu = () => {
                     icon: "pi pi-user",
                     to: "/users",
                 },
+                {
+                    label: "Solicitações",
+                    icon: "pi pi-calendar-plus",
+                    to: "/product_requests",
+                },
             ],
         },
         {
