@@ -5,11 +5,11 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3001:3001"
+      - "3000:3000"
 
   strapi:
     build:
       context: ./strapi
     ports:
       - "1337:1337"
-    entrypoint: sh -c "yarn install && yarn build && yarn start"
+    entrypoint: sh -c "yarn install && yarn start"
