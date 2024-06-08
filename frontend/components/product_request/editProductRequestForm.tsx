@@ -62,7 +62,6 @@ export default function EditProductRequestForm() {
             .then((response) => response.json())
             .then((data) => {
                 const request = data.data;
-                console.log(request);
                 setFormData({
                     client: request.attributes.client,
                     deadline: request.attributes.deadline,
@@ -115,6 +114,39 @@ export default function EditProductRequestForm() {
                             },
                         ],
                     });
+                }
+            })
+            .catch((error) => {
+                showSuccess();
+                console.error(
+                    "There was a problem with the fetch operation:",
+                    error
+                );
+            });
+    };
+    const generateQuotation = (redirect: boolean = false) => {
+        // setSubmitted(true);
+        console.log(formData);
+        fetch(`http://82.197.94.212:1337/api/product-quotations`, {
+            method: "POST",
+            body: JSON.stringify({ data: formData }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                showSuccess();
+                console.log(data.data.id);
+                if (redirect) {
+                    setTimeout(() => {
+                        router.push(`/product_quotations/${data.data.id}`);
+                    }, 2500);
                 }
             })
             .catch((error) => {
@@ -359,6 +391,12 @@ export default function EditProductRequestForm() {
                         onClick={() => sendForm(true)}
                         label="Salvar"
                         icon="pi pi-check"
+                    ></Button>
+                    <Button
+                        onClick={() => generateQuotation(true)}
+                        severity="success"
+                        label="Gerar Orçamento"
+                        icon="pi pi-file"
                     ></Button>
                 </div>
             </div>

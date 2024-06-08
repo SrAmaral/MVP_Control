@@ -4,7 +4,8 @@
   "info": {
     "singularName": "employee",
     "pluralName": "employees",
-    "displayName": "Employee"
+    "displayName": "Employee",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -18,27 +19,22 @@
     "email": {
       "type": "email"
     },
-    "password": {
-      "type": "password",
-      "required": false
-    },
     "contact_number": {
       "type": "string"
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "attachment": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
+    },
+    "role": {
+      "type": "string"
     }
   }
 }

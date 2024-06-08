@@ -26,6 +26,11 @@ const AppMenu = () => {
                     icon: "pi pi-calendar-plus",
                     to: "/product_requests",
                 },
+                {
+                    label: "Cotações",
+                    icon: "pi pi-calendar-plus",
+                    to: "/product_quotations",
+                },
             ],
         },
         {

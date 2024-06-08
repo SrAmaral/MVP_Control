@@ -13,14 +13,31 @@ type UserType = {
     location: string;
     site: string;
     description: string;
-    contactEmail: string;
-    contactNumber: string;
+    contact_email: string;
+    contact_number: string;
     isClient: boolean;
     dockId: number;
     files: null;
     createdAt: string;
     updatedAt: string;
     lastVisit: string;
+};
+type UserStrapiType = {
+    id: number;
+    attributes: {
+        name: string;
+        location: string;
+        site: string;
+        description: string;
+        contact_email: string;
+        contact_number: string;
+        isClient: boolean;
+        dockId: number;
+        files: null;
+        createdAt: string;
+        updatedAt: string;
+        lastVisit: string;
+    };
 };
 
 export default function ListClientPage() {
@@ -30,29 +47,32 @@ export default function ListClientPage() {
     const [clientToDelete, setClientToDelete] = useState<number | undefined>();
 
     useEffect(() => {
-        fetch("http://askg80w.82.197.94.212.sslip.io/accounts/clients", {
+        fetch("http://82.197.94.212:1337/api/clients", {
             cache: "no-store",
         })
             .then((res) => res.json())
-            .then((data) => {
-                const reverseData = [...data].reverse();
-                const formattedData = reverseData.map((client: UserType) => ({
-                    id: client.id,
-                    name: client.name,
-                    contactEmail: client.contactEmail,
-                    contactNumber: client.contactNumber,
-                    lastVisit: new Date(client.lastVisit).toLocaleDateString(
-                        "pt-BR"
-                    ),
-                    isClient: client.isClient,
-                    location: client.location,
-                    site: client.site,
-                    description: client.description,
-                    dockId: client.dockId,
-                    files: client.files,
-                    createdAt: client.createdAt,
-                    updatedAt: client.updatedAt,
-                }));
+            .then((data: any) => {
+                const clients = data.data;
+                const reverseData = clients.reverse();
+                const formattedData = reverseData.map(
+                    (client: UserStrapiType) => ({
+                        id: client.id,
+                        name: client.attributes.name,
+                        contactEmail: client.attributes.contact_email,
+                        contactNumber: client.attributes.contact_number,
+                        lastVisit: new Date(
+                            client.attributes.lastVisit
+                        ).toLocaleDateString("pt-BR"),
+                        isClient: client.attributes.isClient,
+                        location: client.attributes.location,
+                        site: client.attributes.site,
+                        description: client.attributes.description,
+                        dockId: client.attributes.dockId,
+                        files: client.attributes.files,
+                        createdAt: client.attributes.createdAt,
+                        updatedAt: client.attributes.updatedAt,
+                    })
+                );
                 setClients(formattedData);
             });
     }, []);
@@ -124,12 +144,9 @@ export default function ListClientPage() {
     };
 
     const handleDelete = () => {
-        fetch(
-            `http://askg80w.82.197.94.212.sslip.io/accounts/clients/${clientToDelete}`,
-            {
-                method: "DELETE",
-            }
-        ).then(() => {
+        fetch(`http://82.197.94.212:1337/api/clients/${clientToDelete}`, {
+            method: "DELETE",
+        }).then(() => {
             setClientToDelete(undefined);
             setClients(clients.filter((c) => c.id !== Number(clientToDelete)));
         });

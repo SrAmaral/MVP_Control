@@ -6,48 +6,73 @@ import { useRouter } from "next/navigation";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
+import { DescriptionProductQuotation } from "./productQuotationInterface";
 
-type UserType = {
+type ProductQuotationType = {
     id: number;
-    name: string;
-    email: string;
-    contact_number: string;
-    role: string;
+    type: string;
+    status: "new" | "pending" | "finished";
+    deadline: string | null;
+    client: { disconnect: string[]; connect: string[] };
+    qtyQuotations: number;
+    createdAt: string;
+    updatedAt: string;
 };
-type UserStrapiType = {
+
+type ProductQuotationStrapiType = {
     id: number;
     attributes: {
-        name: string;
-        email: string;
-        contact_number: string;
-        role: string;
+        type: string;
+        status: "new" | "pending" | "finished";
+        deadline: string;
+        client: { disconnect: string[]; connect: string[] };
+        description: DescriptionProductQuotation[];
+        createdAt: string;
+        updatedAt: string;
     };
 };
 
-export default function ListUserPage() {
+export default function ListProductQuotation() {
     const router = useRouter();
-    const [users, setUsers] = useState<UserType[]>([]);
+    const [productQuotations, setProductQuotations] = useState<
+        ProductQuotationType[]
+    >([]);
     const [diologVisible, setDialogVisible] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<number | undefined>();
+    const [quotationToDelete, setQuotationToDelete] = useState<
+        number | undefined
+    >();
+
+    const convertData = (unformatedDate: string) => {
+        let date = new Date(unformatedDate);
+        console.log(date);
+        let isoDateStr = date.toLocaleDateString("pt-BR");
+        return isoDateStr;
+    };
 
     useEffect(() => {
-        fetch("http://82.197.94.212:1337/api/employees", {
+        fetch("http://82.197.94.212:1337/api/product-quotations", {
             cache: "no-store",
         })
             .then((res) => res.json())
             .then((data) => {
-                const clients = data.data;
-                const reverseData = clients.reverse();
-                const formattedData = reverseData.map(
-                    (user: UserStrapiType) => ({
-                        id: user.id,
-                        name: user.attributes.name,
-                        email: user.attributes.email,
-                        contact_number: user.attributes.contact_number,
-                        role: user.attributes.role,
+                const reverseData = [...data.data].reverse();
+                const formattedData: ProductQuotationType[] = reverseData.map(
+                    (request: ProductQuotationStrapiType) => ({
+                        id: request.id,
+                        type: request.attributes.type,
+                        qtyRequests: request.attributes.description.length,
+                        status: request.attributes.status,
+                        deadline: request.attributes.deadline
+                            ? convertData(request.attributes.deadline)
+                            : null,
+                        client: request.attributes.client,
+                        createdAt: request.attributes.createdAt,
+                        updatedAt: request.attributes.updatedAt,
+                        qtyQuotations: 0, // Add this line to include the qtyQuotations property
                     })
                 );
-                setUsers(formattedData);
+
+                setProductQuotations(formattedData);
             });
     }, []);
 
@@ -67,8 +92,8 @@ export default function ListUserPage() {
                     <Button
                         type="button"
                         icon="pi pi-plus-circle"
-                        label="Criar um novo usuario"
-                        onClick={() => router.push("/users/new")}
+                        label="Criar uma novo Orçamento"
+                        onClick={() => router.push("/product_quotations/new")}
                     />
                     <Button
                         type="button"
@@ -92,7 +117,7 @@ export default function ListUserPage() {
         );
     };
 
-    const actionBodyTemplate = (rowData: UserType) => {
+    const actionBodyTemplate = (rowData: ProductQuotationType) => {
         return (
             <div className="flex justify-content-center gap-4">
                 <Button
@@ -104,7 +129,7 @@ export default function ListUserPage() {
                     icon="pi pi-trash"
                     severity="danger"
                     onClick={() => {
-                        setUserToDelete(rowData.id);
+                        setQuotationToDelete(rowData.id);
                         setDialogVisible(true);
                     }}
                     rounded
@@ -113,16 +138,23 @@ export default function ListUserPage() {
         );
     };
 
-    const handleEdit = (user: UserType) => {
-        router.push(`/users/${user.id}`);
+    const handleEdit = (request: ProductQuotationType) => {
+        router.push(`/product_quotations/${request.id}`);
     };
 
     const handleDelete = () => {
-        fetch(`http://82.197.94.212:1337/api/employees/${userToDelete}`, {
-            method: "DELETE",
-        }).then(() => {
-            setUserToDelete(undefined);
-            setUsers(users.filter((u) => u.id !== Number(userToDelete)));
+        fetch(
+            `http://82.197.94.212:1337/api/product-quotations/${quotationToDelete}`,
+            {
+                method: "DELETE",
+            }
+        ).then(() => {
+            setQuotationToDelete(undefined);
+            setProductQuotations(
+                productQuotations.filter(
+                    (c) => c.id !== Number(quotationToDelete)
+                )
+            );
         });
     };
 
@@ -149,24 +181,24 @@ export default function ListUserPage() {
     return (
         <div className="grid">
             <Dialog
-                header="Exluir Usuario"
+                header="Exluir Orçamento"
                 visible={diologVisible}
                 style={{ width: "50vw" }}
                 onHide={() => setDialogVisible(false)}
                 footer={footerContentDiolog}
             >
                 <p className="flex m-0 text-3xl font-bold">
-                    Tem certeza que deseja excluir este Usuario?
+                    Tem certeza que deseja excluir esta Orçamento?
                 </p>
                 <p className="flex m-0 text-xl mt-4">
-                    Ao excluir este ususario, os dados do mesmo serão perdidos
+                    Ao excluir estea Orçamento, os dados da mesmo serão perdidos
                 </p>
             </Dialog>
             <div className="col-12">
                 <div className="card">
-                    <h1>Usuarios</h1>
+                    <h1>Orçamentos</h1>
                     <DataTable
-                        value={users}
+                        value={productQuotations}
                         paginator
                         className="p-datatable-gridlines"
                         showGridlines
@@ -177,37 +209,36 @@ export default function ListUserPage() {
                         emptyMessage="No customers found."
                         header={renderHeader}
                         globalFilterFields={[
-                            "name",
-                            "contactEmail",
-                            "contact_number",
-                            "lastVisit",
-                            "location",
+                            "id",
+                            "status",
+                            "qtyRequests",
+                            "deadline",
                         ]}
                     >
                         <Column
-                            field="name"
-                            header="Nome"
+                            field="id"
+                            header="ID"
                             alignHeader={"center"}
                             sortable
-                            style={{ minWidth: "12rem" }}
+                            style={{ minWidth: "8rem", textAlign: "center" }}
                         />
                         <Column
-                            field="email"
-                            header="Email"
+                            field="status"
+                            header="Status"
                             alignHeader={"center"}
                             sortable
-                            style={{ minWidth: "10rem", textAlign: "center" }}
+                            style={{ minWidth: "8rem", textAlign: "center" }}
                         />
                         <Column
-                            field="contact_number"
-                            header="Numero de contato"
+                            field="qtyRequests"
+                            header="Quantidade de solicitações"
                             alignHeader={"center"}
                             sortable
-                            style={{ maxWidth: "10rem", textAlign: "center" }}
+                            style={{ maxWidth: "8rem", textAlign: "center" }}
                         />
                         <Column
-                            field="role"
-                            header="Tipo de Usuario"
+                            field="deadline"
+                            header="Data Limite"
                             alignHeader={"center"}
                             sortable
                             style={{ maxWidth: "7rem", textAlign: "center" }}

@@ -1,16 +1,11 @@
 "use client";
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
-import { SplitButton } from "primereact/splitbutton";
 import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
-import {
-    DescriptionProductRequest,
-    ProductRequestInterface,
-    ProductRequestInterfaceSetup,
-} from "./productRequestInterface";
+import { useParams, useRouter } from "next/navigation";
+
 import { InputTextarea } from "primereact/inputtextarea";
 import { ListBox, ListBoxChangeEvent } from "primereact/listbox";
 import {
@@ -18,9 +13,13 @@ import {
     InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
 import { v4 } from "uuid";
+import {
+    DescriptionProductQuotation,
+    ProductQuotationInterface,
+} from "./productQuotationInterface";
 
-export default function AddProductRequestForm() {
-    const [formData, setFormData] = useState<ProductRequestInterface>({
+export default function EditProductQuotationForm() {
+    const [formData, setFormData] = useState<ProductQuotationInterface>({
         status: "new",
         deadline: null,
         client: {
@@ -30,9 +29,16 @@ export default function AddProductRequestForm() {
         description: [
             {
                 description: "",
-                type: "service",
-                priority: "low",
+                type: {
+                    name: "",
+                    value: "",
+                },
+                priority: {
+                    name: "",
+                    value: "",
+                },
                 qty: null,
+                value: 0,
             },
         ],
     });
@@ -40,6 +46,7 @@ export default function AddProductRequestForm() {
     const [submitted, setSubmitted] = useState(false);
     const toast = useRef<Toast>(null);
     const router = useRouter();
+    const { quotationId } = useParams();
 
     const showSuccess = () => {
         toast.current?.show({
@@ -58,18 +65,36 @@ export default function AddProductRequestForm() {
         });
     };
 
+    useEffect(() => {
+        fetch(`http://82.197.94.212:1337/api/product-quotations/${quotationId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const request = data.data;
+                setFormData({
+                    client: request.attributes.client,
+                    deadline: request.attributes.deadline,
+                    description: request.attributes.description,
+                    status: request.attributes.status,
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [quotationId]);
+
     const sendForm = (redirect: boolean = false) => {
         // setSubmitted(true);
 
-        console.log(formData);
-
-        fetch("http://82.197.94.212:1337/api/product-requests", {
-            method: "POST",
-            body: JSON.stringify({ data: formData }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        fetch(
+            `http://82.197.94.212:1337/api/product-quotations/${quotationId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify({ data: formData }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        )
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -80,7 +105,7 @@ export default function AddProductRequestForm() {
                 showSuccess();
                 if (redirect) {
                     setTimeout(() => {
-                        router.push("/product_requests");
+                        router.push("/product_quotations");
                     }, 3500);
                 } else {
                     setSubmitted(false);
@@ -94,9 +119,16 @@ export default function AddProductRequestForm() {
                         description: [
                             {
                                 description: "",
-                                type: "service",
-                                priority: "low",
+                                type: {
+                                    name: "",
+                                    value: "",
+                                },
+                                priority: {
+                                    name: "",
+                                    value: "",
+                                },
                                 qty: null,
+                                value: 0,
                             },
                         ],
                     });
@@ -110,20 +142,13 @@ export default function AddProductRequestForm() {
                 );
             });
     };
+
     // const handleUpload = (event: FileUploadSelectEvent) => {
     //     const files = event.files;
     //     if (files && files.length > 0) {
     //         setFormData({ ...formData, files });
     //     }
     // };
-
-    const items = [
-        {
-            label: "Criar e um novo",
-            icon: "pi pi-id-card",
-            command: () => sendForm(false),
-        },
-    ];
 
     const convertData = (unformatedDate: Date): Date | string => {
         let date = new Date(unformatedDate);
@@ -136,7 +161,7 @@ export default function AddProductRequestForm() {
             <Toast ref={toast} />
             <div className="card w-full">
                 <div className="flex justify-content-between">
-                    <h1>Nova Requisição de Serviço</h1>
+                    <h1>Editar Orçamento</h1>
                     <Link href="/product_requests">
                         <Button
                             label="Voltar"
@@ -156,9 +181,16 @@ export default function AddProductRequestForm() {
                             let newItems = formData;
                             newItems.description.push({
                                 description: "",
-                                type: "service",
-                                priority: "low",
+                                type: {
+                                    name: "",
+                                    value: "",
+                                },
+                                priority: {
+                                    name: "",
+                                    value: "",
+                                },
                                 qty: 0,
+                                value: 0,
                             });
 
                             setFormDataVersion(v4());
@@ -167,10 +199,10 @@ export default function AddProductRequestForm() {
                     />
                     <div className="p-fluid row-gap-6  grid mt-4 col-12 flex-row">
                         {formData.description.map(
-                            (item: DescriptionProductRequest, index) => (
+                            (item: DescriptionProductQuotation, index) => (
                                 <div key={index} className="grid col-12">
                                     <div
-                                        className="field col-6"
+                                        className="field col-4"
                                         key={index + "description"}
                                     >
                                         <label
@@ -201,11 +233,11 @@ export default function AddProductRequestForm() {
                                         />
                                     </div>
                                     <div
-                                        className="field col-2"
+                                        className="field col-1.5"
                                         key={index + "type"}
                                     >
                                         <label htmlFor="type" className="mb-2 ">
-                                            tipo
+                                            Tipo
                                         </label>
                                         <ListBox
                                             value={item.type}
@@ -231,18 +263,18 @@ export default function AddProductRequestForm() {
                                                 },
                                             ]}
                                             optionLabel="name"
-                                            className="w-full md:w-14rem"
+                                            className="w-full md:w-14rem max-w-8rem"
                                         />
                                     </div>
                                     <div
-                                        className="field col-2"
+                                        className="field col-1.5 ml-2"
                                         key={index + "priority"}
                                     >
                                         <label
                                             htmlFor="priority"
                                             className="mb-2 "
                                         >
-                                            tipo
+                                            Prioridade
                                         </label>
                                         <ListBox
                                             value={item.priority}
@@ -272,7 +304,7 @@ export default function AddProductRequestForm() {
                                                 },
                                             ]}
                                             optionLabel="name"
-                                            className="w-full md:w-14rem"
+                                            className="w-full md:w-14rem max-w-8rem"
                                         />
                                     </div>
                                     <div
@@ -296,6 +328,35 @@ export default function AddProductRequestForm() {
                                                 setFormDataVersion(v4());
                                                 setFormData(newItems);
                                             }}
+                                        />
+                                    </div>
+                                    <div
+                                        className="field col-3 "
+                                        key={index + "value"}
+                                    >
+                                        <label
+                                            htmlFor="value"
+                                            className="mb-2 "
+                                        >
+                                            Valor po unidade
+                                        </label>
+                                        <InputNumber
+                                            id="value"
+                                            locale="pt-BR"
+                                            minFractionDigits={2}
+                                            value={item.value}
+                                            onValueChange={(
+                                                e: InputNumberValueChangeEvent
+                                            ) => {
+                                                let newItems = formData;
+
+                                                newItems.description[
+                                                    index
+                                                ].value = e.value;
+                                                setFormDataVersion(v4());
+                                                setFormData(newItems);
+                                            }}
+                                            className="w-full md:w-14rem max-w-15rem"
                                         />
                                     </div>
                                     <Button
@@ -333,7 +394,7 @@ export default function AddProductRequestForm() {
                                 onChange={(e) =>
                                     setFormData(
                                         (
-                                            prevFormData: ProductRequestInterface
+                                            prevFormData: ProductQuotationInterface
                                         ) => ({
                                             ...prevFormData,
                                             deadline: convertData(
@@ -348,12 +409,21 @@ export default function AddProductRequestForm() {
                     </div>
                 </div>
                 <div className="flex gap-6 col-12 mt-6 ">
-                    <SplitButton
+                    <Button
                         onClick={() => sendForm(true)}
-                        label="Criar"
+                        label="Salvar"
                         icon="pi pi-check"
-                        model={items}
-                    ></SplitButton>
+                    ></Button>
+                    <Button
+                        onClick={() =>
+                            router.push(
+                                `/product_quotations/approve/${quotationId}`
+                            )
+                        }
+                        severity="success"
+                        label="Aprovar Cotação"
+                        icon="pi pi-file"
+                    ></Button>
                 </div>
             </div>
         </div>

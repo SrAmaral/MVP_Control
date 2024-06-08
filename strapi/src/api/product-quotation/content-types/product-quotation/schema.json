@@ -4,18 +4,14 @@
   "info": {
     "singularName": "product-quotation",
     "pluralName": "product-quotations",
-    "displayName": "Product_quotation"
+    "displayName": "Product_quotation",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "employees": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::employee.employee"
-    },
     "client": {
       "type": "relation",
       "relation": "oneToOne",
@@ -23,9 +19,6 @@
     },
     "type": {
       "type": "string"
-    },
-    "description": {
-      "type": "blocks"
     },
     "deadline": {
       "type": "datetime"
@@ -37,8 +30,11 @@
         "writing",
         "pending",
         "approved",
-        "reproved"
+        "rejected"
       ]
+    },
+    "description": {
+      "type": "json"
     }
   }
 }

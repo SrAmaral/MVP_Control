@@ -38,9 +38,9 @@ export default function AddUserForm() {
     const sendForm = (redirect: boolean = false) => {
         setSubmitted(true);
 
-        fetch("http://askg80w.82.197.94.212.sslip.io/accounts/users", {
+        fetch(`http://82.197.94.212:1337/api/employees`, {
             method: "POST",
-            body: JSON.stringify(formData),
+            body: JSON.stringify({ data: formData }),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -181,20 +181,20 @@ export default function AddUserForm() {
                     <div className="field col-12 md:col-6">
                         <span className="p-float-label">
                             <InputMask
-                                id="contactNumber"
+                                id="contact_number"
                                 mask="(99) 99999-9999"
                                 type="text"
-                                value={formData.contactNumber ?? undefined}
+                                value={formData.contact_number ?? undefined}
                                 onChange={(e) => {
                                     setFormData(
                                         (prevFormData: userInterface) => ({
                                             ...prevFormData,
-                                            contactNumber: e.target.value,
+                                            contact_number: e.target.value,
                                         })
                                     );
                                 }}
                                 className={
-                                    submitted && !formData.contactNumber
+                                    submitted && !formData.contact_number
                                         ? "p-invalid"
                                         : ""
                                 }
@@ -203,7 +203,7 @@ export default function AddUserForm() {
                                 Numero para contato
                             </label>
                         </span>
-                        {submitted && !formData.contactNumber && (
+                        {submitted && !formData.contact_number && (
                             <small id="number-help" className="p-error">
                                 Adicione um telefone para o funcionario
                             </small>

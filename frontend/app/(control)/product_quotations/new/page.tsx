@@ -6,11 +6,7 @@ import { Calendar } from "primereact/calendar";
 import { SplitButton } from "primereact/splitbutton";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
-import {
-    DescriptionProductRequest,
-    ProductRequestInterface,
-    ProductRequestInterfaceSetup,
-} from "./productRequestInterface";
+
 import { InputTextarea } from "primereact/inputtextarea";
 import { ListBox, ListBoxChangeEvent } from "primereact/listbox";
 import {
@@ -18,9 +14,13 @@ import {
     InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
 import { v4 } from "uuid";
+import {
+    DescriptionProductQuotation,
+    ProductQuotationInterface,
+} from "@/components/product_quotations/productQuotationInterface";
 
-export default function AddProductRequestForm() {
-    const [formData, setFormData] = useState<ProductRequestInterface>({
+export default function AddProductQuotationForm() {
+    const [formData, setFormData] = useState<ProductQuotationInterface>({
         status: "new",
         deadline: null,
         client: {
@@ -30,9 +30,10 @@ export default function AddProductRequestForm() {
         description: [
             {
                 description: "",
-                type: "service",
-                priority: "low",
+                type: { name: "", value: "" },
+                priority: { name: "", value: "" },
                 qty: null,
+                value: 0,
             },
         ],
     });
@@ -63,7 +64,7 @@ export default function AddProductRequestForm() {
 
         console.log(formData);
 
-        fetch("http://82.197.94.212:1337/api/product-requests", {
+        fetch("http://82.197.94.212:1337/api/product_quotations", {
             method: "POST",
             body: JSON.stringify({ data: formData }),
             headers: {
@@ -80,7 +81,7 @@ export default function AddProductRequestForm() {
                 showSuccess();
                 if (redirect) {
                     setTimeout(() => {
-                        router.push("/product_requests");
+                        router.push("/product_quotations");
                     }, 3500);
                 } else {
                     setSubmitted(false);
@@ -94,9 +95,10 @@ export default function AddProductRequestForm() {
                         description: [
                             {
                                 description: "",
-                                type: "service",
-                                priority: "low",
+                                type: { name: "", value: "" },
+                                priority: { name: "", value: "" },
                                 qty: null,
+                                value: 0,
                             },
                         ],
                     });
@@ -156,9 +158,10 @@ export default function AddProductRequestForm() {
                             let newItems = formData;
                             newItems.description.push({
                                 description: "",
-                                type: "service",
-                                priority: "low",
+                                type: { name: "", value: "" },
+                                priority: { name: "", value: "" },
                                 qty: 0,
+                                value: 0,
                             });
 
                             setFormDataVersion(v4());
@@ -167,10 +170,13 @@ export default function AddProductRequestForm() {
                     />
                     <div className="p-fluid row-gap-6  grid mt-4 col-12 flex-row">
                         {formData.description.map(
-                            (item: DescriptionProductRequest, index) => (
+                            (
+                                item: DescriptionProductQuotation,
+                                index: number
+                            ) => (
                                 <div key={index} className="grid col-12">
                                     <div
-                                        className="field col-6"
+                                        className="field col-4"
                                         key={index + "description"}
                                     >
                                         <label
@@ -201,11 +207,11 @@ export default function AddProductRequestForm() {
                                         />
                                     </div>
                                     <div
-                                        className="field col-2"
+                                        className="field col-1.5"
                                         key={index + "type"}
                                     >
                                         <label htmlFor="type" className="mb-2 ">
-                                            tipo
+                                            Tipo
                                         </label>
                                         <ListBox
                                             value={item.type}
@@ -231,18 +237,18 @@ export default function AddProductRequestForm() {
                                                 },
                                             ]}
                                             optionLabel="name"
-                                            className="w-full md:w-14rem"
+                                            className="w-full md:w-14rem max-w-8rem"
                                         />
                                     </div>
                                     <div
-                                        className="field col-2"
+                                        className="field col-1.5 ml-2"
                                         key={index + "priority"}
                                     >
                                         <label
                                             htmlFor="priority"
                                             className="mb-2 "
                                         >
-                                            tipo
+                                            Prioridade
                                         </label>
                                         <ListBox
                                             value={item.priority}
@@ -272,7 +278,7 @@ export default function AddProductRequestForm() {
                                                 },
                                             ]}
                                             optionLabel="name"
-                                            className="w-full md:w-14rem"
+                                            className="w-full md:w-14rem max-w-8rem"
                                         />
                                     </div>
                                     <div
@@ -296,6 +302,35 @@ export default function AddProductRequestForm() {
                                                 setFormDataVersion(v4());
                                                 setFormData(newItems);
                                             }}
+                                        />
+                                    </div>
+                                    <div
+                                        className="field col-3 "
+                                        key={index + "value"}
+                                    >
+                                        <label
+                                            htmlFor="value"
+                                            className="mb-2 "
+                                        >
+                                            Valor po unidade
+                                        </label>
+                                        <InputNumber
+                                            id="value"
+                                            locale="pt-BR"
+                                            minFractionDigits={2}
+                                            value={item.value}
+                                            onValueChange={(
+                                                e: InputNumberValueChangeEvent
+                                            ) => {
+                                                let newItems = formData;
+
+                                                newItems.description[
+                                                    index
+                                                ].value = e.value;
+                                                setFormDataVersion(v4());
+                                                setFormData(newItems);
+                                            }}
+                                            className="w-full md:w-14rem max-w-15rem"
                                         />
                                     </div>
                                     <Button
@@ -333,7 +368,7 @@ export default function AddProductRequestForm() {
                                 onChange={(e) =>
                                     setFormData(
                                         (
-                                            prevFormData: ProductRequestInterface
+                                            prevFormData: ProductQuotationInterface
                                         ) => ({
                                             ...prevFormData,
                                             deadline: convertData(

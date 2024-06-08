@@ -42,35 +42,31 @@ export default function EditClientForm() {
     };
 
     useEffect(() => {
-        fetch(
-            `http://askg80w.82.197.94.212.sslip.io/accounts/clients/${clientId}`
-        )
-            .then((response) => response.json())
+        fetch(`http://82.197.94.212:1337/api/clients/${clientId}`, {
+            cache: "no-store",
+        })
+            .then((res) => res.json())
             .then((data) => {
-                setFormData(data);
-            })
-            .catch((error) => {
-                console.error(error);
+                console.log(data);
+                setFormData(data.data.attributes);
             });
     }, [clientId]);
     const sendForm = (redirect: boolean = false) => {
         setSubmitted(true);
 
-        fetch(
-            `http://askg80w.82.197.94.212.sslip.io/accounts/clients/${clientId}`,
-            {
-                method: "PUT",
-                body: JSON.stringify(formData),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        )
+        fetch(`http://82.197.94.212:1337/api/clients/${clientId}`, {
+            method: "PUT",
+            body: JSON.stringify({ data: formData }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => res.json())
             .then((response) => {
-                if (!response.ok) {
+                if (response.data == null) {
                     throw new Error("Network response was not ok");
                 }
-                return response.json();
+                return response;
             })
             .then((data) => {
                 showSuccess();
@@ -189,17 +185,17 @@ export default function EditClientForm() {
                             <InputText
                                 id="contactEmail"
                                 type="text"
-                                value={formData.contactEmail}
+                                value={formData.contact_email}
                                 onChange={(e) => {
                                     setFormData(
                                         (prevFormData: ClientInterface) => ({
                                             ...prevFormData,
-                                            contactEmail: e.target.value,
+                                            contact_email: e.target.value,
                                         })
                                     );
                                 }}
                                 className={
-                                    submitted && !formData.contactEmail
+                                    submitted && !formData.contact_email
                                         ? "p-invalid"
                                         : ""
                                 }
@@ -208,7 +204,7 @@ export default function EditClientForm() {
                                 Email para contato
                             </label>
                         </span>
-                        {submitted && !formData.contactEmail && (
+                        {submitted && !formData.contact_email && (
                             <small id="email-help" className="p-error">
                                 Adicione um email para o cliente
                             </small>
@@ -220,17 +216,17 @@ export default function EditClientForm() {
                                 id="contactNumber"
                                 mask="(99) 99999-9999"
                                 type="text"
-                                value={formData.contactNumber ?? undefined}
+                                value={formData.contact_number ?? undefined}
                                 onChange={(e) => {
                                     setFormData(
                                         (prevFormData: ClientInterface) => ({
                                             ...prevFormData,
-                                            contactNumber: e.target.value,
+                                            contact_number: e.target.value,
                                         })
                                     );
                                 }}
                                 className={
-                                    submitted && !formData.contactNumber
+                                    submitted && !formData.contact_number
                                         ? "p-invalid"
                                         : ""
                                 }
@@ -239,7 +235,7 @@ export default function EditClientForm() {
                                 Numero para contato
                             </label>
                         </span>
-                        {submitted && !formData.contactNumber && (
+                        {submitted && !formData.contact_number && (
                             <small id="number-help" className="p-error">
                                 Adicione um telefone para o cliente
                             </small>
@@ -282,11 +278,11 @@ export default function EditClientForm() {
                         </label>
                         <InputSwitch
                             id="client"
-                            checked={formData.client}
+                            checked={formData.isClient}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    client: e.value,
+                                    isClient: e.value,
                                 })
                             }
                         />

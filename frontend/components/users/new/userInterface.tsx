@@ -3,7 +3,7 @@ import { Nullable } from "primereact/ts-helpers";
 export interface userInterface {
     name: string;
     email: string;
-    contactNumber: string | undefined | Nullable<string>;
+    contact_number: string | undefined | Nullable<string>;
     role: string;
     attachments: string[];
 }
@@ -11,7 +11,7 @@ export interface userInterface {
 export const userInterfaceSetup = {
     name: "",
     email: "",
-    contactNumber: "",
+    contact_number: "",
     role: "",
     attachments: [],
 };

@@ -5,11 +5,11 @@ export interface ClientInterface {
     location: string;
     site: string;
     description: string | undefined | Nullable<string>;
-    contactEmail: string;
-    contactNumber: string | undefined | Nullable<string>;
+    contact_email: string;
+    contact_number: string | undefined | Nullable<string>;
     // files: File[];
     lastVisit: Date | Nullable<Date>;
-    client: boolean;
+    isClient: boolean;
     dockId: number;
 }
 
@@ -18,10 +18,10 @@ export const ClientInterfaceSetup = {
     location: "",
     site: "",
     description: "",
-    contactEmail: "",
-    contactNumber: "",
+    contact_email: "",
+    contact_number: "",
     // files: [],
     lastVisit: null,
-    client: false,
+    isClient: false,
     dockId: 0,
 };

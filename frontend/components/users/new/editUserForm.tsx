@@ -35,29 +35,25 @@ export default function EditUserForm() {
     };
 
     useEffect(() => {
-        fetch(`http://askg80w.82.197.94.212.sslip.io/accounts/users/${userId}`)
+        fetch(`http://82.197.94.212:1337/api/employees/${userId}`)
             .then((response) => response.json())
             .then((data) => {
-                setFormData(data);
+                setFormData(data.data.attributes);
             })
             .catch((error) => {
                 console.error(error);
             });
     }, [userId]);
-    console.log(formData);
     const sendForm = (redirect: boolean = false) => {
         setSubmitted(true);
 
-        fetch(
-            `http://askg80w.82.197.94.212.sslip.io/accounts/users/${userId}`,
-            {
-                method: "PUT",
-                body: JSON.stringify(formData),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        )
+        fetch(`http://82.197.94.212:1337/api/employees/${userId}`, {
+            method: "PUT",
+            body: JSON.stringify({ data: formData }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -189,17 +185,17 @@ export default function EditUserForm() {
                                 id="contactNumber"
                                 mask="(99) 99999-9999"
                                 type="text"
-                                value={formData.contactNumber ?? undefined}
+                                value={formData.contact_number ?? undefined}
                                 onChange={(e) => {
                                     setFormData(
                                         (prevFormData: userInterface) => ({
                                             ...prevFormData,
-                                            contactNumber: e.target.value,
+                                            contact_number: e.target.value,
                                         })
                                     );
                                 }}
                                 className={
-                                    submitted && !formData.contactNumber
+                                    submitted && !formData.contact_number
                                         ? "p-invalid"
                                         : ""
                                 }
@@ -208,7 +204,7 @@ export default function EditUserForm() {
                                 Numero para contato
                             </label>
                         </span>
-                        {submitted && !formData.contactNumber && (
+                        {submitted && !formData.contact_number && (
                             <small id="number-help" className="p-error">
                                 Adicione um telefone para o funcionario
                             </small>

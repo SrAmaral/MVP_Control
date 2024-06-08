@@ -18,11 +18,8 @@
     "location": {
       "type": "text"
     },
-    "email": {
+    "contact_email": {
       "type": "email"
-    },
-    "contact_number": {
-      "type": "biginteger"
     },
     "attachment_files": {
       "type": "media",
@@ -37,6 +34,21 @@
     },
     "description": {
       "type": "text"
+    },
+    "isClient": {
+      "type": "boolean"
+    },
+    "dockId": {
+      "type": "integer"
+    },
+    "lastVisit": {
+      "type": "date"
+    },
+    "site": {
+      "type": "string"
+    },
+    "contact_number": {
+      "type": "string"
     }
   }
 }

@@ -836,10 +836,14 @@ export interface ApiClientClient extends Schema.CollectionType {
   attributes: {
     name: Attribute.String;
     location: Attribute.Text;
-    email: Attribute.Email;
-    contact_number: Attribute.BigInteger;
+    contact_email: Attribute.Email;
     attachment_files: Attribute.Media;
     description: Attribute.Text;
+    isClient: Attribute.Boolean;
+    dockId: Attribute.Integer;
+    lastVisit: Attribute.Date;
+    site: Attribute.String;
+    contact_number: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -863,6 +867,7 @@ export interface ApiEmployeeEmployee extends Schema.CollectionType {
     singularName: 'employee';
     pluralName: 'employees';
     displayName: 'Employee';
+    description: '';
   };
   options: {
     draftAndPublish: false;
@@ -870,14 +875,9 @@ export interface ApiEmployeeEmployee extends Schema.CollectionType {
   attributes: {
     name: Attribute.String & Attribute.Required;
     email: Attribute.Email;
-    password: Attribute.Password;
     contact_number: Attribute.String;
-    users_permissions_user: Attribute.Relation<
-      'api::employee.employee',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
     attachment: Attribute.Media;
+    role: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -974,27 +974,23 @@ export interface ApiProductQuotationProductQuotation
     singularName: 'product-quotation';
     pluralName: 'product-quotations';
     displayName: 'Product_quotation';
+    description: '';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    employees: Attribute.Relation<
-      'api::product-quotation.product-quotation',
-      'oneToMany',
-      'api::employee.employee'
-    >;
     client: Attribute.Relation<
       'api::product-quotation.product-quotation',
       'oneToOne',
       'api::client.client'
     >;
     type: Attribute.String;
-    description: Attribute.Blocks;
     deadline: Attribute.DateTime;
     status: Attribute.Enumeration<
-      ['new', 'writing', 'pending', 'approved', 'reproved']
+      ['new', 'writing', 'pending', 'approved', 'rejected']
     >;
+    description: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1033,6 +1029,7 @@ export interface ApiProductRequestProductRequest extends Schema.CollectionType {
     deadline: Attribute.DateTime;
     status: Attribute.Enumeration<['new', 'pending', 'finished']>;
     description: Attribute.JSON;
+    clientName: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
