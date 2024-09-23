@@ -10,9 +10,10 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import {usersService } from "~/app/(modules)/users/module/module";
 
-import { getServerAuthSession } from "~/server/auth";
-import { db } from "~/server/db";
+import { getServerAuthSession } from "~/core/auth";
+import { db } from "~/core/db";
 
 /**
  * 1. CONTEXT
@@ -33,6 +34,9 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     db,
     session,
     ...opts,
+    usersService:{
+      ...usersService
+    }
   };
 };
 
