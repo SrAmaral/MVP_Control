@@ -15,5 +15,7 @@ datasource db {
 }
 plugin zod {
   provider = '@core/zod'
-  preserveTsFiles = true
+  compile = false
+  output = "./dev/zod"
+  modelOnly = true
 }
