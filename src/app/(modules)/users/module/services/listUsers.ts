@@ -1,5 +1,10 @@
-import { db } from "~/core/db";
+import { PrismaClient } from "@prisma/client";
 
-export function listUsersService() {
-    return db.user.findMany();
+export function listUsers(db: PrismaClient) {
+    return db.user.findMany({
+        include: {
+            address: true,
+            role: true
+        }
+        });
 }
