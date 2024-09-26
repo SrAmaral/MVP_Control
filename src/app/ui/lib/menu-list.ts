@@ -33,64 +33,84 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/dashboard",
-          label: "Dashboard",
-          active: pathname.includes("/dashboard"),
+          href: "/pagina-inicial",
+          label: "Página Inicial",
+          active: pathname.includes("/pagina-inicial"),
           icon: LayoutGrid,
           submenus: []
         }
       ]
     },
     {
-      groupLabel: "Contents",
+      groupLabel: "",
       menus: [
         {
           href: "",
-          label: "Posts",
-          active: pathname.includes("/form"),
+          label: "Clientes",
+          active: pathname.includes("/clients"),
           icon: SquarePen,
           submenus: [
             {
-              href: "/form/users",
-              label: "All Posts",
-              active: pathname === "/form/users"
+              href: "/clients/dashboard",
+              label: "Dashboad",
+              active: pathname === "/clients/dashboard"
             },
             {
-              href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
+              href: "/clients/list",
+              label: "Listagem",
+              active: pathname === "/clients/list"
             }
           ]
         },
         {
-          href: "/categories",
-          label: "Categories",
-          active: pathname.includes("/categories"),
+          href: "/users",
+          label: "Funcionários",
+          active: pathname.includes("/users"),
           icon: Bookmark,
-          submenus: []
+          submenus: [
+            {
+              href: "/users/dashboard",
+              label: "Dashboad",
+              active: pathname === "/users/dashboard"
+            },
+            {
+              href: "/users/list",
+              label: "Listagem",
+              active: pathname === "/users/list"
+            },
+            {
+              href: "/users/form",
+              label: "Cadastro",
+              active: pathname === "/users/form"
+            }
+          ]
         },
         {
-          href: "/tags",
-          label: "Tags",
-          active: pathname.includes("/tags"),
+          href: "/solicitations",
+          label: "Solicitações",
+          active: pathname.includes("/solicitations"),
           icon: Tag,
-          submenus: []
+          submenus: [
+            {
+              href: "/solicitations/dashboard",
+              label: "Dashboad",
+              active: pathname === "/solicitations/dashboard"
+            },
+            {
+              href: "/solicitations/list",
+              label: "Listagem",
+              active: pathname === "/solicitations/list"
+            }
+          ]
         }
       ]
     },
     {
-      groupLabel: "Settings",
+      groupLabel: "",
       menus: [
         {
-          href: "/users/form",
-          label: "Users",
-          active: pathname.includes("/users/form"),
-          icon: Users,
-          submenus: []
-        },
-        {
           href: "/account",
-          label: "Account",
+          label: "Conta",
           active: pathname.includes("/account"),
           icon: Settings,
           submenus: []
