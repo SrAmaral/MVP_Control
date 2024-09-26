@@ -12,12 +12,14 @@ type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  title?: string
 };
 
 type Menu = {
   href: string;
   label: string;
   active: boolean;
+  title?: string
   icon: LucideIcon
   submenus: Submenu[];
 };
@@ -36,6 +38,7 @@ export function getMenuList(pathname: string): Group[] {
           href: "/pagina-inicial",
           label: "Página Inicial",
           active: pathname.includes("/pagina-inicial"),
+          title:"Página inicial",
           icon: LayoutGrid,
           submenus: []
         }
@@ -49,15 +52,18 @@ export function getMenuList(pathname: string): Group[] {
           label: "Clientes",
           active: pathname.includes("/clients"),
           icon: SquarePen,
+          title:"Clientes",
           submenus: [
             {
               href: "/clients/dashboard",
               label: "Dashboad",
+              title:"Dashboard dos clientes",
               active: pathname === "/clients/dashboard"
             },
             {
               href: "/clients/list",
               label: "Listagem",
+              title:"Listagem dos clientes",
               active: pathname === "/clients/list"
             }
           ]
@@ -66,21 +72,25 @@ export function getMenuList(pathname: string): Group[] {
           href: "/users",
           label: "Funcionários",
           active: pathname.includes("/users"),
+          title:"Funcionários",
           icon: Bookmark,
           submenus: [
             {
               href: "/users/dashboard",
               label: "Dashboad",
+              title:"Dashboard dos usuarios",
               active: pathname === "/users/dashboard"
             },
             {
               href: "/users/list",
               label: "Listagem",
+              title:"Listagem dos usuarios",
               active: pathname === "/users/list"
             },
             {
               href: "/users/form",
               label: "Cadastro",
+              title:"Cadastro dos usuarios",
               active: pathname === "/users/form"
             }
           ]
@@ -90,15 +100,18 @@ export function getMenuList(pathname: string): Group[] {
           label: "Solicitações",
           active: pathname.includes("/solicitations"),
           icon: Tag,
+          title:"Solicitações",
           submenus: [
             {
               href: "/solicitations/dashboard",
               label: "Dashboad",
+              title:"Dashboard das solicitações",
               active: pathname === "/solicitations/dashboard"
             },
             {
               href: "/solicitations/list",
               label: "Listagem",
+              title:"Listagem das solicitações",
               active: pathname === "/solicitations/list"
             }
           ]
@@ -118,4 +131,21 @@ export function getMenuList(pathname: string): Group[] {
       ]
     }
   ];
+}
+
+
+export function findActiveLabel( pathname: string): string | null {
+  const menuList = getMenuList(pathname);
+  for (const group of menuList) {
+    for (const menu of group.menus) {
+      const activeSubmenu = menu.submenus.find(submenu => submenu.active);
+      if (activeSubmenu) {
+        return activeSubmenu.title ? activeSubmenu.title : "";
+      }
+      if (menu.active) {
+        return menu.title ? menu.title : "";;
+      }
+    }
+  }
+  return null;
 }
