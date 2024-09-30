@@ -1,3 +1,4 @@
+import { clientsRouter } from "~/app/(modules)/clients/module/module";
 import { usersRouter } from "~/app/(modules)/users/module/module";
 import { createCallerFactory, createTRPCRouter } from "~/core/trpc/trpc";
 
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/core/trpc/trpc";
  */
 export const appRouter = createTRPCRouter({
   users: usersRouter,
+  clients: clientsRouter,
 });
 
 // export type definition of API
