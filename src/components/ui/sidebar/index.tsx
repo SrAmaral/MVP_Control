@@ -3,9 +3,9 @@ import { PanelsTopLeft } from "lucide-react";
 
 import { cn } from "~/lib/utils"; 
 import { SidebarToggle } from "../sidebar-toggle";
-import { useSidebarToggle } from "../../hooks/use-sidebar-toggle";
+import { useSidebarToggle } from "../../../app/ui/hooks/use-sidebar-toggle";
 import { Menu } from "../menu";
-import { useStore } from "../../hooks/use-store";
+import { useStore } from "../../../app/ui/hooks/use-store";
 import { Button } from "../button";
 
 export function Sidebar() {

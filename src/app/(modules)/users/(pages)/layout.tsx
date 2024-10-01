@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "~/app/ui/components/breadcrumb";
-import { ContentLayout } from "~/app/ui/components/content-layout";
-import PlaceholderContent from "~/app/ui/components/placeholder-content";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "~/components/ui/breadcrumb";
+import { ContentLayout } from "~/components/ui/content-layout";
+import PlaceholderContent from "~/components/ui/placeholder-content";
 
 interface LayoutProps {
   children?: React.ReactNode
@@ -26,9 +26,7 @@ export default  function  Page({children, title="Users"}: LayoutProps) {
           </BreadcrumbList>
         </Breadcrumb>
         <PlaceholderContent >
-          <div className="bg-gray-200  w-full h-full  ">
             {children}
-          </div>
         </PlaceholderContent>
       </ContentLayout>
   );

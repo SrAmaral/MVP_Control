@@ -5,7 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/core/trpc/callers/react";
 import { ThemeProvider } from "./ui/providers/theme-provider";
-import AdminPanelLayout from "./ui/components/admin-panel-layout";
+import AdminPanelLayout from "../components/ui/admin-panel-layout";
 
 export const metadata: Metadata = {
   title: "Create T3 App",

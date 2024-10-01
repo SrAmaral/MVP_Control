@@ -33,7 +33,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/pagina-inicial",
+          href: "/",
           label: "Página Inicial",
           active: pathname.includes("/pagina-inicial"),
           icon: LayoutGrid,
@@ -51,7 +51,7 @@ export function getMenuList(pathname: string): Group[] {
           icon: SquarePen,
           submenus: [
             {
-              href: "/clients/dashboard",
+              href: "",
               label: "Dashboad",
               active: pathname === "/clients/dashboard"
             },
