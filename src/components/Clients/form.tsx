@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
@@ -27,13 +28,39 @@ export default function ClientsFormCreate() {
     resolver: zodResolver(clientSchema),
     defaultValues: {
       cnpj: "",
+      fantasyName: "",
+      companyName: "",
+      cnaeCode: "",
+      cnaeDescription: "",
+      contactNumber: "",
+      contactEmail: "",
+      openedData: "",
+      clientAddress: {
+        streetType: "",
+        street: "",
+        number: "",
+        complement: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        zipCode: "",
+      },
+      contacts: [
+        {
+          id: 0,
+          name: "",
+          email: "",
+          phone: "",
+        },
+      ],
     },
   });
 
-  console.log(`teste `, form.getValues());
-
   const cnpjWatch = form.watch("cnpj");
   const [findingCNPJ, setFindingCNPJ] = useState("");
+
+  const contacts = form.watch("contacts");
+
   useEffect(() => {
     if (cnpjWatch.replace(/\D/g, "").length === 14) {
       setFindingCNPJ("Buscando CNPJ...");
@@ -81,10 +108,11 @@ export default function ClientsFormCreate() {
   function onSubmit(values: z.infer<typeof clientSchema>) {
     console.log(values);
   }
+
   return (
     <div className="p-10">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Tabs defaultValue="companyInfos" className="">
             <TabsList>
               <TabsTrigger value="companyInfos">
@@ -103,7 +131,7 @@ export default function ClientsFormCreate() {
                       <FormItem>
                         <FormLabel>CNPJ</FormLabel>
                         <FormControl ref={withMask("99.999.999/9999-99")}>
-                          <Input placeholder="cnpj" {...field} />
+                          <Input placeholder="CNPJ" {...field} />
                         </FormControl>
                         <FormDescription
                           className={`text-sm ${
@@ -349,6 +377,104 @@ export default function ClientsFormCreate() {
                     )}
                   />
                 </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="contacts">
+              <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
+                {contacts.map(
+                  (contact: (typeof contacts)[0], index: number) => (
+                    <>
+                      <div
+                        className="col-span-4 grid"
+                        key={`contact-name-${index}`}
+                      >
+                        <FormField
+                          control={form.control}
+                          name={`contacts.${index}.name`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nome</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Nome" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div
+                        className="col-span-4 grid"
+                        key={`contact-email-${index}`}
+                      >
+                        <FormField
+                          control={form.control}
+                          name={`contacts.${index}.email`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Email" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div
+                        className="col-span-3 grid"
+                        key={`contact-phone-${index}`}
+                      >
+                        <FormField
+                          control={form.control}
+                          name={`contacts.${index}.phone`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Telefone</FormLabel>
+                              <FormControl ref={withMask("(99) 99999-9999")}>
+                                <Input placeholder="Telefone" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        className="3 col-span-1 mt-8 gap-3"
+                        variant="destructive"
+                        key={`contact-remove-${index}`}
+                        onClick={() => {
+                          const newContacts = [...form.watch("contacts")];
+                          newContacts.splice(index, 1);
+                          form.setValue("contacts", newContacts);
+                        }}
+                      >
+                        <TrashIcon />
+                      </Button>
+                    </>
+                  ),
+                )}
+
+                <Button
+                  type="button"
+                  className="col-span-3 mt-10 gap-3"
+                  variant="outline"
+                  onClick={() => {
+                    const newContacts = [
+                      ...form.watch("contacts"),
+                      {
+                        id: form.watch("contacts").length,
+                        name: "",
+                        email: "",
+                        phone: "",
+                      },
+                    ];
+                    form.setValue("contacts", newContacts);
+                  }}
+                >
+                  <PlusIcon />
+                  Adicionar Contato
+                </Button>
               </div>
             </TabsContent>
           </Tabs>
