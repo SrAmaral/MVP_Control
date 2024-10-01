@@ -1,7 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, TrashIcon } from "lucide-react";
+import {
+  InfoIcon,
+  MapPinnedIcon,
+  PhoneCallIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
@@ -116,10 +122,15 @@ export default function ClientsFormCreate() {
           <Tabs defaultValue="companyInfos" className="">
             <TabsList>
               <TabsTrigger value="companyInfos">
+                <InfoIcon className="mr-2 h-4 w-4" />
                 Informações da Empresa
               </TabsTrigger>
-              <TabsTrigger value="address">Endereço</TabsTrigger>
-              <TabsTrigger value="contacts">Contatos</TabsTrigger>
+              <TabsTrigger value="address">
+                <MapPinnedIcon className="mr-2 h-4 w-4" /> Endereço
+              </TabsTrigger>
+              <TabsTrigger value="contacts">
+                <PhoneCallIcon className="mr-2 h-4 w-4" /> Contatos
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="companyInfos">
               <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
