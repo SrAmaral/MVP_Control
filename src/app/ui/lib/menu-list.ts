@@ -35,7 +35,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/pagina-inicial",
+          href: "/",
           label: "Página Inicial",
           active: pathname.includes("/pagina-inicial"),
           title:"Página inicial",
@@ -55,7 +55,7 @@ export function getMenuList(pathname: string): Group[] {
           title:"Clientes",
           submenus: [
             {
-              href: "/clients/dashboard",
+              href: "",
               label: "Dashboad",
               title:"Dashboard dos clientes",
               active: pathname === "/clients/dashboard"

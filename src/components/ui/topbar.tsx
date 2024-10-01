@@ -13,7 +13,7 @@ import { ContentLayout } from "./content-layout";
 import PlaceholderContent from "./placeholder-content";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { findActiveLabel, getMenuList } from "../lib/menu-list";
+import { findActiveLabel } from "~/app/ui/lib/menu-list";
 
 interface LayoutProps {
   children?: React.ReactNode;
