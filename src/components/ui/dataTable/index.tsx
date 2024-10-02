@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
-import Input from "~/components/ui/input";
+import { Input } from "~/components/ui/input";
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useState } from "react";
+import LoadingSpinner from "../loading";
 
 
 interface DataTableProps<TData> {
@@ -30,6 +30,7 @@ interface DataTableProps<TData> {
   filterPlaceholder?: string;
   enableSorting?: boolean;
   enablePagination?: boolean;
+  loading?: boolean;
 }
 
 export function DataTable<TData>({
@@ -38,6 +39,7 @@ export function DataTable<TData>({
   filterPlaceholder = "Filter...",
   enableSorting = true,
   enablePagination = true,
+  loading = false,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -66,42 +68,52 @@ export function DataTable<TData>({
         <Input
           placeholder={filterPlaceholder}
           value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
       </div>
 
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        {loading ? (
+          <div className="flex justify-center items-center  h-[calc(100vh-300px)]">
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </div>
 
       {enablePagination && (
