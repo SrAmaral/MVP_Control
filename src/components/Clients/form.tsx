@@ -408,7 +408,10 @@ export default function ClientsFormCreate() {
               <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
                 {contacts.map(
                   (contact: (typeof contacts)[0], index: number) => (
-                    <div key={`contact-${index}`}>
+                    <div
+                      key={`contact-${index}`}
+                      className="col-span-12 grid grid-cols-12 gap-x-5 gap-y-6"
+                    >
                       <div
                         className="col-span-4 grid"
                         key={`contact-name-${index}`}
