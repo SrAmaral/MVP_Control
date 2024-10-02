@@ -74,3 +74,46 @@ model UserAddress {
   userId       String
   user         User   @relation(fields: [userId], references: [id])
 }
+
+model Client {
+  id              String          @id() @default(cuid())
+  cnpj            String
+  fantasyName     String
+  companyName     String
+  cnaeCode        String
+  cnaeDescription String
+  contactNumber   String
+  contactEmail    String
+  openedData      String
+  createdAt       DateTime?       @default(now())
+  updatedAt       DateTime?       @updatedAt()
+  clientAddress   ClientAddress?
+  contacts        CLientContact[]
+}
+
+model ClientAddress {
+  id           String    @id() @default(cuid())
+  streetType   String
+  street       String
+  number       String
+  complement   String
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt()
+  clientId     String    @unique()
+  client       Client    @relation(fields: [clientId], references: [id])
+}
+
+model CLientContact {
+  id          String    @id() @default(cuid())
+  name        String
+  email       String
+  phoneNumber String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt()
+  clientId    String    @unique()
+  client      Client    @relation(fields: [clientId], references: [id])
+}
