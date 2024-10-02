@@ -16,6 +16,7 @@ import {
   clientSchema,
   type CNPJRequestType,
 } from "~/app/(modules)/clients/module/types";
+import { api } from "~/core/trpc/callers/react";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -56,7 +57,7 @@ export default function ClientsFormCreate() {
           id: 0,
           name: "",
           email: "",
-          phone: "",
+          phoneNumber: "",
         },
       ],
     },
@@ -111,8 +112,10 @@ export default function ClientsFormCreate() {
     }
   }, [cnpjWatch, form]);
 
+  const createClient = api.clients.createClient.useMutation();
+
   function onSubmit(values: z.infer<typeof clientSchema>) {
-    console.log(values);
+    createClient.mutate(values);
   }
 
   useEffect(() => {
@@ -448,7 +451,7 @@ export default function ClientsFormCreate() {
                       >
                         <FormField
                           control={form.control}
-                          name={`contacts.${index}.phone`}
+                          name={`contacts.${index}.phoneNumber`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Telefone</FormLabel>
@@ -488,7 +491,7 @@ export default function ClientsFormCreate() {
                         id: form.watch("contacts").length,
                         name: "",
                         email: "",
-                        phone: "",
+                        phoneNumber: "",
                       },
                     ];
                     form.setValue("contacts", newContacts);

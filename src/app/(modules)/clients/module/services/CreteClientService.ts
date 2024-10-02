@@ -16,6 +16,7 @@ export async function ClientCreate(data: ClientType) {
       contacts: contacts ? {
         create: contacts.map((contact) => ({
           ...contact,
+          id: contact.id.toString(),
         })),
       } : undefined,
     },
