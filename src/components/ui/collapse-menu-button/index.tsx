@@ -91,7 +91,7 @@ export function CollapseMenuButton({
             className="w-full justify-start h-10 mb-1"
             asChild
           >
-            <Link href={href}>
+            <Link href={href || "/"}>
               <span className="mr-4 ml-2">
                 <Dot size={18} />
               </span>

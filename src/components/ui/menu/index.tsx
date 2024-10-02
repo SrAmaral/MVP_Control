@@ -5,7 +5,7 @@ import { Ellipsis, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "~/lib/utils";
-import { getMenuList } from "../../lib/menu-list";
+import { getMenuList } from "../../../app/ui/lib/menu-list";
 import { ScrollArea } from "../scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../tooltip";
 import { Button } from "../button";
@@ -80,7 +80,7 @@ export function Menu({ isOpen }: MenuProps) {
                           </TooltipTrigger>
                           {isOpen === false && (
                             <TooltipContent side="right">
-                              {label}
+                              {label} 
                             </TooltipContent>
                           )}
                         </Tooltip>
@@ -100,9 +100,9 @@ export function Menu({ isOpen }: MenuProps) {
               )}
             </li>
           ))}
-          <li className="w-full grow flex items-end">
+          <li className="w-full grow flex items-end ">
             <TooltipProvider disableHoverableContent>
-              <Tooltip delayDuration={100}>
+              <Tooltip delayDuration={10}>
                 <TooltipTrigger asChild>
                   <Button
                     onClick={() => {}}
