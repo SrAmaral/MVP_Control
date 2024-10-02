@@ -1,9 +1,13 @@
 import {
-  Bookmark,
+  BookUser,
+  LayoutDashboardIcon,
   LayoutGrid,
   Settings,
-  SquarePen,
+  TableProperties,
   Tag,
+  User,
+  UserRoundPlus,
+  Users,
   type LucideIcon
 } from "lucide-react";
 
@@ -11,7 +15,8 @@ type Submenu = {
   href: string;
   label: string;
   active: boolean;
-  title?: string
+  title?: string;
+  icon?: LucideIcon;
 };
 
 type Menu = {
@@ -50,26 +55,29 @@ export function getMenuList(pathname: string): Group[] {
           href: "",
           label: "Clientes",
           active: pathname.includes("/clients"),
-          icon: SquarePen,
+          icon: User,
           title:"Clientes",
           submenus: [
             {
               href: "/clients",
               label: "Dashboad",
               title:"Dashboard de clientes",
-              active: pathname === "/clients"
+              active: pathname === "/clients",
+              icon: LayoutDashboardIcon
             },
             {
               href: "/clients/list",
               label: "Listagem",
               title:"Listagem dos clientes",
-              active: pathname === "/clients/list"
+              active: pathname === "/clients/list",
+              icon: BookUser
             },
             {
               href: "/clients/create",
               label: "Criação",
               title:"Criação de cliente",
-              active: pathname === "/clients/create"
+              active: pathname === "/clients/create",
+              icon: UserRoundPlus
             }
           ]
         },
@@ -78,25 +86,28 @@ export function getMenuList(pathname: string): Group[] {
           label: "Funcionários",
           active: pathname.includes("/users"),
           title:"Funcionários",
-          icon: Bookmark,
+          icon: Users,
           submenus: [
             {
               href: "/users/dashboard",
               label: "Dashboad",
               title:"Dashboard dos usuarios",
-              active: pathname === "/users/dashboard"
+              active: pathname === "/users/dashboard",
+              icon: LayoutDashboardIcon
             },
             {
               href: "/users/list",
               label: "Listagem",
               title:"Listagem dos usuarios",
-              active: pathname === "/users/list"
+              active: pathname === "/users/list",
+              icon: BookUser
             },
             {
               href: "/users/form",
               label: "Cadastro",
               title:"Cadastro dos usuarios",
-              active: pathname === "/users/form"
+              active: pathname === "/users/form",
+              icon: UserRoundPlus
             }
           ]
         },
@@ -111,13 +122,15 @@ export function getMenuList(pathname: string): Group[] {
               href: "/solicitations/dashboard",
               label: "Dashboad",
               title:"Dashboard das solicitações",
-              active: pathname === "/solicitations/dashboard"
+              active: pathname === "/solicitations/dashboard",
+              icon: LayoutDashboardIcon
             },
             {
               href: "/solicitations/list",
               label: "Listagem",
               title:"Listagem das solicitações",
-              active: pathname === "/solicitations/list"
+              active: pathname === "/solicitations/list",
+              icon: TableProperties
             }
           ]
         }
