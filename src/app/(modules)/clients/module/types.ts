@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const clientSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   cnpj: z.string(),
   fantasyName: z.string(),
   companyName: z.string(),
@@ -14,7 +14,7 @@ export const clientSchema = z.object({
   updatedAt: z.coerce.date().nullish(),
   clientAddress: z
     .object({
-      id: z.number(),
+      id: z.number().optional(),
       streetType: z.string(),
       street: z.string(),
       number: z.string(),
@@ -30,7 +30,7 @@ export const clientSchema = z.object({
         id: z.number(),
         name: z.string(),
         email: z.string(),
-        phone: z.string(),
+        phoneNumber: z.string(),
 }))})
 
 export type ClientType = z.infer<typeof clientSchema>;

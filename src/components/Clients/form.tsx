@@ -115,6 +115,14 @@ export default function ClientsFormCreate() {
     console.log(values);
   }
 
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length !== 0) {
+      console.group("Form Errors");
+      console.log(form.formState.errors);
+      console.groupEnd();
+    }
+  }, [form.formState.errors]);
+
   return (
     <div className="p-10">
       <Form {...form}>
@@ -148,7 +156,10 @@ export default function ClientsFormCreate() {
                           className={`text-sm ${
                             findingCNPJ === "CNPJ encontrado!"
                               ? "text-green-600"
-                              : "text-red-600"
+                              : findingCNPJ ===
+                                  "CNPJ não encontrado na base do governo!"
+                                ? "text-red-600"
+                                : null
                           }`}
                         >
                           {findingCNPJ}
@@ -394,7 +405,7 @@ export default function ClientsFormCreate() {
               <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
                 {contacts.map(
                   (contact: (typeof contacts)[0], index: number) => (
-                    <>
+                    <div key={`contact-${index}`}>
                       <div
                         className="col-span-4 grid"
                         key={`contact-name-${index}`}
@@ -462,7 +473,7 @@ export default function ClientsFormCreate() {
                       >
                         <TrashIcon />
                       </Button>
-                    </>
+                    </div>
                   ),
                 )}
 

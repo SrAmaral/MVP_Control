@@ -8,10 +8,15 @@ export async function ClientCreate(data: ClientType) {
     data: {
       ...clientData,
       clientAddress: clientAddress ? {
-        create: {...clientAddress},
+        create: {
+          ...clientAddress,
+          id: clientAddress.id?.toString(),
+        },
       } : undefined,
       contacts: contacts ? {
-        create: {...contacts},
+        create: contacts.map((contact) => ({
+          ...contact,
+        })),
       } : undefined,
     },
     include: {
