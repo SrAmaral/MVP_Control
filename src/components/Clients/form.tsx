@@ -54,7 +54,6 @@ export default function ClientsFormCreate() {
       },
       contacts: [
         {
-          id: 0,
           name: "",
           email: "",
           phoneNumber: "",

@@ -4,7 +4,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {usersService } from "~/app/(modules)/users/module/module"
+import {usersService } from "~/app/(modules)/users/module/service"
 import { db } from "./db";
 
 /**
