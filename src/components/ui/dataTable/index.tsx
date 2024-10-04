@@ -71,17 +71,19 @@ export function DataTable<TData>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center space-x-2 py-4 justify-between">
         <Input
           placeholder={filterPlaceholder}
           value={globalFilter}
           onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setGlobalFilter(e.target.value)}
-          className="max-w-sm"
+          className="max-w-60 ml-2 w-full"
         />
-      <DropdownMenu>
+        <div className="overflow-hidden">
+           
+      <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Colunas exibidas <ChevronDownIcon className="ml-2 h-4 w-4" />
+              Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -104,6 +106,7 @@ export function DataTable<TData>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         {loading ? (

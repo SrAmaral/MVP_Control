@@ -28,7 +28,7 @@ function ColumnClient(
             </Button>
             ),
         cell: ({ row }) => (
-            <div className="text-left">{row.original.fantasyName}</div>
+            <div className="text-left">{row.getValue("fantasyName")}</div>
         ),
     },
     {
