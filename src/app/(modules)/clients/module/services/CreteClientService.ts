@@ -10,13 +10,11 @@ export async function ClientCreate(data: ClientType) {
       clientAddress: clientAddress ? {
         create: {
           ...clientAddress,
-          id: clientAddress.id?.toString(),
         },
       } : undefined,
       contacts: contacts ? {
         create: contacts.map((contact) => ({
           ...contact,
-          id: contact.id.toString(),
         })),
       } : undefined,
     },

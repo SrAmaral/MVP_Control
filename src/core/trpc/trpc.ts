@@ -10,8 +10,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { clientService } from "~/app/(modules)/clients/module/module";
-import { usersService } from "~/app/(modules)/users/module/module";
+import { clientService } from "~/app/(modules)/clients/module/service";
+import { usersService } from "~/app/(modules)/users/module/service";
 
 import { getServerAuthSession } from "~/core/auth";
 import { db } from "~/core/db";
@@ -30,17 +30,12 @@ import { db } from "~/core/db";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await getServerAuthSession();
-
   return {
     db,
     session,
     ...opts,
-    usersService:{
-      ...usersService
-    },
-    clientService: {
-      ...clientService
-    }
+    usersService,
+    clientService
   };
 };
 

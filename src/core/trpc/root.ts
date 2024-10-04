@@ -1,5 +1,5 @@
-import { clientsRouter } from "~/app/(modules)/clients/module/module";
-import { usersRouter } from "~/app/(modules)/users/module/module";
+import { clientsRouter } from "~/app/(modules)/clients/module/router";
+import { usersRouter } from "~/app/(modules)/users/module/router";
 import { createCallerFactory, createTRPCRouter } from "~/core/trpc/trpc";
 
 /**
