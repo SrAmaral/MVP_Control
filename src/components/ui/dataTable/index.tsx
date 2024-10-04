@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   SortingState,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
@@ -22,6 +23,8 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import LoadingSpinner from "../loading";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../dropdown-menu";
+import { ChevronDownIcon } from "lucide-react";
 
 
 interface DataTableProps<TData> {
@@ -44,16 +47,20 @@ export function DataTable<TData>({
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 10 });
-
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
   const table = useReactTable({
     data,
     columns,
     state: {
+      columnFilters,
       sorting,
       globalFilter,
       pagination,
     },
     getCoreRowModel: getCoreRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getFilteredRowModel: getFilteredRowModel(),
@@ -64,15 +71,43 @@ export function DataTable<TData>({
 
   return (
     <div className="w-full">
-      <div className="py-4">
+      <div className="flex items-center space-x-2 py-4 justify-between">
         <Input
           placeholder={filterPlaceholder}
           value={globalFilter}
           onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setGlobalFilter(e.target.value)}
-          className="max-w-sm"
+          className="max-w-60 ml-2 w-full"
         />
+        <div className="overflow-hidden">
+           
+      <DropdownMenu >
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        </div>
       </div>
-
       <div className="rounded-md border">
         {loading ? (
           <div className="flex justify-center items-center  h-[calc(100vh-300px)]">
