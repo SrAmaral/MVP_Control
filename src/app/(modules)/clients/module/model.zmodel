@@ -15,28 +15,28 @@ model Client {
 }
 
 model ClientAddress {
-  id           String    @id() @default(cuid())
-  streetType   String
-  street       String
-  number       String
-  complement   String
-  neighborhood String
-  city         String
-  state        String
-  zipCode      String
-  createdAt    DateTime? @default(now())
-  updatedAt    DateTime? @updatedAt
-  clientId     String    @unique
-  client       Client    @relation(fields: [clientId], references: [id])
+  id             String    @id() @default(cuid())
+  streetType     String
+  street         String
+  number         String
+  complement     String
+  neighborhood   String
+  city           String
+  state          String
+  zipCode        String
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
+  clientAddresId String    @unique
+  client         Client    @relation(fields: [clientAddresId], references: [id])
 }
 
 model CLientContact {
-  id          String    @id() @default(cuid())
-  name        String
-  email       String
-  phoneNumber String
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
-  clientId    String    @unique
-  client      Client    @relation(fields: [clientId], references: [id])
+  id              String    @id() @default(cuid())
+  name            String
+  email           String
+  phoneNumber     String
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
+  clientContactId String
+  client          Client    @relation(fields: [clientContactId], references: [id])
 }

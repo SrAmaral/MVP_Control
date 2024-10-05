@@ -74,8 +74,8 @@ export function getMenuList(pathname: string): Group[] {
             },
             {
               href: "/clients/create",
-              label: "Criação",
-              title:"Criação de cliente",
+              label: "Cadastro",
+              title:"Cadastro de cliente",
               active: pathname === "/clients/create",
               icon: UserRoundPlus
             }
@@ -103,10 +103,10 @@ export function getMenuList(pathname: string): Group[] {
               icon: BookUser
             },
             {
-              href: "/users/form",
+              href: "/users/create",
               label: "Cadastro",
               title:"Cadastro dos usuarios",
-              active: pathname === "/users/form",
+              active: pathname === "/users/create",
               icon: UserRoundPlus
             }
           ]

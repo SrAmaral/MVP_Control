@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "email" DROP NOT NULL,
+ALTER COLUMN "hiringDate" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "UserAddress" ALTER COLUMN "complement" DROP NOT NULL,
+ALTER COLUMN "neighborhood" DROP NOT NULL,
+ALTER COLUMN "zipCode" DROP NOT NULL;
