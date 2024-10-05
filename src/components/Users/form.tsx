@@ -1,11 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookUser, MapPinnedIcon } from "lucide-react";
-import { useEffect } from "react";
+import { BookUser, KeyRound, MapPinnedIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
-import { CreateUserData } from "~/app/(modules)/users/module/types";
+import {
+  type CreateUserData,
+  CreateUserSchema,
+  type UpdateUserData,
+} from "~/app/(modules)/users/module/types";
+import { api } from "~/core/trpc/callers/react";
 import { Button } from "../ui/button";
 import { ComboBoxComponent } from "../ui/combo-box/comboBox";
 import {
@@ -20,15 +25,41 @@ import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 
-export default function UsersFormCreate() {
+type UpdateUserFormProps = {
+  user?: UpdateUserData;
+};
+export default function UsersFormCreate({ user }: UpdateUserFormProps) {
   const form = useForm<CreateUserData>({
-    resolver: zodResolver(CreateUserData),
-    defaultValues: {},
+    resolver: zodResolver(CreateUserSchema),
+    defaultValues: {
+      id: user?.id ?? "",
+      address: user?.address,
+    },
   });
 
+  const createUsers = api.users.createUser.useMutation();
+  const updateUser = api.users.updateUser.useMutation();
   function onSubmit(values: CreateUserData) {
-    console.log(values);
+    if (user !== undefined) {
+      updateUser.mutate({ ...values, id: user.id });
+    } else {
+      createUsers.mutate(values);
+    }
   }
+
+  const roles = api.users.listRoles.useQuery();
+  const rolesOptions = roles.data?.map((role) => {
+    return {
+      value: role.id,
+      label: role.name,
+    };
+  });
+
+  useEffect(() => {
+    if (user !== undefined) {
+      form.reset(user);
+    }
+  }, [form, user]);
 
   useEffect(() => {
     if (Object.keys(form.formState.errors).length !== 0) {
@@ -37,6 +68,20 @@ export default function UsersFormCreate() {
       console.groupEnd();
     }
   }, [form.formState.errors]);
+
+  const [hiringType, setHiringType] = useState("");
+  const [roleType, setRoleType] = useState();
+  const [positionType, setPositionType] = useState();
+
+  useEffect(() => {
+    form.setValue("typeHiring", hiringType);
+    if (roleType !== undefined) {
+      form.setValue("role.id", roleType);
+    }
+    if (positionType !== undefined) {
+      form.setValue("position", positionType);
+    }
+  }, [form, hiringType, roleType, positionType]);
 
   const hiringTypeOptions = [
     {
@@ -65,7 +110,7 @@ export default function UsersFormCreate() {
     },
   ];
 
-  const roleTypeOptions = [
+  const positionOptions = [
     {
       value: "Gerente",
       label: "Gerente",
@@ -103,6 +148,9 @@ export default function UsersFormCreate() {
               </TabsTrigger>
               <TabsTrigger value="address">
                 <MapPinnedIcon className="mr-2 h-4 w-4" /> Endereço
+              </TabsTrigger>
+              <TabsTrigger value="accountInfos">
+                <KeyRound className="mr-2 h-4 w-4" /> Dados de acesso
               </TabsTrigger>
             </TabsList>
             <TabsContent value="employeeInfos">
@@ -251,13 +299,17 @@ export default function UsersFormCreate() {
                     options={hiringTypeOptions}
                     className="mt-8"
                     placeholder="Tipo de Contratação"
+                    setState={setHiringType}
+                    state={hiringType}
                   />
                 </div>
                 <div className="col-span-4 grid">
                   <ComboBoxComponent
-                    options={roleTypeOptions}
+                    options={positionOptions}
                     className="mt-8"
                     placeholder="Area de Atuação"
+                    setState={setPositionType}
+                    state={positionType}
                   />
                 </div>
                 <div className="col-span-4 grid">
@@ -268,7 +320,11 @@ export default function UsersFormCreate() {
                       <FormItem>
                         <FormLabel>Salario</FormLabel>
                         <FormControl ref={withMask("brl-currency")}>
-                          <Input placeholder="Salario" {...field} />
+                          <Input
+                            placeholder="Salario"
+                            className="!text-left"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -294,6 +350,10 @@ export default function UsersFormCreate() {
                   <Textarea
                     placeholder="Digite a descrição aqui!"
                     className="h-40"
+                    value={form.watch("comment")}
+                    onChange={(event) => {
+                      form.setValue("comment", event.target.value);
+                    }}
                   />
                 </div>
               </div>
@@ -412,12 +472,59 @@ export default function UsersFormCreate() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>CEP</FormLabel>
-                        <FormControl>
+                        <FormControl ref={withMask("99999-999")}>
                           <Input placeholder="Numero" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="accountInfos">
+              <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
+                <div className="col-span-6 grid">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email para Contato</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Email para Contato" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-6 grid">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Senha</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="Senha"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="col-span-4 grid">
+                  <ComboBoxComponent
+                    options={rolesOptions}
+                    className="mt-8"
+                    placeholder="Nivel de acesso"
+                    setState={setRoleType}
+                    state={roleType}
                   />
                 </div>
               </div>

@@ -12,3 +12,19 @@ export async function ListCLients() {
     console.error(error)
   }
 }
+
+export async function ListClientById(id: string) {
+  try {
+    return await db.client.findUnique({
+      where: {
+        id
+      },
+      include: {
+        clientAddress: true,
+        contacts: true
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}

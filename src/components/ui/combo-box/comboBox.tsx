@@ -1,5 +1,3 @@
-"use client";
-
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
@@ -19,22 +17,34 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 
-type ComboBoxType = {
-  options: {
-    value: string;
-    label: string;
-  }[];
+// Definindo o tipo para suportar valores numéricos e strings
+type ComboBoxType<T> = {
+  options:
+    | {
+        value: number | string;
+        label: number | string;
+      }[]
+    | undefined;
   className?: string;
   placeholder?: string;
+  setState?: React.Dispatch<React.SetStateAction<T>>;
+  state: string | number | undefined;
 };
 
-export function ComboBoxComponent({
+export function ComboBoxComponent<T>({
   options,
   className = "",
   placeholder = "",
-}: ComboBoxType) {
+  setState,
+  state,
+}: ComboBoxType<T>) {
+  // Ajustar o tipo do estado para `number | string`
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState<number | string | undefined>(state);
+
+  React.useEffect(() => {
+    setState?.(value as T);
+  }, [setState, value]);
 
   return (
     <div className={className}>
@@ -47,23 +57,28 @@ export function ComboBoxComponent({
             className="w-full justify-between"
           >
             {value
-              ? options.find((option) => option.value === value)?.label
+              ? options?.find((option) => option.value === value)?.label
               : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0">
           <Command>
-            <CommandInput placeholder="Search framework..." />
+            <CommandInput placeholder="Procurar item..." />
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandEmpty>Nenhum item encontrado.</CommandEmpty>
               <CommandGroup>
-                {options.map((option) => (
+                {options?.map((option) => (
                   <CommandItem
                     key={option.value}
-                    value={option.value}
+                    value={option.value.toString()} // Passar `value` como string para garantir a comparação correta
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                      // Converter `currentValue` para o tipo correto (number ou string)
+                      const selectedValue =
+                        typeof option.value === "number"
+                          ? Number(currentValue)
+                          : currentValue;
+                      setValue(selectedValue === value ? "" : selectedValue);
                       setOpen(false);
                     }}
                   >

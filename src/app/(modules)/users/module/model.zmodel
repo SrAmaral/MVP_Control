@@ -1,6 +1,6 @@
 model User {
   id            String        @id @default(cuid())
-  email         String        @unique
+  email         String?       @unique
   password      String?
   role          Role?         @relation(fields: [roleId], references: [id])
   roleId        Int?
@@ -48,15 +48,15 @@ model UserFile {
 }
 
 model UserAddress {
-  id           Int    @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   streetType   String
   street       String
   number       String
-  complement   String
-  neighborhood String
+  complement   String?
+  neighborhood String?
   city         String
   state        String
-  zipCode      String
+  zipCode      String?
   userId       String
-  user         User   @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id])
 }

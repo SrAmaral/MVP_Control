@@ -1,7 +1,7 @@
 import checkCredentials from "./services/checkCredentials";
 import createUser from "./services/createUser";
 import listRoles from "./services/listRoles";
-import { listUsers } from "./services/listUsers";
+import { listUserById, listUsers } from "./services/listUsers";
 import updateUser from "./services/updateUser";
 
 export const usersService = {
@@ -9,5 +9,6 @@ export const usersService = {
     checkCredentials,
     createUser,
     updateUser,
-    listRoles
+    listRoles,
+    listUserById
 };

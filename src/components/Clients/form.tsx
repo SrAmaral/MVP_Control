@@ -14,6 +14,7 @@ import { withMask } from "use-mask-input";
 import { type z } from "zod";
 import {
   clientSchema,
+  type ClientType,
   type CNPJRequestType,
 } from "~/app/(modules)/clients/module/types";
 import { api } from "~/core/trpc/callers/react";
@@ -30,28 +31,15 @@ import {
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
-export default function ClientsFormCreate() {
+type UpdateClientFormProps = {
+  client?: ClientType;
+};
+
+export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      cnpj: "",
-      fantasyName: "",
-      companyName: "",
-      cnaeCode: "",
-      cnaeDescription: "",
-      contactNumber: "",
-      contactEmail: "",
-      openedData: "",
-      clientAddress: {
-        streetType: "",
-        street: "",
-        number: "",
-        complement: "",
-        neighborhood: "",
-        city: "",
-        state: "",
-        zipCode: "",
-      },
+      id: client?.id ?? "",
       contacts: [
         {
           name: "",
@@ -68,7 +56,13 @@ export default function ClientsFormCreate() {
   const contacts = form.watch("contacts");
 
   useEffect(() => {
-    if (cnpjWatch.replace(/\D/g, "").length === 14) {
+    if (client !== undefined) {
+      form.reset(client);
+    }
+  }, [form, client]);
+
+  useEffect(() => {
+    if (cnpjWatch?.replace(/\D/g, "").length === 14) {
       setFindingCNPJ("Buscando CNPJ...");
       fetch(
         `https://api-publica.speedio.com.br/buscarcnpj?cnpj=${cnpjWatch.replace(/\D/g, "")}`,
@@ -112,9 +106,13 @@ export default function ClientsFormCreate() {
   }, [cnpjWatch, form]);
 
   const createClient = api.clients.createClient.useMutation();
-
+  const updateClient = api.clients.updateClient.useMutation();
   function onSubmit(values: z.infer<typeof clientSchema>) {
-    createClient.mutate(values);
+    if (client !== undefined) {
+      updateClient.mutate(values);
+    } else {
+      createClient.mutate(values);
+    }
   }
 
   useEffect(() => {
@@ -209,7 +207,7 @@ export default function ClientsFormCreate() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>CNAE Codigo</FormLabel>
-                        <FormControl>
+                        <FormControl ref={withMask("99999-9/99")}>
                           <Input placeholder="CNAE Codigo" {...field} />
                         </FormControl>
                         <FormMessage />
@@ -239,7 +237,7 @@ export default function ClientsFormCreate() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Numero para Contato</FormLabel>
-                        <FormControl>
+                        <FormControl ref={withMask("(99) 99999-9999")}>
                           <Input placeholder="Numero para Contato" {...field} />
                         </FormControl>
                         <FormMessage />
@@ -287,7 +285,7 @@ export default function ClientsFormCreate() {
                     name="clientAddress.streetType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nome Fantasia</FormLabel>
+                        <FormLabel>Tipo de Longradouro</FormLabel>
                         <FormControl>
                           <Input placeholder="Tipo de Longradouro" {...field} />
                         </FormControl>
@@ -302,7 +300,7 @@ export default function ClientsFormCreate() {
                     name="clientAddress.street"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nome Fantasia</FormLabel>
+                        <FormLabel>Longradouro</FormLabel>
                         <FormControl>
                           <Input placeholder="Tipo de Longradouro" {...field} />
                         </FormControl>
@@ -393,7 +391,7 @@ export default function ClientsFormCreate() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>CEP</FormLabel>
-                        <FormControl>
+                        <FormControl ref={withMask("99999-999")}>
                           <Input placeholder="Numero" {...field} />
                         </FormControl>
                         <FormMessage />
@@ -405,7 +403,7 @@ export default function ClientsFormCreate() {
             </TabsContent>
             <TabsContent value="contacts">
               <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                {contacts.map(
+                {contacts?.map(
                   (contact: (typeof contacts)[0], index: number) => (
                     <div
                       key={`contact-${index}`}

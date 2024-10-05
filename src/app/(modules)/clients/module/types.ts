@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const clientSchema = z.object({
+  id: z.string().optional(),
   cnpj: z.string(),
   fantasyName: z.string(),
   companyName: z.string(),
@@ -13,6 +14,7 @@ export const clientSchema = z.object({
   updatedAt: z.coerce.date().nullish(),
   clientAddress: z
     .object({
+      id: z.string().optional(),
       streetType: z.string(),
       street: z.string(),
       number: z.string(),
@@ -25,6 +27,7 @@ export const clientSchema = z.object({
   contacts: z
     .array(
       z.object({
+        id: z.string().optional(),
         name: z.string(),
         email: z.string(),
         phoneNumber: z.string(),

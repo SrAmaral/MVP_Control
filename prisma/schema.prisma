@@ -14,7 +14,7 @@ generator client {
 
 model User {
   id            String        @id() @default(cuid())
-  email         String        @unique()
+  email         String?       @unique()
   password      String?
   role          Role?         @relation(fields: [roleId], references: [id])
   roleId        Int?
@@ -28,7 +28,7 @@ model User {
   contactNumber String?
   contactEmail  String?
   typeHiring    String?
-  hiringDate    DateTime?
+  hiringDate    String?
   position      String?
   salary        String?
   workLoad      String?
@@ -62,17 +62,17 @@ model UserFile {
 }
 
 model UserAddress {
-  id           Int    @id() @default(autoincrement())
+  id           Int     @id() @default(autoincrement())
   streetType   String
   street       String
   number       String
-  complement   String
-  neighborhood String
+  complement   String?
+  neighborhood String?
   city         String
   state        String
-  zipCode      String
+  zipCode      String?
   userId       String
-  user         User   @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id])
 }
 
 model Client {
@@ -92,28 +92,28 @@ model Client {
 }
 
 model ClientAddress {
-  id           String    @id() @default(cuid())
-  streetType   String
-  street       String
-  number       String
-  complement   String
-  neighborhood String
-  city         String
-  state        String
-  zipCode      String
-  createdAt    DateTime? @default(now())
-  updatedAt    DateTime? @updatedAt()
-  clientId     String    @unique()
-  client       Client    @relation(fields: [clientId], references: [id])
+  id             String    @id() @default(cuid())
+  streetType     String
+  street         String
+  number         String
+  complement     String
+  neighborhood   String
+  city           String
+  state          String
+  zipCode        String
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt()
+  clientAddresId String    @unique()
+  client         Client    @relation(fields: [clientAddresId], references: [id])
 }
 
 model CLientContact {
-  id          String    @id() @default(cuid())
-  name        String
-  email       String
-  phoneNumber String
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt()
-  clientId    String    @unique()
-  client      Client    @relation(fields: [clientId], references: [id])
+  id              String    @id() @default(cuid())
+  name            String
+  email           String
+  phoneNumber     String
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt()
+  clientContactId String
+  client          Client    @relation(fields: [clientContactId], references: [id])
 }

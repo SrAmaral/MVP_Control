@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const CreateUserSchema = z.object({
-    email: z.string(),
+    id: z.string().optional(),
+    email: z.string().optional(),
     password: z.string().optional(),
     firstName: z.string(),
     lastName: z.string().optional(),
@@ -18,14 +19,15 @@ export const CreateUserSchema = z.object({
     workLoad: z.string().optional(),
     comment: z.string().optional(),
     address:z.array(z.object({
+        id: z.number().optional(),
         streetType: z.string(),
         street: z.string(),
         number: z.string(),
-        complement: z.string(),
-        neighborhood: z.string(),
+        complement: z.string().optional(),
+        neighborhood: z.string().optional(),
         city: z.string(),
         state: z.string(),
-        zipCode: z.string(),
+        zipCode: z.string().optional(),
     })).optional(),
     role:z.object({
         id: z.number(),
@@ -53,15 +55,15 @@ export const UpdateUserSchema = z.object({
     workLoad: z.string().optional(),
     comment: z.string().optional(),
     address:z.array(z.object({
-        id: z.number(),
-        streetType: z.string(),
-        street: z.string(),
-        number: z.string(),
-        complement: z.string(),
-        neighborhood: z.string(),
-        city: z.string(),
-        state: z.string(),
-        zipCode: z.string(),
+        id: z.number().optional(),
+        streetType: z.string().optional(),
+        street: z.string().optional(),
+        number: z.string().optional(),
+        complement: z.string().optional(),
+        neighborhood: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zipCode: z.string().optional(),
     })).optional(),
     role:z.object({
         id: z.number(),
