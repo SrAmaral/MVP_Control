@@ -5,6 +5,7 @@ import { api } from "~/core/trpc/callers/react";
 import { ClientType } from "../../../module/types";
 import LoadingSpinner from "~/components/ui/loading";
 import { useToast } from "~/hooks/use-toast";
+import { Button } from "~/components/ui/button";
 
 export default function Page() {
   const { clientId } = useParams();
@@ -16,7 +17,7 @@ export default function Page() {
   if (isError) {
     toast({
       title: "Cliente não encontrado ou não existe",
-      variant: "destructive",
+      variant: "error",
     });
 
     router.push("/clients/list");
@@ -27,6 +28,27 @@ export default function Page() {
   }
 
   return (
-<ClientsFormCreate client={client as ClientType} />  );
-}
+<>
+<Button onClick={() => 
+  toast({
+    title: "Cliente salvo com sucesso",
+    variant: "success",
+  })
+}>Toast</Button>
+  
+  <Button onClick={() => 
+  toast({
+    title: "Cliente salvo com sucesso",
+    variant: "error",
+  })
+}>Toast</Button>
+<Button onClick={() => 
+  toast({
+    title: "Cliente salvo com sucesso",
+  })
+}>Toast</Button>
 
+  <ClientsFormCreate client={client as ClientType} />
+</>
+  );
+}
