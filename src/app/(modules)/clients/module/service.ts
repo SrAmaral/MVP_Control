@@ -1,10 +1,10 @@
-import { ClientCreate } from "./services/CreteClientService";
-import { ListClientById, ListCLients } from "./services/ListClientsService";
-import { updateCLient } from "./services/UpdateClientService";
+import { ClientCreate, deleteClient, ListClientById, ListCLients, updateCLient } from "./services/services";
+
 
 export const clientService = {
     ListCLients,
     ClientCreate,
     ListClientById,
-    updateCLient
+    updateCLient,
+    deleteClient
   };

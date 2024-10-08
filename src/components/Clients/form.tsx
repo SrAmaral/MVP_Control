@@ -488,10 +488,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                     const newContacts = [
                       ...form.watch("contacts"),
                       {
-                        id: form.watch("contacts").length,
+                        id: form.watch("contacts").length.toString(),
                         name: "",
                         email: "",
                         phoneNumber: "",
+                        logicalDeleted: false,
                       },
                     ];
                     form.setValue("contacts", newContacts);

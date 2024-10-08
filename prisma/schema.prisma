@@ -89,6 +89,7 @@ model Client {
   updatedAt       DateTime?       @updatedAt()
   clientAddress   ClientAddress?
   contacts        CLientContact[]
+  logicalDeleted  Boolean         @default(false)
 }
 
 model ClientAddress {
@@ -105,6 +106,7 @@ model ClientAddress {
   updatedAt      DateTime? @updatedAt()
   clientAddresId String    @unique()
   client         Client    @relation(fields: [clientAddresId], references: [id])
+  logicalDeleted Boolean   @default(false)
 }
 
 model CLientContact {
@@ -116,4 +118,5 @@ model CLientContact {
   updatedAt       DateTime? @updatedAt()
   clientContactId String
   client          Client    @relation(fields: [clientContactId], references: [id])
+  logicalDeleted  Boolean   @default(false)
 }

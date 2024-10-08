@@ -1,12 +1,12 @@
 import { createTRPCRouter } from "~/core/trpc/trpc";
-import { createClient } from "./procedures/CreateClient";
-import { listClient, listClientById } from "./procedures/ListClient";
-import { updateClient } from "./procedures/UpdateClient";
+import { createClient, deleteClient, listClient, listClientById, updateClient } from "./procedures/procedures";
+
 
 export const clientsRouter = createTRPCRouter({
     listClient,
     createClient,
     listClientById,
-    updateClient
+    updateClient,
+    deleteClient
   });
   

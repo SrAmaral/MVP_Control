@@ -12,6 +12,7 @@ export const clientSchema = z.object({
   openedData: z.string(),
   createdAt: z.coerce.date().default(() => new Date()).nullish(),
   updatedAt: z.coerce.date().nullish(),
+  logicalDeleted: z.boolean(),
   clientAddress: z
     .object({
       id: z.string().optional(),
@@ -23,6 +24,7 @@ export const clientSchema = z.object({
       city: z.string(),
       state: z.string(),
       zipCode: z.string(),
+      logicalDeleted: z.boolean(),
     }),
   contacts: z
     .array(
@@ -31,6 +33,7 @@ export const clientSchema = z.object({
         name: z.string(),
         email: z.string(),
         phoneNumber: z.string(),
+        logicalDeleted: z.boolean(),
 }))})
 
 export type ClientType = z.infer<typeof clientSchema>;
