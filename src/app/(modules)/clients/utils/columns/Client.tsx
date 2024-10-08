@@ -51,10 +51,11 @@ function ColumnClient(
       accessorKey: "Ações",
       enableHiding: true,
       header: () => (
-        <div className="text-center">Ações</div>
+        <div className="text-right pr-8">Ações</div>
       ),
       cell: ({ row }) => (
-        <div className="flex justify-between space-x-2">
+        <div className="flex space-x-2 justify-end">
+
           <TrashIcon className="h-5 w-5 cursor-pointer" onClick={() => erase?.(row.original.id)} />
           <Pencil2Icon className="h-5 w-5 cursor-pointer" onClick={() => edit?.(row.original.id)} />
           <InfoCircledIcon className="h-5 w-5 cursor-pointer" onClick={() => info?.(row.original.id)} />
