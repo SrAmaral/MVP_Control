@@ -28,27 +28,6 @@ export default function Page() {
   }
 
   return (
-<>
-<Button onClick={() => 
-  toast({
-    title: "Cliente salvo com sucesso",
-    variant: "success",
-  })
-}>Toast</Button>
-  
-  <Button onClick={() => 
-  toast({
-    title: "Cliente salvo com sucesso",
-    variant: "error",
-  })
-}>Toast</Button>
-<Button onClick={() => 
-  toast({
-    title: "Cliente salvo com sucesso",
-  })
-}>Toast</Button>
-
   <ClientsFormCreate client={client as ClientType} />
-</>
   );
 }
