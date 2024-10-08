@@ -11,19 +11,17 @@ import { use, useEffect } from "react";
 export default function Page() {
   const { clientId } = useParams();
   const { toast } = useToast()
-  const { data: client, isLoading, isError, error  } = api.clients.listClientById.useQuery("dsdsadas");
+  const { data: client, isLoading, isError, error  } = api.clients.listClientById.useQuery(clientId as string);
   const router =  useRouter()
 
-  useEffect(() => {
-    if (!client || isError) {
-      toast({
-        title: "Cliente não encontrado ou não existe",
-        variant: "error",
-      });
-  
-      router.push("/clients/list");
-    }
-  }, [isError, client]);
+  if (!client || isError) {
+    toast({
+      title: "Cliente não encontrado ou não existe",
+      variant: "error",
+    });
+
+    router.push("/clients/list");
+  }
 
   if (isLoading) {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
