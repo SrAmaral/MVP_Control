@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import {
   flexRender,
@@ -23,9 +23,13 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import LoadingSpinner from "../loading";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../dropdown-menu";
 import { ChevronDownIcon } from "lucide-react";
-
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -45,11 +49,14 @@ export function DataTable<TData>({
   loading = false,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 10 });
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+    [],
+  );
   const table = useReactTable({
     data,
     columns,
@@ -61,7 +68,9 @@ export function DataTable<TData>({
     },
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
+    getPaginationRowModel: enablePagination
+      ? getPaginationRowModel()
+      : undefined,
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
@@ -71,46 +80,47 @@ export function DataTable<TData>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center space-x-2 py-4 justify-between">
+      <div className="flex items-center justify-between space-x-2 py-4">
         <Input
           placeholder={filterPlaceholder}
           value={globalFilter}
-          onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setGlobalFilter(e.target.value)}
-          className="max-w-60 ml-2 w-full"
+          onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
+            setGlobalFilter(e.target.value)
+          }
+          className="ml-2 w-full max-w-60"
         />
         <div className="overflow-hidden">
-           
-      <DropdownMenu >
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="rounded-md border">
         {loading ? (
-          <div className="flex justify-center items-center  h-[calc(100vh-300px)]">
+          <div className="flex h-[calc(100vh-300px)] items-center justify-center">
             <LoadingSpinner />
           </div>
         ) : (
@@ -122,7 +132,10 @@ export function DataTable<TData>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -134,14 +147,20 @@ export function DataTable<TData>({
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
                     No results.
                   </TableCell>
                 </TableRow>
