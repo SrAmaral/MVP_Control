@@ -30,12 +30,19 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { useToast } from "~/hooks/use-toast";
+import FormFieldBase from "../ui/form-field";
+import LoadingSpinner from "../ui/loading";
+import { useRouter } from "next/navigation";
 
 type UpdateClientFormProps = {
   client?: ClientType;
 };
 
 export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -62,7 +69,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   }, [form, client]);
 
   useEffect(() => {
-    if (cnpjWatch?.replace(/\D/g, "").length === 14) {
+    if (cnpjWatch?.replace(/\D/g, "").length === 14 && !client?.id) {
       setFindingCNPJ("Buscando CNPJ...");
       fetch(
         `https://api-publica.speedio.com.br/buscarcnpj?cnpj=${cnpjWatch.replace(/\D/g, "")}`,
@@ -74,7 +81,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         })
         .then((data: CNPJRequestType) => {
           if (Object.keys(data).length !== 1) {
-            setFindingCNPJ("CNPJ encontrado!");
+            setFindingCNPJ("");
             form.setValue("fantasyName", data["NOME FANTASIA"]);
             form.setValue("companyName", data["RAZAO SOCIAL"]);
             form.setValue("cnaeCode", data["CNAE PRINCIPAL CODIGO"]);
@@ -108,10 +115,45 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const createClient = api.clients.createClient.useMutation();
   const updateClient = api.clients.updateClient.useMutation();
   function onSubmit(values: z.infer<typeof clientSchema>) {
+    setLoading(true);
     if (client !== undefined) {
-      updateClient.mutate(values);
+      updateClient.mutate(values, {
+        onSuccess: () => {
+          toast({
+            title: "Cliente atualizado com sucesso!",
+            variant: "success",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Erro ao atualizar cliente!",
+            variant: "error",
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+          router.push("/clients/list");
+        },
+      });
     } else {
-      createClient.mutate(values);
+      createClient.mutate(values, {
+        onSuccess: () => {
+          toast({
+            title: "Cliente criado com sucesso!",
+            variant: "success",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Erro ao criar cliente!",
+            variant: "error",
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+          router.push("/clients/list");
+        },
+      });
     }
   }
 
@@ -125,390 +167,280 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
 
   return (
     <div className="p-10">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Tabs defaultValue="companyInfos" className="">
-            <TabsList>
-              <TabsTrigger value="companyInfos">
-                <InfoIcon className="mr-2 h-4 w-4" />
-                Informações da Empresa
-              </TabsTrigger>
-              <TabsTrigger value="address">
-                <MapPinnedIcon className="mr-2 h-4 w-4" /> Endereço
-              </TabsTrigger>
-              <TabsTrigger value="contacts">
-                <PhoneCallIcon className="mr-2 h-4 w-4" /> Contatos
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="companyInfos">
-              <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="cnpj"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CNPJ</FormLabel>
-                        <FormControl ref={withMask("99.999.999/9999-99")}>
-                          <Input placeholder="CNPJ" {...field} />
-                        </FormControl>
-                        <FormDescription
-                          className={`text-sm ${
-                            findingCNPJ === "CNPJ encontrado!"
-                              ? "text-green-600"
-                              : findingCNPJ ===
-                                  "CNPJ não encontrado na base do governo!"
-                                ? "text-red-600"
-                                : null
-                          }`}
-                        >
-                          {findingCNPJ}
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6" />
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="fantasyName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome Fantasia</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nome Fantasia" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="companyName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome da Empresa</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nome da Empresa" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="cnaeCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CNAE Codigo</FormLabel>
-                        <FormControl ref={withMask("99999-9/99")}>
-                          <Input placeholder="CNAE Codigo" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="cnaeDescription"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CNAE Descrição</FormLabel>
-                        <FormControl>
-                          <Input placeholder="CNAE Descrição" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="contactNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Numero para Contato</FormLabel>
-                        <FormControl ref={withMask("(99) 99999-9999")}>
-                          <Input placeholder="Numero para Contato" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="contactEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email para Contato</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Email para Contato" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-6 grid">
-                  <FormField
-                    control={form.control}
-                    name="openedData"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Data de Abertura</FormLabel>
-                        <FormControl ref={withMask("99/99/9999")}>
-                          <Input placeholder="Data de Abertura" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="address">
-              <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                <div className="col-span-2 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.streetType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Tipo de Longradouro</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Tipo de Longradouro" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-10 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.street"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Longradouro</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Tipo de Longradouro" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-2 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.number"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Numero</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Numero" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-5 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.complement"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Complemento</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Complemento" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-5 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.neighborhood"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Bairro</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Bairro" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-4 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.city"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Cidade</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Cidade" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-4 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.state"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Estado</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Estado" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="col-span-4 grid">
-                  <FormField
-                    control={form.control}
-                    name="clientAddress.zipCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CEP</FormLabel>
-                        <FormControl ref={withMask("99999-999")}>
-                          <Input placeholder="Numero" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="contacts">
-              <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                {contacts?.map(
-                  (contact: (typeof contacts)[0], index: number) => (
-                    <div
-                      key={`contact-${index}`}
-                      className="col-span-12 grid grid-cols-12 gap-x-5 gap-y-6"
-                    >
-                      <div
-                        className="col-span-4 grid"
-                        key={`contact-name-${index}`}
-                      >
-                        <FormField
-                          control={form.control}
-                          name={`contacts.${index}.name`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nome</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nome" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div
-                        className="col-span-4 grid"
-                        key={`contact-email-${index}`}
-                      >
-                        <FormField
-                          control={form.control}
-                          name={`contacts.${index}.email`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Email" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div
-                        className="col-span-3 grid"
-                        key={`contact-phone-${index}`}
-                      >
-                        <FormField
-                          control={form.control}
-                          name={`contacts.${index}.phoneNumber`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Telefone</FormLabel>
-                              <FormControl ref={withMask("(99) 99999-9999")}>
-                                <Input placeholder="Telefone" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <Button
-                        type="button"
-                        className="3 col-span-1 mt-8 gap-3"
-                        variant="destructive"
-                        key={`contact-remove-${index}`}
-                        onClick={() => {
-                          const newContacts = [...form.watch("contacts")];
-                          newContacts.splice(index, 1);
-                          form.setValue("contacts", newContacts);
-                        }}
-                      >
-                        <TrashIcon />
-                      </Button>
-                    </div>
-                  ),
-                )}
-
-                <Button
-                  type="button"
-                  className="col-span-3 mt-10 gap-3"
-                  variant="outline"
-                  onClick={() => {
-                    const newContacts = [
-                      ...form.watch("contacts"),
-                      {
-                        id: form.watch("contacts").length.toString(),
-                        name: "",
-                        email: "",
-                        phoneNumber: "",
-                        logicalDeleted: false,
-                      },
-                    ];
-                    form.setValue("contacts", newContacts);
-                  }}
+      {!loading ? (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Tabs defaultValue="companyInfos" className="">
+              <TabsList className="flex h-32 flex-col space-y-2 rounded-md bg-gray-100 p-2 md:h-12 md:flex-row md:space-x-4 md:space-y-0">
+                <TabsTrigger
+                  value="companyInfos"
+                  className="flex items-center justify-center md:justify-start"
                 >
-                  <PlusIcon />
-                  Adicionar Contato
-                </Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-          <Button type="submit" className="mt-10">
-            Submit
-          </Button>
-        </form>
-      </Form>
+                  <InfoIcon className="mr-2 h-4 w-4" />
+                  Informações da Empresa
+                </TabsTrigger>
+                <TabsTrigger
+                  value="address"
+                  className="flex items-center justify-center md:justify-start"
+                >
+                  <MapPinnedIcon className="mr-2 h-4 w-4" />
+                  Endereço
+                </TabsTrigger>
+                <TabsTrigger
+                  value="contacts"
+                  className="flex items-center justify-center md:justify-start"
+                >
+                  <PhoneCallIcon className="mr-2 h-4 w-4" />
+                  Contatos
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="companyInfos">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
+                  <div className="col-span-6 grid">
+                    <FormField
+                      control={form.control}
+                      name="cnpj"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CNPJ</FormLabel>
+                          <FormControl ref={withMask("99.999.999/9999-99")}>
+                            <Input placeholder="CNPJ" {...field} />
+                          </FormControl>
+                          <FormDescription
+                            className={`text-sm ${
+                              findingCNPJ === "CNPJ encontrado!"
+                                ? "text-green-600"
+                                : findingCNPJ ===
+                                    "CNPJ não encontrado na base do governo!"
+                                  ? "text-red-600"
+                                  : null
+                            }`}
+                          >
+                            {findingCNPJ}
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="col-span-6" />
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="Nome Fantasia"
+                      formControl={form.control}
+                      name="fantasyName"
+                      placeholder="Nome Fantasia"
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="Nome da Empresa"
+                      formControl={form.control}
+                      name="companyName"
+                      placeholder="Nome da Empresa"
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="CNAE Codigo"
+                      formControl={form.control}
+                      name="cnaeCode"
+                      placeholder="CNAE Codigo"
+                      formControlRef={withMask("99999-9/99")}
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="CNAE Descrição"
+                      formControl={form.control}
+                      name="cnaeDescription"
+                      placeholder="CNAE Descrição"
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="Número para Contato"
+                      formControl={form.control}
+                      name="contactNumber"
+                      placeholder="Número para Contato"
+                      formControlRef={withMask("(99) 99999-9999")}
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="Email para Contato"
+                      formControl={form.control}
+                      name="contactEmail"
+                      placeholder="Email para Contato"
+                    />
+                  </div>
+                  <div className="col-span-6 grid">
+                    <FormFieldBase
+                      label="Data de Abertura"
+                      formControl={form.control}
+                      name="openedData"
+                      placeholder="Data de Abertura"
+                      formControlRef={withMask("99/99/9999")}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="address">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
+                  <div className="col-span-12 md:col-span-3">
+                    <FormFieldBase
+                      label="Tipo de Longradouro"
+                      formControl={form.control}
+                      name="clientAddress.streetType"
+                      placeholder="Tipo de Longradouro"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-9">
+                    <FormFieldBase
+                      label="Longradouro"
+                      formControl={form.control}
+                      name="clientAddress.street"
+                      placeholder="Longradouro"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-2">
+                    <FormFieldBase
+                      label="Numero"
+                      formControl={form.control}
+                      name="clientAddress.number"
+                      placeholder="Numero"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-5">
+                    <FormFieldBase
+                      label="Complemento"
+                      formControl={form.control}
+                      name="clientAddress.complement"
+                      placeholder="Complemento"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-5">
+                    <FormFieldBase
+                      label="Bairro"
+                      formControl={form.control}
+                      name="clientAddress.neighborhood"
+                      placeholder="Bairro"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-4">
+                    <FormFieldBase
+                      label="Cidade"
+                      formControl={form.control}
+                      name="clientAddress.city"
+                      placeholder="Cidade"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-4">
+                    <FormFieldBase
+                      label="Estado"
+                      formControl={form.control}
+                      name="clientAddress.state"
+                      placeholder="Estado"
+                    />
+                  </div>
+                  <div className="col-span-12 md:col-span-4">
+                    <FormFieldBase
+                      label="CEP"
+                      formControl={form.control}
+                      name="clientAddress.zipCode"
+                      placeholder="CEP"
+                      formControlRef={withMask("99999-999")}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="contacts">
+                <div className="mt-10 grid max-w-full grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-6 md:grid-cols-12">
+                  {contacts?.map(
+                    (contact: (typeof contacts)[0], index: number) => (
+                      <div
+                        key={`contact-${index}`}
+                        className="col-span-12 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-6 md:grid-cols-12"
+                      >
+                        <div className="col-span-12 sm:col-span-3 md:col-span-4">
+                          <FormFieldBase
+                            label="Nome"
+                            formControl={form.control}
+                            name={`contacts.${index}.name`}
+                            placeholder="Nome"
+                          />
+                        </div>
+                        <div className="col-span-12 sm:col-span-3 md:col-span-4">
+                          <FormFieldBase
+                            label="Email"
+                            formControl={form.control}
+                            name={`contacts.${index}.email`}
+                            placeholder="Email"
+                          />
+                        </div>
+                        <div className="col-span-12 sm:col-span-2 md:col-span-3">
+                          <FormFieldBase
+                            label="Telefone"
+                            formControl={form.control}
+                            name={`contacts.${index}.phoneNumber`}
+                            placeholder="Telefone"
+                            formControlRef={withMask("(99) 99999-9999")}
+                          />
+                        </div>
+                        <div className="col-span-12 flex items-end justify-end sm:col-span-1 md:col-span-1">
+                          <Button
+                            type="button"
+                            className="col-span-12 ml-4 justify-self-end sm:col-span-1 sm:mt-0 md:col-span-1"
+                            variant="destructive"
+                            onClick={() => {
+                              const newContacts = [...form.watch("contacts")];
+                              newContacts.splice(index, 1);
+                              form.setValue("contacts", newContacts);
+                            }}
+                          >
+                            <TrashIcon className="h-6 w-6" />
+                          </Button>
+                        </div>
+                      </div>
+                    ),
+                  )}
+
+                  <Button
+                    type="button"
+                    className="col-span-12 mt-6 gap-3 sm:col-span-3 sm:mt-10"
+                    variant="outline"
+                    onClick={() => {
+                      const newContacts = [
+                        ...form.watch("contacts"),
+                        {
+                          id: form.watch("contacts").length.toString(),
+                          name: "",
+                          email: "",
+                          phoneNumber: "",
+                          logicalDeleted: false,
+                        },
+                      ];
+                      form.setValue("contacts", newContacts);
+                    }}
+                  >
+                    <PlusIcon />
+                    Adicionar Contato
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
+            <Button type="submit" className="mt-10 bg-green-500">
+              Salvar
+            </Button>
+          </form>
+        </Form>
+      ) : (
+        <div className="flex h-[calc(100vh-300px)] items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      )}
     </div>
   );
 }
