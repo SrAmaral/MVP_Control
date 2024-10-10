@@ -29,7 +29,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../dropdown-menu";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -38,6 +39,7 @@ interface DataTableProps<TData> {
   enableSorting?: boolean;
   enablePagination?: boolean;
   loading?: boolean;
+  redirecyCreate?: string;
 }
 
 export function DataTable<TData>({
@@ -47,7 +49,9 @@ export function DataTable<TData>({
   enableSorting = true,
   enablePagination = true,
   loading = false,
+  redirecyCreate,
 }: DataTableProps<TData>) {
+  const router = useRouter();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState({
@@ -89,10 +93,21 @@ export function DataTable<TData>({
           }
           className="ml-2 w-full max-w-60"
         />
-        <div className="overflow-hidden">
+        <div className="row justify-between overflow-hidden rounded-md md:flex">
+          {redirecyCreate && (
+            <Button
+              className="row mb-0 mr-2"
+              variant="outline"
+              onClick={() => {
+                router.push(redirecyCreate);
+              }}
+            >
+              cadastrar
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" className="m-1 ml-auto">
                 Colunas <ChevronDownIcon className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

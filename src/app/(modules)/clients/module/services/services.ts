@@ -3,7 +3,7 @@ import { db } from "~/core/db";
 import { type ClientType } from "../types";
 
 export async function ClientCreate(data: ClientType) {
-  const { clientAddress, contacts, ...clientData } = data;
+  const { clientAddress, contacts, id, ...clientData } = data;
 
   const client = await db.client.create({
     data: {

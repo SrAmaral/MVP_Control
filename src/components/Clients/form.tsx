@@ -33,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useToast } from "~/hooks/use-toast";
 import FormFieldBase from "../ui/form-field";
 import LoadingSpinner from "../ui/loading";
+import { useRouter } from "next/navigation";
 
 type UpdateClientFormProps = {
   client?: ClientType;
@@ -40,6 +41,7 @@ type UpdateClientFormProps = {
 
 export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const { toast } = useToast();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
@@ -130,6 +132,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         },
         onSettled: () => {
           setLoading(false);
+          router.push("/clients/list");
         },
       });
     } else {
@@ -148,6 +151,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         },
         onSettled: () => {
           setLoading(false);
+          router.push("/clients/list");
         },
       });
     }
@@ -167,7 +171,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs defaultValue="companyInfos" className="">
-              <TabsList className="flex flex-col space-y-2 rounded-md bg-gray-100 p-2 md:flex-row md:space-x-4 md:space-y-0">
+              <TabsList className="flex h-32 flex-col space-y-2 rounded-md bg-gray-100 p-2 md:h-12 md:flex-row md:space-x-4 md:space-y-0">
                 <TabsTrigger
                   value="companyInfos"
                   className="flex items-center justify-center md:justify-start"
@@ -284,7 +288,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
               </TabsContent>
               <TabsContent value="address">
                 <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
-                  <div className="col-span-2 grid">
+                  <div className="col-span-12 md:col-span-3">
                     <FormFieldBase
                       label="Tipo de Longradouro"
                       formControl={form.control}
@@ -292,7 +296,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Tipo de Longradouro"
                     />
                   </div>
-                  <div className="col-span-10 grid">
+                  <div className="col-span-12 md:col-span-9">
                     <FormFieldBase
                       label="Longradouro"
                       formControl={form.control}
@@ -300,7 +304,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Longradouro"
                     />
                   </div>
-                  <div className="col-span-2 grid">
+                  <div className="col-span-12 md:col-span-2">
                     <FormFieldBase
                       label="Numero"
                       formControl={form.control}
@@ -308,7 +312,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Numero"
                     />
                   </div>
-                  <div className="col-span-5 grid">
+                  <div className="col-span-12 md:col-span-5">
                     <FormFieldBase
                       label="Complemento"
                       formControl={form.control}
@@ -316,7 +320,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Complemento"
                     />
                   </div>
-                  <div className="col-span-5 grid">
+                  <div className="col-span-12 md:col-span-5">
                     <FormFieldBase
                       label="Bairro"
                       formControl={form.control}
@@ -324,7 +328,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Bairro"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 md:col-span-4">
                     <FormFieldBase
                       label="Cidade"
                       formControl={form.control}
@@ -332,7 +336,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Cidade"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 md:col-span-4">
                     <FormFieldBase
                       label="Estado"
                       formControl={form.control}
@@ -340,29 +344,27 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Estado"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 md:col-span-4">
                     <FormFieldBase
                       label="CEP"
                       formControl={form.control}
                       name="clientAddress.zipCode"
-                      placeholder="Número"
+                      placeholder="CEP"
                       formControlRef={withMask("99999-999")}
                     />
                   </div>
                 </div>
               </TabsContent>
+
               <TabsContent value="contacts">
-                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
+                <div className="mt-10 grid max-w-full grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-6 md:grid-cols-12">
                   {contacts?.map(
                     (contact: (typeof contacts)[0], index: number) => (
                       <div
                         key={`contact-${index}`}
-                        className="col-span-12 grid grid-cols-12 gap-x-5 gap-y-6"
+                        className="col-span-12 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-6 md:grid-cols-12"
                       >
-                        <div
-                          className="col-span-4 grid"
-                          key={`contact-name-${index}`}
-                        >
+                        <div className="col-span-12 sm:col-span-3 md:col-span-4">
                           <FormFieldBase
                             label="Nome"
                             formControl={form.control}
@@ -370,10 +372,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                             placeholder="Nome"
                           />
                         </div>
-                        <div
-                          className="col-span-4 grid"
-                          key={`contact-email-${index}`}
-                        >
+                        <div className="col-span-12 sm:col-span-3 md:col-span-4">
                           <FormFieldBase
                             label="Email"
                             formControl={form.control}
@@ -381,10 +380,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                             placeholder="Email"
                           />
                         </div>
-                        <div
-                          className="col-span-3 grid"
-                          key={`contact-phone-${index}`}
-                        >
+                        <div className="col-span-12 sm:col-span-2 md:col-span-3">
                           <FormFieldBase
                             label="Telefone"
                             formControl={form.control}
@@ -393,26 +389,27 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                             formControlRef={withMask("(99) 99999-9999")}
                           />
                         </div>
-                        <Button
-                          type="button"
-                          className="col-span-1 mt-8 min-w-[52px]"
-                          variant="destructive"
-                          key={`contact-remove-${index}`}
-                          onClick={() => {
-                            const newContacts = [...form.watch("contacts")];
-                            newContacts.splice(index, 1);
-                            form.setValue("contacts", newContacts);
-                          }}
-                        >
-                          <TrashIcon className="h-10 w-10" />
-                        </Button>
+                        <div className="col-span-12 flex items-end justify-end sm:col-span-1 md:col-span-1">
+                          <Button
+                            type="button"
+                            className="col-span-12 ml-4 justify-self-end sm:col-span-1 sm:mt-0 md:col-span-1"
+                            variant="destructive"
+                            onClick={() => {
+                              const newContacts = [...form.watch("contacts")];
+                              newContacts.splice(index, 1);
+                              form.setValue("contacts", newContacts);
+                            }}
+                          >
+                            <TrashIcon className="h-6 w-6" />
+                          </Button>
+                        </div>
                       </div>
                     ),
                   )}
 
                   <Button
                     type="button"
-                    className="col-span-3 mt-10 gap-3"
+                    className="col-span-12 mt-6 gap-3 sm:col-span-3 sm:mt-10"
                     variant="outline"
                     onClick={() => {
                       const newContacts = [
@@ -434,7 +431,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                 </div>
               </TabsContent>
             </Tabs>
-            <Button type="submit" className="mt-10">
+            <Button type="submit" className="mt-10 bg-green-500">
               Salvar
             </Button>
           </form>
