@@ -31,7 +31,6 @@ export default function Page() {
         description={"Tem certeza que deseja excluir o cliente?"}
         textConfirm={"Excluir"}
         onCancel={() => {
-          console.log("cancel");
           setOpen(false);
         }}
         onConfirm={handleErase}
