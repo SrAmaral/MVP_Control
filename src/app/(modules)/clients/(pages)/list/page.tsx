@@ -1,11 +1,10 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import GenericConfirmDialog from "~/components/genericConfirmDialog";
 import { DataTable } from "~/components/ui/dataTable";
 import { api } from "~/core/trpc/callers/react";
 import ColumnClient from "../../utils/columns/Client";
-import { use, useEffect, useState } from "react";
-import GenericConfirmDialog from "~/components/genericConfirmDialog";
-import { Button } from "~/components/ui/button";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const clients = api.clients.listClient.useQuery();
@@ -16,7 +15,7 @@ export default function Page() {
 
   const handleErase = async () => {
     if (selectedClientId) {
-      await erase.mutate(selectedClientId);
+      erase.mutate(selectedClientId);
       await clients.refetch();
       setOpen(false);
     }
@@ -45,7 +44,7 @@ export default function Page() {
             router.push(`/clients/list/${id}`);
           },
         })}
-        data={clients.data || []}
+        data={clients.data ?? []}
         loading={clients.isLoading}
         redirecyCreate={"/clients/create"}
       />

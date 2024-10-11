@@ -1,20 +1,24 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import ClientsFormCreate from "~/components/Clients/form";
-import { api } from "~/core/trpc/callers/react";
-import { ClientType } from "../../../module/types";
-import LoadingSpinner from "~/components/ui/loading";
-import { useToast } from "~/hooks/use-toast";
 import { useEffect } from "react";
+import ClientsFormCreate from "~/components/Clients/form";
+import LoadingSpinner from "~/components/ui/loading";
+import { api } from "~/core/trpc/callers/react";
+import { useToast } from "~/hooks/use-toast";
+import { type ClientType } from "../../../module/types";
 
 export default function Page() {
   const { clientId } = useParams();
   const router = useRouter();
   const { toast } = useToast();
 
-  const { data: client, isLoading, isError } = api.clients.listClientById.useQuery(clientId as string);
-  
+  const {
+    data: client,
+    isLoading,
+    isError,
+  } = api.clients.listClientById.useQuery(clientId as string);
+
   useEffect(() => {
     if (!isLoading && (isError || !client)) {
       toast({

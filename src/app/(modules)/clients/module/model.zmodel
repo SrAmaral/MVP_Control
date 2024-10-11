@@ -1,3 +1,5 @@
+import "../../os/module/model.zmodel"
+
 model Client {
   id              String          @id() @default(cuid())
   cnpj            String
@@ -13,6 +15,7 @@ model Client {
   clientAddress   ClientAddress?
   contacts        CLientContact[]
   logicalDeleted  Boolean         @default(false)
+  oS              OS[]
 }
 
 model ClientAddress {

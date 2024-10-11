@@ -1,3 +1,5 @@
+import "../../os/module/model.zmodel"
+
 model User {
   id            String        @id @default(cuid())
   email         String?       @unique
@@ -22,6 +24,7 @@ model User {
   files         UserFile[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  oS            OS[]
 }
 
 model Role {
