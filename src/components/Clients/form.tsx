@@ -171,7 +171,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs defaultValue="companyInfos" className="">
-              <TabsList className="flex h-32 flex-col space-y-2 rounded-md bg-gray-100 p-2 md:h-12 md:flex-row md:space-x-4 md:space-y-0">
+              <TabsList className="flex h-32 flex-col space-y-2 rounded-md p-2 md:h-12 md:flex-row md:items-center md:justify-start md:space-x-4 md:space-y-0">
                 <TabsTrigger
                   value="companyInfos"
                   className="flex items-center justify-center md:justify-start"

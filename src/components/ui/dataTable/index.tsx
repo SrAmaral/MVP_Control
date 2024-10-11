@@ -93,16 +93,16 @@ export function DataTable<TData>({
           }
           className="ml-2 w-full max-w-60"
         />
-        <div className="row justify-between overflow-hidden rounded-md md:flex">
+        <div className="row justify-between overflow-hidden rounded-md md:flex md:items-center md:space-x-2">
           {redirecyCreate && (
             <Button
-              className="row mb-0 mr-2"
+              className="mr-2"
               variant="outline"
               onClick={() => {
                 router.push(redirecyCreate);
               }}
             >
-              cadastrar
+              Cadastrar <Plus className="ml-2 h-4 w-4" />
             </Button>
           )}
           <DropdownMenu>
