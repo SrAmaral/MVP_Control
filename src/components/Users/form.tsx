@@ -96,7 +96,8 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
   const roles = api.users.listRoles.useQuery();
   const rolesOptions = roles.data?.map((role) => {
     return {
-      value: role.id,
+      id: role.id,
+      value: role.name,
       label: role.name,
     };
   });
@@ -128,6 +129,69 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
       form.setValue("position", positionType);
     }
   }, [form, hiringType, roleType, positionType]);
+
+
+  const hiringTypeOptions = [
+    {
+      id: "CLT",
+      value: "CLT",
+      label: "CLT",
+    },
+    {
+      id: "PJ",
+      value: "PJ",
+      label: "PJ",
+    },
+    {
+      id: "Intermitente",
+      value: "Intermitente",
+      label: "Intermitente",
+    },
+    {
+      id: "Estagiário",
+      value: "Estagiário",
+      label: "Estagiário",
+    },
+    {
+      id: "Freelancer",
+      value: "Freelancer",
+      label: "Freelancer",
+    },
+    {
+      id: "Outros",
+      value: "Outros",
+      label: "Outros",
+    },
+  ];
+
+  const positionOptions = [
+    {
+      id: "Gerente",
+      value: "Gerente",
+      label: "Gerente",
+    },
+    {
+      id: "Vendedor",
+      value: "Vendedor",
+      label: "Vendedor",
+    },
+    {
+      id: "Financeiro",
+      value: "Financeiro",
+      label: "Financeiro",
+    },
+    {
+      id: "Tecnico",
+      value: "Tecnico",
+      label: "Tecnico",
+    },
+    {
+      id: "Outros",
+      value: "Outros",
+      label: "Outros",
+    },
+  ];
+
 
   return (
     <div className="p-10">

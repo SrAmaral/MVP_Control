@@ -1,5 +1,6 @@
 import {
   BookUser,
+  ClipboardList,
   LayoutDashboardIcon,
   LayoutGrid,
   Settings,
@@ -112,25 +113,32 @@ export function getMenuList(pathname: string): Group[] {
           ]
         },
         {
-          href: "/solicitations",
-          label: "Solicitações",
-          active: pathname.includes("/solicitations"),
+          href: "/os",
+          label: "Ordem de Serviço",
+          active: pathname.includes("/os"),
           icon: Tag,
-          title:"Solicitações",
+          title:"Ordem de Serviço",
           submenus: [
             {
-              href: "/solicitations/dashboard",
+              href: "/os/dashboard",
               label: "Dashboad",
-              title:"Dashboard das solicitações",
-              active: pathname === "/solicitations/dashboard",
+              title:"Dashboard das OS",
+              active: pathname === "/os/dashboard",
               icon: LayoutDashboardIcon
             },
             {
-              href: "/solicitations/list",
+              href: "/os/list",
               label: "Listagem",
-              title:"Listagem das solicitações",
-              active: pathname === "/solicitations/list",
+              title:"Listagem das OS",
+              active: pathname === "/os/list",
               icon: TableProperties
+            },
+            {
+              href: "/os/create",
+              label: "Cadastro",
+              title:"Cadastro de OS",
+              active: pathname === "/os/create",
+              icon: ClipboardList
             }
           ]
         }
