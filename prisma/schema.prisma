@@ -36,6 +36,7 @@ model User {
   files         UserFile[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt()
+  oS            OS[]
 }
 
 model Role {
@@ -75,6 +76,20 @@ model UserAddress {
   user         User    @relation(fields: [userId], references: [id])
 }
 
+model OS {
+  id             String    @id() @default(cuid())
+  scheduleDate   String
+  description    String
+  deadline       String
+  status         String
+  users          User[]
+  client         Client    @relation(fields: [clientId], references: [id])
+  clientId       String
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt()
+  logicalDeleted Boolean   @default(false)
+}
+
 model Client {
   id              String          @id() @default(cuid())
   cnpj            String
@@ -90,6 +105,7 @@ model Client {
   clientAddress   ClientAddress?
   contacts        CLientContact[]
   logicalDeleted  Boolean         @default(false)
+  oS              OS[]
 }
 
 model ClientAddress {

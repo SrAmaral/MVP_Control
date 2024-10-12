@@ -17,7 +17,7 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 
-// Definindo o tipo para suportar valores numéricos e strings
+// Definindo o tipo para suportar múltiplos valores
 type ComboBoxType<T> = {
   options:
     | {
@@ -29,23 +29,33 @@ type ComboBoxType<T> = {
   className?: string;
   placeholder?: string;
   setState?: React.Dispatch<React.SetStateAction<T>>;
-  state: string | number | undefined;
+  state: (string | number)[] | undefined;
 };
 
-export function ComboBoxComponent<T>({
+export function ComboBoxMultiple<T>({
   options,
   className = "",
   placeholder = "",
   setState,
   state,
 }: ComboBoxType<T>) {
-  // Ajustar o tipo do estado para `number | string`
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<number | string | undefined>(state);
+  const [values, setValues] = React.useState<(number | string)[]>(state ?? []);
 
   React.useEffect(() => {
-    setState?.(options?.find((option) => option.value === value)?.id as T);
-  }, [setState, value]);
+    const users = options?.filter((option) => values.includes(option.value));
+    setState?.(users?.map((user) => user.id) as T);
+  }, [setState, values]);
+
+  const handleSelect = (currentValue: string | number) => {
+    const selectedValue =
+      typeof currentValue === "number" ? Number(currentValue) : currentValue;
+    setValues((prevValues) =>
+      prevValues.includes(selectedValue)
+        ? prevValues.filter((value) => value !== selectedValue)
+        : [...prevValues, selectedValue],
+    );
+  };
 
   return (
     <div className={className}>
@@ -57,36 +67,30 @@ export function ComboBoxComponent<T>({
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {value
-              ? options?.find((option) => option.value === value)?.label
+            {values.length > 0
+              ? values.length + " - Funcioanrios selecionados"
               : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0">
           <Command>
-            <CommandInput placeholder="Procurar item..." />
+            <CommandInput placeholder="Procurar item..."></CommandInput>
             <CommandList>
               <CommandEmpty>Nenhum item encontrado.</CommandEmpty>
               <CommandGroup>
                 {options?.map((option) => (
                   <CommandItem
                     key={option.value}
-                    value={option.value.toString()} // Passar `value` como string para garantir a comparação correta
-                    onSelect={(currentValue) => {
-                      // Converter `currentValue` para o tipo correto (number ou string)
-                      const selectedValue =
-                        typeof option.value === "number"
-                          ? Number(currentValue)
-                          : currentValue;
-                      setValue(selectedValue === value ? "" : selectedValue);
-                      setOpen(false);
-                    }}
+                    value={option.value.toString()}
+                    onSelect={() => handleSelect(option.value)}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value === option.value ? "opacity-100" : "opacity-0",
+                        values.includes(option.value)
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                     {option.label}
