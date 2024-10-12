@@ -130,76 +130,13 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
     }
   }, [form, hiringType, roleType, positionType]);
 
-
-  const hiringTypeOptions = [
-    {
-      id: "CLT",
-      value: "CLT",
-      label: "CLT",
-    },
-    {
-      id: "PJ",
-      value: "PJ",
-      label: "PJ",
-    },
-    {
-      id: "Intermitente",
-      value: "Intermitente",
-      label: "Intermitente",
-    },
-    {
-      id: "Estagiário",
-      value: "Estagiário",
-      label: "Estagiário",
-    },
-    {
-      id: "Freelancer",
-      value: "Freelancer",
-      label: "Freelancer",
-    },
-    {
-      id: "Outros",
-      value: "Outros",
-      label: "Outros",
-    },
-  ];
-
-  const positionOptions = [
-    {
-      id: "Gerente",
-      value: "Gerente",
-      label: "Gerente",
-    },
-    {
-      id: "Vendedor",
-      value: "Vendedor",
-      label: "Vendedor",
-    },
-    {
-      id: "Financeiro",
-      value: "Financeiro",
-      label: "Financeiro",
-    },
-    {
-      id: "Tecnico",
-      value: "Tecnico",
-      label: "Tecnico",
-    },
-    {
-      id: "Outros",
-      value: "Outros",
-      label: "Outros",
-    },
-  ];
-
-
   return (
     <div className="p-10">
       {!loading ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs defaultValue="employeeInfos" className="">
-              <TabsList className="h-46 flex flex-col space-y-2 rounded-md p-2 sm:flex md:h-12 md:flex-row md:items-center md:justify-start md:space-x-4 md:space-y-0">
+              <TabsList className="h-46 flex flex-col space-y-2 rounded-md p-2 sm:flex lg:h-12 lg:flex-row lg:items-center lg:justify-start lg:space-x-4 lg:space-y-0">
                 <TabsTrigger value="employeeInfos">
                   <BookUser className="mr-2 h-4 w-4" />
                   Informações do Funcionario
@@ -216,8 +153,8 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="employeeInfos">
-                <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                  <div className="col-span-6 grid">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-12">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="Nome"
                       formControl={form.control}
@@ -225,7 +162,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Nome"
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="Sobrenome"
                       formControl={form.control}
@@ -233,7 +170,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Sobrenome"
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="RG"
                       formControl={form.control}
@@ -242,7 +179,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("99.999.999-9")}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="CPF"
                       formControl={form.control}
@@ -251,7 +188,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("999.999.999-99")}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="PIS"
                       formControl={form.control}
@@ -260,7 +197,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("999.99999.99-9")}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="CTPS"
                       formControl={form.control}
@@ -269,7 +206,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("999.99999.999-99")}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="Número para Contato"
                       formControl={form.control}
@@ -278,7 +215,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("(99) 99999-9999")}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="Email para Contato"
                       formControl={form.control}
@@ -289,8 +226,8 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 </div>
               </TabsContent>
               <TabsContent value="hiringInfos">
-                <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                  <div className="text col-span-4 grid">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
+                  <div className="text col-span-12 grid md:col-span-4">
                     <FormFieldBase
                       label="Data de Contratação"
                       formControl={form.control}
@@ -299,7 +236,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       formControlRef={withMask("99/99/9999")}
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 grid md:col-span-4">
                     <ComboBoxComponent
                       options={hiringTypeOptions}
                       className="mt-8"
@@ -308,26 +245,26 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       state={hiringType}
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 grid md:col-span-4">
                     <ComboBoxComponent
                       options={positionOptions}
                       className="mt-8"
-                      placeholder="Area de Atuação"
+                      placeholder="Área de Atuação"
                       setState={setPositionType}
                       state={positionType}
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid md:col-span-6">
                     <FormFieldBase
-                      label="Sálario"
+                      label="Salário"
                       formControl={form.control}
                       name="salary"
-                      placeholder="Sálario"
+                      placeholder="Salário"
                       formControlRef={withMask("brl-currency")}
                       classNameInput="!text-left"
                     />
                   </div>
-                  <div className="col-span-6 grid">
+                  <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
                       label="Horas de Trabalho"
                       formControl={form.control}
@@ -349,8 +286,8 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 </div>
               </TabsContent>
               <TabsContent value="address">
-                <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
-                  <div className="col-span-3 grid">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 lg:grid-cols-12">
+                  <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
                       label="Tipo de Longradouro"
                       formControl={form.control}
@@ -358,7 +295,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Tipo de Longradouro"
                     />
                   </div>
-                  <div className="col-span-9 grid">
+                  <div className="col-span-12 grid lg:col-span-8">
                     <FormFieldBase
                       label="Logradouro"
                       formControl={form.control}
@@ -366,15 +303,15 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Logradouro"
                     />
                   </div>
-                  <div className="col-span-2 grid">
+                  <div className="col-span-12 grid lg:col-span-2">
                     <FormFieldBase
-                      label="Numero"
+                      label="Número"
                       formControl={form.control}
                       name="address.0.number"
-                      placeholder="Numero"
+                      placeholder="Número"
                     />
                   </div>
-                  <div className="col-span-5 grid">
+                  <div className="col-span-12 grid lg:col-span-5">
                     <FormFieldBase
                       label="Complemento"
                       formControl={form.control}
@@ -382,7 +319,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Complemento"
                     />
                   </div>
-                  <div className="col-span-5 grid">
+                  <div className="col-span-12 grid lg:col-span-5">
                     <FormFieldBase
                       label="Bairro"
                       formControl={form.control}
@@ -390,7 +327,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Bairro"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
                       label="Cidade"
                       formControl={form.control}
@@ -398,7 +335,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Cidade"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
                       label="Estado"
                       formControl={form.control}
@@ -406,7 +343,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Estado"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
                       label="CEP"
                       formControl={form.control}
@@ -417,8 +354,9 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                   </div>
                 </div>
               </TabsContent>
+
               <TabsContent value="accountInfos">
-                <div className="mt-10 grid grid-cols-12 gap-x-5 gap-y-6">
+                <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 lg:grid-cols-12">
                   <div className="col-span-6 grid">
                     <FormFieldBase
                       label="Email para Contato"
@@ -436,7 +374,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       typeInput="password"
                     />
                   </div>
-                  <div className="col-span-4 grid">
+                  <div className="col-span-6 grid">
                     <ComboBoxComponent
                       options={rolesOptions}
                       className="mt-8"
@@ -448,8 +386,8 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 </div>
               </TabsContent>
             </Tabs>
-            <Button type="submit" className="mt-10">
-              Submit
+            <Button type="submit" className="mt-10 bg-green-500">
+              Salvar
             </Button>
           </form>
         </Form>

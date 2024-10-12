@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import LoadingSpinner from "../ui/loading";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
+import ClientDataAccordion from "./client-details";
 
 export default function OsFormCreate() {
   const { toast } = useToast();
@@ -305,77 +306,7 @@ export default function OsFormCreate() {
               <div className="col-span-4 grid" />
 
               {formValues?.client && (
-                <div className="col-span-12 mb-5">
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>
-                        Dados do cliente associado a OS
-                      </AccordionTrigger>
-                      <AccordionContent className="pl-3">
-                        <div className="col-span-12 mt-5">
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Nome Fantasia :</Label>
-                            <div className="">
-                              {formValues?.client.fantasyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Razão Social :</Label>
-                            <div className="">
-                              {formValues?.client.companyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Email de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactEmail}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Numero de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactNumber}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">CNPJ :</Label>
-                            <div className="">{formValues?.client.cnpj}</div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Endereço :</Label>
-                            <div className="">
-                              <AddressComponent
-                                address={formValues.client.clientAddress}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Data de abertura :</Label>
-                            <div className="">
-                              {formValues?.client.openedData}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex flex-col gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Contatos cadastrados:</Label>
-                            {formValues?.client.contacts.map((contact, id) => (
-                              <div
-                                key={contact.id}
-                                className={`ml-5 pl-2 ${id / 2 !== 0 ? "bg-slate-100" : ""}`}
-                              >
-                                contato {id + 1} : {contact.name} -{" "}
-                                {contact.email} - {contact.phoneNumber}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
+                <ClientDataAccordion client={formValues.client} />
               )}
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
