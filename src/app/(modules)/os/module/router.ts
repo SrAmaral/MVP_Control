@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/core/trpc/trpc";
-import { clientService, osService } from "./service";
-import { clientSchema, osSchema } from "./types";
+import { osService } from "./service";
+import { osSchema } from "./types";
 
 export const createOs = publicProcedure
   .input(
@@ -11,27 +11,31 @@ export const createOs = publicProcedure
     return osService.OsCreate(input, db)
   })
 
-export const listClient = publicProcedure
-  .query(({ ctx: {clientService}}) => {
-    return clientService.ListCLients()
+export const listOs = publicProcedure
+  .query(({ ctx: {db}}) => {
+    return osService.OsList(db)
   })
 
-  export const listClientById = publicProcedure
+  export const listOsById = publicProcedure
   .input(z.string())
-  .query(({ ctx: {clientService},input}) => {
-    return clientService.ListClientById(input)
+  .query(({ ctx: {db},input}) => {
+    return osService.OsListById(input, db)
   })
 
-export const updateClient = publicProcedure.input(clientSchema).mutation(({ctx:{db},input}) => {
-    return clientService.updateCLient(input,db)
+export const updateOs = publicProcedure.input(osSchema).mutation(({ctx:{db},input}) => {
+    return osService.OsUpdate(input,db)
 })
 
-export const deleteClient = publicProcedure.input(z.string()).mutation(({ctx:{db},input}) => {
-    return clientService.deleteClient(input,db)
+export const deleteOs = publicProcedure.input(z.string()).mutation(({ctx:{db},input}) => {
+    return osService.OsDelete(input,db)
 })
 
 
 export const osRouter = createTRPCRouter({
-    
+    createOs,
+    listOs,
+    listOsById,
+    updateOs,
+    deleteOs
   });
   

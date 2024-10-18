@@ -11,7 +11,7 @@ export const OsCreate = async (data: OSType, db: PrismaClient) => {
         client: {
           connect: {
             id: client.id ?? ""
-          }
+          },
         }
       }),
       ...(users && {
@@ -21,6 +21,11 @@ export const OsCreate = async (data: OSType, db: PrismaClient) => {
           }))
         }
       })
+      ,
+    },
+    include: {
+      client: true,
+      users: true
     }
   });
   
@@ -62,12 +67,13 @@ export const OsListById = async (id: string, db: PrismaClient) => {
 }
 
 
-export const OsUpdate = async (id: string, data: OSType, db: PrismaClient) => {
+export const OsUpdate = async ( data: OSType, db: PrismaClient) => {
   const {client, users , ...osData } = data;
+  console.log(users)
 
   const os = await db.oS.update({
     where: {
-      id
+      id: osData.id
     },
     data: {
       ...osData,
@@ -80,11 +86,15 @@ export const OsUpdate = async (id: string, data: OSType, db: PrismaClient) => {
       }),
       ...(users && {
         users: {
-          connect: users.map((user) => ({
+          set: users.map((user) => ({
             id: user.id ?? ""
           }))
         }
       })
+    },
+    include: {
+      client: true,
+      users: true
     }
   });
   

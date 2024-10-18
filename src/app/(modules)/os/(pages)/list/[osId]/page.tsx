@@ -2,11 +2,10 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import ClientsFormCreate from "~/components/Clients/form";
+import OsFormCreate from "~/components/Os/form";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
-import { type ClientType } from "../../../module/types";
 
 export default function Page() {
   const { osId } = useParams();
@@ -14,25 +13,25 @@ export default function Page() {
   const { toast } = useToast();
 
   const {
-    data: client,
+    data: os,
     isLoading,
     isError,
-  } = api.clients.listClientById.useQuery(clientId as string);
+  } = api.os.listOsById.useQuery(osId as string);
 
   useEffect(() => {
-    if (!isLoading && (isError || !client)) {
+    if (!isLoading && (isError || !os)) {
       toast({
-        title: "Cliente não encontrado ou não existe",
+        title: "OS não encontrada ou não existe",
         variant: "error",
       });
 
-      router.push("/clients/list");
+      router.push("/os/list");
     }
-  }, [isLoading, isError, client, toast, router]);
+  }, [isLoading, isError, os, toast, router]);
 
   if (isLoading) {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  return <ClientsFormCreate client={client as ClientType} />;
+  return <OsFormCreate os={os} />;
 }

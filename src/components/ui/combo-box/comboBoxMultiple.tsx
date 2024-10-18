@@ -47,6 +47,14 @@ export function ComboBoxMultiple<T>({
     setState?.(users?.map((user) => user.id) as T);
   }, [setState, values]);
 
+  React.useEffect(() => {
+    const users = options?.filter((option) => state?.includes(option.id));
+    const newValues = users?.map((user) => user.value) ?? [];
+    if (JSON.stringify(newValues) !== JSON.stringify(values)) {
+      setValues(newValues);
+    }
+  }, [state, options]);
+
   const handleSelect = (currentValue: string | number) => {
     const selectedValue =
       typeof currentValue === "number" ? Number(currentValue) : currentValue;
@@ -67,7 +75,7 @@ export function ComboBoxMultiple<T>({
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {values.length > 0
+            {values?.length > 0
               ? values.length + " - Funcioanrios selecionados"
               : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -88,7 +96,7 @@ export function ComboBoxMultiple<T>({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        values.includes(option.value)
+                        values?.includes(option.value)
                           ? "opacity-100"
                           : "opacity-0",
                       )}
