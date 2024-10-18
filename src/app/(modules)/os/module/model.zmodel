@@ -6,7 +6,7 @@ model OS {
   scheduleDate   String
   description    String
   deadline       String
-  status         String
+  status         String    @default("pending")
   users          User[]
   client         Client    @relation(fields: [clientId], references: [id])
   clientId       String
