@@ -1,18 +1,11 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { type Adapter } from "next-auth/adapters";
 import CredentialsProvider from "next-auth/providers/credentials";
-import DiscordProvider from "next-auth/providers/discord";
-
-import { env } from "~/env";
-import { db } from "~/core/db";
-import { createCaller } from "./trpc/root";
-import { createTRPCContext } from "./trpc/trpc";
-import { headers } from "next/headers";
+import {usersService } from "~/app/(modules)/users/module/service"
+import { db } from "./db";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -63,13 +56,9 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null;
         }
-        const api = createCaller(await createTRPCContext({ headers: new Headers(headers()) }));
-        const user = await api.users.checkCredentials({
-          email: credentials.email,
-          password: credentials.password,
-        });
+        const user = usersService.checkCredentials(credentials.email, credentials.password,db);
         if (user !== null) {
-          return {...user};
+          return { ...user };
         }
         return null;
       },

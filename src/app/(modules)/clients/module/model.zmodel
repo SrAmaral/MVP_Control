@@ -1,0 +1,48 @@
+import "../../os/module/model.zmodel"
+
+model Client {
+  id              String          @id() @default(cuid())
+  cnpj            String
+  fantasyName     String
+  companyName     String
+  cnaeCode        String
+  cnaeDescription String
+  contactNumber   String
+  contactEmail    String
+  openedData      String
+  createdAt       DateTime?       @default(now())
+  updatedAt       DateTime?       @updatedAt
+  clientAddress   ClientAddress?
+  contacts        CLientContact[]
+  logicalDeleted  Boolean         @default(false)
+  oS              OS[]
+}
+
+model ClientAddress {
+  id             String    @id() @default(cuid())
+  streetType     String
+  street         String
+  number         String
+  complement     String
+  neighborhood   String
+  city           String
+  state          String
+  zipCode        String
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime? @updatedAt
+  clientAddresId String    @unique
+  client         Client    @relation(fields: [clientAddresId], references: [id])
+  logicalDeleted Boolean   @default(false)
+}
+
+model CLientContact {
+  id              String    @id() @default(cuid())
+  name            String
+  email           String
+  phoneNumber     String
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
+  clientContactId String
+  client          Client    @relation(fields: [clientContactId], references: [id])
+  logicalDeleted  Boolean   @default(false)
+}

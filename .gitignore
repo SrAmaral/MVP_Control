@@ -21,6 +21,9 @@ next-env.d.ts
 # production
 /build
 
+#dev folder
+/dev
+
 # misc
 .DS_Store
 *.pem
@@ -44,3 +47,5 @@ yarn-error.log*
 
 # idea files
 .idea
+
+package-lock.json

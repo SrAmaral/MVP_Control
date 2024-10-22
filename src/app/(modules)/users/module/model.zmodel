@@ -1,22 +1,65 @@
+import "../../os/module/model.zmodel"
+
 model User {
-  id       String    @id() @default(cuid())
-  email    String
-  password String?
-  role     Role?
+  id            String        @id @default(cuid())
+  email         String?       @unique
+  password      String?
+  role          Role?         @relation(fields: [roleId], references: [id])
+  roleId        Int?
+  firstName     String
+  lastName      String?
+  rg            String?
+  cpf           String ?       @unique
+  pis           String?
+  ctps          String?
+  address       UserAddress[]
+  contactNumber String?
+  contactEmail  String?
+  typeHiring    String?
+  hiringDate    String?
+  position      String?
+  salary        String?
+  workLoad      String?
+  comment       String?
+  files         UserFile[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  oS            OS[]
 }
 
-model Role{
-  id Int @id() @default(autoincrement())
-  name String
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String
   description String?
+  users       User[]
   permissions Permission[]
-  user User @relation(fields:[userId],references:[id])
-  userId String @unique
-
 }
 
-model Permission{
-  id Int @id() @default(autoincrement())
-  name String
+model Permission {
+  id    Int    @id @default(autoincrement())
+  name  String
   roles Role[]
+}
+
+model UserFile {
+  id       Int    @id @default(autoincrement())
+  filename String
+  url      String
+  type     String
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model UserAddress {
+  id           Int     @id @default(autoincrement())
+  streetType   String
+  street       String
+  number       String
+  complement   String?
+  neighborhood String?
+  city         String
+  state        String
+  zipCode      String?
+  userId       String
+  user         User    @relation(fields: [userId], references: [id])
 }
