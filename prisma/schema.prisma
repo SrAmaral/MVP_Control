@@ -13,126 +13,23 @@ generator client {
 }
 
 model User {
-  id            String        @id() @default(cuid())
-  email         String?       @unique()
-  password      String?
-  role          Role?         @relation(fields: [roleId], references: [id])
-  roleId        Int?
-  firstName     String
-  lastName      String?
-  rg            String?
-  cpf           String?       @unique()
-  pis           String?
-  ctps          String?
-  address       UserAddress[]
-  contactNumber String?
-  contactEmail  String?
-  typeHiring    String?
-  hiringDate    String?
-  position      String?
-  salary        String?
-  workLoad      String?
-  comment       String?
-  files         UserFile[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt()
-  oS            OS[]
+  id       String  @id() @default(cuid())
+  email    String
+  password String?
+  role     Role?
 }
 
 model Role {
   id          Int          @id() @default(autoincrement())
   name        String
   description String?
-  users       User[]
   permissions Permission[]
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @unique()
 }
 
 model Permission {
   id    Int    @id() @default(autoincrement())
   name  String
   roles Role[]
-}
-
-model UserFile {
-  id       Int    @id() @default(autoincrement())
-  filename String
-  url      String
-  type     String
-  userId   String
-  user     User   @relation(fields: [userId], references: [id])
-}
-
-model UserAddress {
-  id           Int     @id() @default(autoincrement())
-  streetType   String
-  street       String
-  number       String
-  complement   String?
-  neighborhood String?
-  city         String
-  state        String
-  zipCode      String?
-  userId       String
-  user         User    @relation(fields: [userId], references: [id])
-}
-
-model OS {
-  id             String    @id() @default(cuid())
-  scheduleDate   String
-  description    String
-  deadline       String
-  status         String    @default("pending")
-  users          User[]
-  client         Client    @relation(fields: [clientId], references: [id])
-  clientId       String
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt()
-  logicalDeleted Boolean   @default(false)
-}
-
-model Client {
-  id              String          @id() @default(cuid())
-  cnpj            String
-  fantasyName     String
-  companyName     String
-  cnaeCode        String
-  cnaeDescription String
-  contactNumber   String
-  contactEmail    String
-  openedData      String
-  createdAt       DateTime?       @default(now())
-  updatedAt       DateTime?       @updatedAt()
-  clientAddress   ClientAddress?
-  contacts        CLientContact[]
-  logicalDeleted  Boolean         @default(false)
-  oS              OS[]
-}
-
-model ClientAddress {
-  id             String    @id() @default(cuid())
-  streetType     String
-  street         String
-  number         String
-  complement     String
-  neighborhood   String
-  city           String
-  state          String
-  zipCode        String
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt()
-  clientAddresId String    @unique()
-  client         Client    @relation(fields: [clientAddresId], references: [id])
-  logicalDeleted Boolean   @default(false)
-}
-
-model CLientContact {
-  id              String    @id() @default(cuid())
-  name            String
-  email           String
-  phoneNumber     String
-  createdAt       DateTime? @default(now())
-  updatedAt       DateTime? @updatedAt()
-  clientContactId String
-  client          Client    @relation(fields: [clientContactId], references: [id])
-  logicalDeleted  Boolean   @default(false)
 }
