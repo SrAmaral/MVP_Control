@@ -6,6 +6,8 @@ export const osSchema = z.object({
   id: z.string().optional(),
   scheduleDate: z.string(),
   description: z.string(),
+  serviceDescription: z.string().optional(),
+  realizedDate: z.string().optional(),
   deadline: z.string(),
   status: z.string().optional(),
   createdAt: z.coerce.date().default(() => new Date()).nullish(),

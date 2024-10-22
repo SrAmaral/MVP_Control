@@ -57,8 +57,8 @@ export const OsListById = async (id: string, db: PrismaClient) => {
         }
       },
       include: {
-        client: true,
-        users: true
+        client: {include: {clientAddress: true, contacts: true}},
+        users: {include: {address: true, files: true}}
       }
     })
   } catch (error) {
@@ -69,7 +69,6 @@ export const OsListById = async (id: string, db: PrismaClient) => {
 
 export const OsUpdate = async ( data: OSType, db: PrismaClient) => {
   const {client, users , ...osData } = data;
-  console.log(users)
 
   const os = await db.oS.update({
     where: {
@@ -121,5 +120,5 @@ export const osService = {
   OsList,
   OsListById,
   OsUpdate,
-  OsDelete
+  OsDelete,
   };

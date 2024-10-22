@@ -1,7 +1,7 @@
-import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X, CircleCheck, CircleX } from "lucide-react"; // Adicionar ícones
+import { CircleCheck, CircleX, X } from "lucide-react"; // Adicionar ícones
+import * as React from "react";
 import { cn } from "~/lib/utils";
 
 const ToastProvider = ToastPrimitives.Provider;
@@ -45,11 +45,9 @@ const Toast = React.forwardRef<
   // Função para renderizar o ícone baseado na variante
   const renderIcon = () => {
     if (variant === "success") {
-      console.log("succes33333333333s");
       return <CircleCheck className="h-10 w-10 text-green-600" />; // Ícone de sucesso
     }
     if (variant === "error") {
-      console.log("error22222222");
       return <CircleX className="h-10 w-10 text-red-800" />; // Ícone de erro
     }
     return null; // Sem ícone para o default
@@ -133,13 +131,13 @@ type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
 
 export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
   Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
   ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+  type ToastActionElement,
+  type ToastProps,
 };

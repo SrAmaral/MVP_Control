@@ -13,9 +13,9 @@ type AddressType = {
 const AddressComponent = ({ address }: AddressType) => {
   return (
     <div className="">
-      {address.streetType} {address.street}, {address.number} -{" "}
-      {address.complement} - cep: {address.zipCode} - bairro:{" "}
-      {address.neighborhood} - {address.city} - {address.state}
+      {address?.streetType} {address?.street}, {address?.number} -{" "}
+      {address?.complement} - cep: {address?.zipCode} - bairro:{" "}
+      {address?.neighborhood} - {address?.city} - {address?.state}
     </div>
   );
 };

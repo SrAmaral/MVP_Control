@@ -77,17 +77,19 @@ model UserAddress {
 }
 
 model OS {
-  id             String    @id() @default(cuid())
-  scheduleDate   String
-  description    String
-  deadline       String
-  status         String    @default("pending")
-  users          User[]
-  client         Client    @relation(fields: [clientId], references: [id])
-  clientId       String
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt()
-  logicalDeleted Boolean   @default(false)
+  id                 String    @id() @default(cuid())
+  scheduleDate       String
+  description        String
+  serviceDescription String?
+  deadline           String
+  realizedDate       String?
+  status             String    @default("pending")
+  users              User[]
+  client             Client    @relation(fields: [clientId], references: [id])
+  clientId           String
+  createdAt          DateTime? @default(now())
+  updatedAt          DateTime? @updatedAt()
+  logicalDeleted     Boolean   @default(false)
 }
 
 model Client {

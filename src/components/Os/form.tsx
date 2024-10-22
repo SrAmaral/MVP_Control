@@ -12,12 +12,6 @@ import { osSchema, type OSType } from "~/app/(modules)/os/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { cn } from "~/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { ComboBoxComponent } from "../ui/combo-box/comboBox";
@@ -146,7 +140,6 @@ export default function OsFormCreate({ os }: osFormType) {
   const createOs = api.os.createOs.useMutation();
   const updateOs = api.os.updateOs.useMutation();
   function onSubmit(values: OSType) {
-    console.log(values);
     if (os !== undefined) {
       updateOs.mutate(values, {
         onSuccess: () => {
@@ -195,28 +188,6 @@ export default function OsFormCreate({ os }: osFormType) {
       console.groupEnd();
     }
   }, [form.formState.errors]);
-
-  type AddressType = {
-    address: {
-      streetType: string;
-      street: string;
-      number: string;
-      complement: string;
-      zipCode: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-    };
-  };
-  const AddressComponent = ({ address }: AddressType) => {
-    return (
-      <div className="">
-        {address?.streetType} {address?.street}, {address?.number} -{" "}
-        {address?.complement} - cep: {address?.zipCode} - bairro:{" "}
-        {address?.neighborhood} - {address?.city} - {address?.state}
-      </div>
-    );
-  };
 
   return (
     <div className="p-10">
@@ -317,79 +288,6 @@ export default function OsFormCreate({ os }: osFormType) {
               <div className="col-span-4 grid" />
 
               {formValues?.client && (
-                <div className="col-span-12 mb-5">
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>
-                        Dados do cliente associado a OS
-                      </AccordionTrigger>
-                      <AccordionContent className="pl-3">
-                        <div className="col-span-12 mt-5">
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Nome Fantasia :</Label>
-                            <div className="">
-                              {formValues?.client.fantasyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Razão Social :</Label>
-                            <div className="">
-                              {formValues?.client.companyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Email de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactEmail}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Numero de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactNumber}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">CNPJ :</Label>
-                            <div className="">{formValues?.client.cnpj}</div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Endereço :</Label>
-                            <div className="">
-                              <AddressComponent
-                                address={formValues.client.clientAddress}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Data de abertura :</Label>
-                            <div className="">
-                              {formValues?.client.openedData}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex flex-col gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Contatos cadastrados:</Label>
-                            {formValues?.client?.contacts?.map(
-                              (contact, id) => (
-                                <div
-                                  key={contact.id}
-                                  className={`ml-5 pl-2 ${id / 2 !== 0 ? "bg-slate-100" : ""}`}
-                                >
-                                  contato {id + 1} : {contact.name} -{" "}
-                                  {contact.email} - {contact.phoneNumber}
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
                 <ClientDataAccordion client={formValues.client} />
               )}
             </div>

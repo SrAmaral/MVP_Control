@@ -1,4 +1,5 @@
-import { OSType } from "~/app/(modules)/os/module/types";
+import { type OSType } from "~/app/(modules)/os/module/types";
+import { cn } from "~/lib/utils"; // Utility to handle conditional classes
 import {
   Accordion,
   AccordionContent,
@@ -6,8 +7,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Label } from "../ui/label";
-import { cn } from "~/lib/utils"; // Utility to handle conditional classes
-import AddressComponent from "./address.-details";
+import AddressComponent from "./address-details";
 
 interface ClientDataAccordionProps {
   client: OSType["client"];
@@ -80,7 +80,7 @@ const ClientDataAccordion: React.FC<ClientDataAccordionProps> = ({
 
               <div className="col-span-3 flex flex-col gap-2 rounded-lg pb-2 pl-2 pt-2">
                 <Label>Contatos cadastrados:</Label>
-                {client.contacts.map((contact, id) => (
+                {client?.contacts?.map((contact, id) => (
                   <div
                     key={contact.id}
                     className={cn(
