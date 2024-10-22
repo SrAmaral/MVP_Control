@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import LoadingSpinner from "../ui/loading";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
+import ClientDataAccordion from "./client-details";
 
 type osFormType = {
   os?: OSType;
@@ -389,6 +390,7 @@ export default function OsFormCreate({ os }: osFormType) {
                     </AccordionItem>
                   </Accordion>
                 </div>
+                <ClientDataAccordion client={formValues.client} />
               )}
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
