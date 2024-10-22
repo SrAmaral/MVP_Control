@@ -41,11 +41,17 @@ export function ComboBoxComponent<T>({
 }: ComboBoxType<T>) {
   // Ajustar o tipo do estado para `number | string`
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<number | string | undefined>(state);
+  const [value, setValue] = React.useState<number | string | undefined>(
+    options?.find((option) => option.id === state)?.value,
+  );
 
   React.useEffect(() => {
     setState?.(options?.find((option) => option.value === value)?.id as T);
   }, [setState, value]);
+
+  React.useEffect(() => {
+    setValue(options?.find((option) => option.id === state)?.value);
+  }, [state, options]);
 
   return (
     <div className={className}>

@@ -29,7 +29,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
 import ClientDataAccordion from "./client-details";
 
-export default function OsFormCreate() {
+type osFormType = {
+  os?: OSType;
+};
+
+export default function OsFormCreate({ os }: osFormType) {
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -54,11 +58,19 @@ export default function OsFormCreate() {
     }
   }, [schedulingDate, deadline]);
 
-  // useEffect(() => {
-  //   if (client !== undefined) {
-  //     form.reset(client);
-  //   }
-  // }, [form, client]);
+  useEffect(() => {
+    if (os !== undefined) {
+      form.reset(os);
+      setSchedulingDate(new Date(os?.scheduleDate));
+      setDeadline(new Date(os?.deadline));
+      setUserSelected(
+        os.users.map((user) =>
+          user.id !== undefined ? user.id.toString() : "",
+        ),
+      );
+      setClientSelected(os?.client.id);
+    }
+  }, [form, os]);
 
   const clients = api.clients.listClient.useQuery();
   const clientOptions = clients.data?.map((client) => ({
@@ -131,50 +143,49 @@ export default function OsFormCreate() {
     setFormValues(form.getValues());
   }, [clientSelected, userSelected]);
 
-  // const createClient = api.clients.createClient.useMutation();
-  // const updateClient = api.clients.updateClient.useMutation();
+  const createOs = api.os.createOs.useMutation();
+  const updateOs = api.os.updateOs.useMutation();
   function onSubmit(values: OSType) {
     console.log(values);
-    //   setLoading(true);
-    //   if (client !== undefined) {
-    //     updateClient.mutate(values, {
-    //       onSuccess: () => {
-    //         toast({
-    //           title: "Cliente atualizado com sucesso!",
-    //           variant: "success",
-    //         });
-    //       },
-    //       onError: (error) => {
-    //         toast({
-    //           title: "Erro ao atualizar cliente!",
-    //           variant: "error",
-    //         });
-    //       },
-    //       onSettled: () => {
-    //         setLoading(false);
-    //         router.push("/clients/list");
-    //       },
-    //     });
-    //   } else {
-    //     createClient.mutate(values, {
-    //       onSuccess: () => {
-    //         toast({
-    //           title: "Cliente criado com sucesso!",
-    //           variant: "success",
-    //         });
-    //       },
-    //       onError: (error) => {
-    //         toast({
-    //           title: "Erro ao criar cliente!",
-    //           variant: "error",
-    //         });
-    //       },
-    //       onSettled: () => {
-    //         setLoading(false);
-    //         router.push("/clients/list");
-    //       },
-    //     });
-    //   }
+    if (os !== undefined) {
+      updateOs.mutate(values, {
+        onSuccess: () => {
+          toast({
+            title: "OS atualizado com sucesso!",
+            variant: "success",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Erro ao atualizar OS!",
+            variant: "error",
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+          router.push("/os/list");
+        },
+      });
+    } else {
+      createOs.mutate(values, {
+        onSuccess: () => {
+          toast({
+            title: "OS criada com sucesso!",
+            variant: "success",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Erro ao criar OS!",
+            variant: "error",
+          });
+        },
+        onSettled: () => {
+          setLoading(false);
+          router.push("/os/list");
+        },
+      });
+    }
   }
 
   useEffect(() => {
@@ -200,9 +211,9 @@ export default function OsFormCreate() {
   const AddressComponent = ({ address }: AddressType) => {
     return (
       <div className="">
-        {address.streetType} {address.street}, {address.number} -{" "}
-        {address.complement} - cep: {address.zipCode} - bairro:{" "}
-        {address.neighborhood} - {address.city} - {address.state}
+        {address?.streetType} {address?.street}, {address?.number} -{" "}
+        {address?.complement} - cep: {address?.zipCode} - bairro:{" "}
+        {address?.neighborhood} - {address?.city} - {address?.state}
       </div>
     );
   };
@@ -225,7 +236,7 @@ export default function OsFormCreate() {
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {schedulingDate ? (
+                      {!!schedulingDate ? (
                         format(schedulingDate, "dd/MM/yyyy")
                       ) : (
                         <span>Data de Agendamento</span>
@@ -254,7 +265,7 @@ export default function OsFormCreate() {
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {deadline ? (
+                      {!!deadline ? (
                         format(deadline, "dd/MM/yyyy")
                       ) : (
                         <span>Data Limite</span>
@@ -306,6 +317,79 @@ export default function OsFormCreate() {
               <div className="col-span-4 grid" />
 
               {formValues?.client && (
+                <div className="col-span-12 mb-5">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger>
+                        Dados do cliente associado a OS
+                      </AccordionTrigger>
+                      <AccordionContent className="pl-3">
+                        <div className="col-span-12 mt-5">
+                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
+                            <Label className="">Nome Fantasia :</Label>
+                            <div className="">
+                              {formValues?.client.fantasyName}
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
+                            <Label className="">Razão Social :</Label>
+                            <div className="">
+                              {formValues?.client.companyName}
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
+                            <Label className="">
+                              Email de contato principal :
+                            </Label>
+                            <div className="">
+                              {formValues?.client.contactEmail}
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
+                            <Label className="">
+                              Numero de contato principal :
+                            </Label>
+                            <div className="">
+                              {formValues?.client.contactNumber}
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
+                            <Label className="">CNPJ :</Label>
+                            <div className="">{formValues?.client.cnpj}</div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
+                            <Label className="">Endereço :</Label>
+                            <div className="">
+                              <AddressComponent
+                                address={formValues.client.clientAddress}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
+                            <Label className="">Data de abertura :</Label>
+                            <div className="">
+                              {formValues?.client.openedData}
+                            </div>
+                          </div>
+                          <div className="col-span-3 flex flex-col gap-2 pb-2 pl-2 pt-2">
+                            <Label className="">Contatos cadastrados:</Label>
+                            {formValues?.client?.contacts?.map(
+                              (contact, id) => (
+                                <div
+                                  key={contact.id}
+                                  className={`ml-5 pl-2 ${id / 2 !== 0 ? "bg-slate-100" : ""}`}
+                                >
+                                  contato {id + 1} : {contact.name} -{" "}
+                                  {contact.email} - {contact.phoneNumber}
+                                </div>
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
                 <ClientDataAccordion client={formValues.client} />
               )}
             </div>

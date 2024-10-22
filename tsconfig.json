@@ -13,7 +13,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     /* Bundled projects */
     "lib": [
       "dom",
