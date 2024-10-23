@@ -1,5 +1,4 @@
-"use client"; 
-import GenericConfirmDialog from "~/components/genericConfirmDialog";
+"use client";
 import { DataTable } from "~/components/ui/dataTable";
 import { api } from "~/core/trpc/callers/react";
 import ColumnClient from "../../utils/columns/Client";
@@ -8,7 +7,6 @@ import GenericConfirmDialog from "~/components/genericConfirmDialog";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
-
 
 export default function Page() {
   const clients = api.clients.listClient.useQuery();
