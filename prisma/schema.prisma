@@ -89,6 +89,7 @@ model OS {
   status             String    @default("pending")
   users              User[]
   client             Client    @relation(fields: [clientId], references: [id])
+  principalContact   String    @default("")
   clientId           String
   createdAt          DateTime? @default(now())
   updatedAt          DateTime? @updatedAt()

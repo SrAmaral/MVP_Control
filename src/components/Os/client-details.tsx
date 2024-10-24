@@ -11,10 +11,12 @@ import AddressComponent from "./address-details";
 
 interface ClientDataAccordionProps {
   client: OSType["client"];
+  contactPrincipal: string | undefined;
 }
 
 const ClientDataAccordion: React.FC<ClientDataAccordionProps> = ({
   client,
+  contactPrincipal,
 }) => {
   return (
     <div className="col-span-12 mb-5">
@@ -89,7 +91,9 @@ const ClientDataAccordion: React.FC<ClientDataAccordionProps> = ({
                     )}
                   >
                     contato {id + 1}: {contact.name} - {contact.email} -{" "}
-                    {contact.phoneNumber}
+                    {contact.phoneNumber}{" "}
+                    {contactPrincipal === contact.id &&
+                      "(Principal selecionado)"}
                   </div>
                 ))}
               </div>

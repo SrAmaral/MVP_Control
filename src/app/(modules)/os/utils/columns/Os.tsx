@@ -1,12 +1,13 @@
-import { Client, OS, User } from "@prisma/client";
+import { type Client, type OS, type User } from "@prisma/client";
 import {
   CaretSortIcon,
   InfoCircledIcon,
   Pencil2Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "~/components/ui/button";
+import { resolveOsStatus } from "~/lib/utils";
 
 interface CompleteOs extends OS {
   client: Client;
@@ -25,6 +26,22 @@ function ColumnOs({
   info,
 }: columnOsProps = {}): ColumnDef<CompleteOs>[] {
   const columns: ColumnDef<CompleteOs>[] = [
+    {
+      accessorKey: "client",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-left"
+        >
+          Cliente
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="text-left">{row.original?.client?.fantasyName}</div>
+      ),
+    },
     {
       accessorKey: "scheduleDate",
       header: () => <div>Data Agendada</div>,
@@ -68,24 +85,8 @@ function ColumnOs({
       header: () => <div>Status</div>,
       cell: ({ row }) => (
         <div className="text-left">
-          {row.getValue("status") || "Não Definido"}
+          {resolveOsStatus(row.getValue("status")) || "Não Definido"}
         </div>
-      ),
-    },
-    {
-      accessorKey: "client",
-      header: ({ column }) => (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-left"
-        >
-          Cliente
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      ),
-      cell: ({ row }) => (
-        <div className="text-left">{row.original?.client?.fantasyName}</div>
       ),
     },
     {

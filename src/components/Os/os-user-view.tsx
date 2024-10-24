@@ -57,6 +57,10 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
   useEffect(() => {
     form.reset(os);
   }, [os, form]);
+
+  const principalContact = os?.client.contacts.find(
+    (contact) => contact.id === os.principalContact,
+  );
   return (
     <div className="p-[70px]">
       <div className="mb-10 flex flex-row justify-between">
@@ -110,7 +114,10 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
           </div>
           <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Contato</span>
-            <span className="text-1 font-light">Contato selecionado</span>
+            <span className="text-1 font-light">
+              {principalContact?.name} - {principalContact?.email} -{" "}
+              {principalContact?.phoneNumber}
+            </span>
           </div>
         </div>
       </div>

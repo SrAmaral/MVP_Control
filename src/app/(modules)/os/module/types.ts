@@ -11,6 +11,7 @@ export const osSchema = z.object({
   approverName : z.string().optional(),
   approverDate: z.string().optional(),
   signatureImage: z.string().optional(),
+  principalContact: z.string(),
   deadline: z.string(),
   status: z.string().optional(),
   createdAt: z.coerce.date().default(() => new Date()).nullish(),

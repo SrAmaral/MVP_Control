@@ -35,6 +35,7 @@ export default function OsFormCreate({ os }: osFormType) {
   const [deadline, setDeadline] = useState<Date | null>(null);
   const [formValues, setFormValues] = useState<OSType | undefined>(undefined);
   const [clientSelected, setClientSelected] = useState<string>();
+  const [contactSelected, setContactSelected] = useState<string>();
   const [userSelected, setUserSelected] = useState<
     (string | number)[] | undefined
   >(undefined);
@@ -50,7 +51,10 @@ export default function OsFormCreate({ os }: osFormType) {
     if (deadline !== null) {
       form.setValue("deadline", deadline.toISOString());
     }
-  }, [schedulingDate, deadline]);
+    if (contactSelected !== undefined) {
+      form.setValue("principalContact", contactSelected);
+    }
+  }, [schedulingDate, deadline, contactSelected, form]);
 
   useEffect(() => {
     if (os !== undefined) {
@@ -72,6 +76,20 @@ export default function OsFormCreate({ os }: osFormType) {
     value: client.fantasyName,
     label: client.fantasyName,
   }));
+
+  const selectClient = api.clients.listClientById.useQuery(
+    clientSelected ?? "",
+  );
+
+  const contactOptions = selectClient.data?.contacts.map((contact) => ({
+    id: contact.id,
+    value: `${contact.name} - ${contact.email}`,
+    label: `${contact.name} - ${contact.email}`,
+  }));
+
+  useEffect(() => {
+    setContactSelected(os?.principalContact);
+  }, [selectClient.data]);
 
   const users = api.users.listUsers.useQuery();
   const usersOptions = users.data?.map((user) => ({
@@ -275,6 +293,19 @@ export default function OsFormCreate({ os }: osFormType) {
                   state={clientSelected}
                 />
               </div>
+              {formValues?.client && (
+                <div className="col-span-4 grid">
+                  <Label className="mb-4">Contato principal do cliente</Label>
+                  <ComboBoxComponent
+                    options={contactOptions}
+                    className=""
+                    placeholder="Contato"
+                    setState={setContactSelected}
+                    state={contactSelected}
+                  />
+                </div>
+              )}
+
               <div className="col-span-4 grid">
                 <Label className="mb-4">Funcionarios associados a OS</Label>
                 <ComboBoxMultiple
@@ -288,7 +319,10 @@ export default function OsFormCreate({ os }: osFormType) {
               <div className="col-span-4 grid" />
 
               {formValues?.client && (
-                <ClientDataAccordion client={formValues.client} />
+                <ClientDataAccordion
+                  client={formValues.client}
+                  contactPrincipal={contactSelected}
+                />
               )}
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
