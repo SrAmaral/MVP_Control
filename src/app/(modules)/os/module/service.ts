@@ -76,6 +76,7 @@ export const OsUpdate = async ( data: OSType, db: PrismaClient) => {
     },
     data: {
       ...osData,
+      serviceDescription: osData.serviceDescription ?? "",
       ...(client && {
         client: {
           connect: {
