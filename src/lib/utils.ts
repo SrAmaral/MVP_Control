@@ -18,7 +18,7 @@ export const  resolveOsStatus =  (status: string) => {
     return 'Pendente de Aprovação';
     case 'approved':
       return 'Aprovado';
-    case 'rejected':
+    case 'repproved':
       return 'Rejeitado';
     default:
       return 'Pendente';

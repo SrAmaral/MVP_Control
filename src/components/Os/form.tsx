@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
@@ -69,6 +69,15 @@ export default function OsFormCreate({ os }: osFormType) {
       setClientSelected(os?.client.id);
     }
   }, [form, os]);
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const date = searchParams.get("date");
+
+    if (!!date) {
+      setSchedulingDate(new Date(date.replaceAll("-", "/")));
+    }
+  }, [searchParams]);
 
   const clients = api.clients.listClient.useQuery();
   const clientOptions = clients.data?.map((client) => ({
