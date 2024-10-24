@@ -80,9 +80,12 @@ model OS {
   id                 String    @id() @default(cuid())
   scheduleDate       String
   description        String
-  serviceDescription String?
+  serviceDescription String?   @default("")
   deadline           String
-  realizedDate       String?
+  realizedDate       String?   @default("")
+  approverName       String?   @default("")
+  approverDate       String?   @default("")
+  signatureImage     String?   @default("")
   status             String    @default("pending")
   users              User[]
   client             Client    @relation(fields: [clientId], references: [id])

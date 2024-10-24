@@ -94,11 +94,11 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
       <div className="mb-10 mt-10 w-[450px]">
         <span className="text-2xl font-bold">Dados do cliente</span>
         <div className="mt-5 flex flex-col gap-2">
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Nome Fantasia</span>
             <span className="text-1 font-light">{os?.client.fantasyName}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Endereço</span>
             <span className="text-1 font-light">
               {os?.client?.clientAddress ? (
@@ -108,7 +108,7 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
               )}
             </span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Contato</span>
             <span className="text-1 font-light">Contato selecionado</span>
           </div>
