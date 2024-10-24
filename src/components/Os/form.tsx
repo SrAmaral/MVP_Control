@@ -58,7 +58,7 @@ export default function OsFormCreate({ os }: osFormType) {
       setSchedulingDate(new Date(os?.scheduleDate));
       setDeadline(new Date(os?.deadline));
       setUserSelected(
-        os.users.map((user) =>
+        os?.users.map((user) =>
           user.id !== undefined ? user.id.toString() : "",
         ),
       );

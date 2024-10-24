@@ -3,7 +3,6 @@
 import {
   CaretSortIcon,
   InfoCircledIcon,
-  Pencil1Icon,
   Pencil2Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
