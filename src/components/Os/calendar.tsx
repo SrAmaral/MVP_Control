@@ -31,6 +31,7 @@ export const OsCalendar = ({ events }: CalendarProps) => {
               : "#dc2626",
     };
   });
+
   return (
     <>
       <div className="custom-calendar container">
