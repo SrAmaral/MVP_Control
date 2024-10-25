@@ -1,11 +1,9 @@
-version: "3.8"
-
 services:
   frontend:
     build:
       context: .
     ports:
-      - "3002:3002"
+      - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
@@ -18,4 +16,4 @@ services:
       - AWS_ACCESS_KEY_ID={AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY}
 
-    entrypoint: sh -c "PORT=3002 npm run start"
+    entrypoint: sh -c "PORT=3000 npm run start"

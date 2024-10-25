@@ -13,7 +13,7 @@ type CalendarProps = {
 
 export const OsCalendar = ({ events }: CalendarProps) => {
   const router = useRouter();
-  const resolveEvents = events.map((event) => {
+  const resolveEvents = events?.map((event) => {
     return {
       title: event.client.fantasyName,
       start: event.scheduleDate,
