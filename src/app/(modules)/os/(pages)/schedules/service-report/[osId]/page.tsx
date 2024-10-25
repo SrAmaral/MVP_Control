@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { type OSType } from "~/app/(modules)/os/module/types";
 import { ServiceReportView } from "~/components/Os/service-report-view";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";
@@ -35,5 +36,10 @@ export default function Page() {
 
   const inNewApprove = os?.approverName === "" && os.signatureImage === "";
 
-  return <ServiceReportView os={os} isNewApprove={inNewApprove} />;
+  return (
+    <ServiceReportView
+      os={os as unknown as OSType}
+      isNewApprove={inNewApprove}
+    />
+  );
 }

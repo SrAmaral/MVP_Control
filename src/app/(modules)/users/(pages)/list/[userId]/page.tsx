@@ -5,7 +5,7 @@ import LoadingSpinner from "~/components/ui/loading";
 import UsersFormCreate from "~/components/Users/form";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
-import { UpdateUserData } from "../../../module/types";
+import { type CreateUserData } from "../../../module/types";
 
 export default function Page() {
   const { userId } = useParams();
@@ -35,7 +35,7 @@ export default function Page() {
 
   return (
     <>
-      <UsersFormCreate user={user as UpdateUserData} />
+      <UsersFormCreate user={user as CreateUserData} />
     </>
   );
 }

@@ -1,7 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-import { UpdateUserData } from "../types";
+import { type PrismaClient } from "@prisma/client";
+import { type CreateUserData } from "../types";
 
-export default function updateUser(data: UpdateUserData, db: PrismaClient) {
+export default async function updateUser(data: CreateUserData, db: PrismaClient) {
+  // Check if files are already associated with the user to avoid duplication
+  const existingFiles = await db.userFile.findMany({
+    where: {
+      userId: data.id,
+    },
+  });
+
+  const newFiles = data.files?.filter(
+    (file) => !existingFiles.some((existingFile) => existingFile.id === file.id)
+  );
+
   return db.user.update({
     where: {
       id: data.id,
@@ -13,6 +24,20 @@ export default function updateUser(data: UpdateUserData, db: PrismaClient) {
             update: data.address.map((address) => ({
               where: { id: address.id },
               data: { ...address },
+            })),
+          }
+        : undefined,
+      files: newFiles
+        ? {
+            deleteMany: {
+              userId: data.id,
+              id: { notIn: (data.files ?? []).map((file) => file.id).filter((id): id is number => id !== undefined) },
+            },
+            create: newFiles.map((file) => ({
+              filename: file.filename ?? "",
+              url: file.url ?? "",
+              type: file.type ?? "",
+              ...file,
             })),
           }
         : undefined,

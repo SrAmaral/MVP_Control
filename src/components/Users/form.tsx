@@ -1,43 +1,36 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookUser, KeyRound, MapPinnedIcon } from "lucide-react";
+import { BookUser, Files, KeyRound, MapPinnedIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
 import {
   type CreateUserData,
   CreateUserSchema,
-  type UpdateUserData,
 } from "~/app/(modules)/users/module/types";
 import { api } from "~/core/trpc/callers/react";
+import { useToast } from "~/hooks/use-toast";
 import { Button } from "../ui/button";
 import { ComboBoxComponent } from "../ui/combo-box/comboBox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { Form } from "../ui/form";
+import FormFieldBase from "../ui/form-field";
+import LoadingSpinner from "../ui/loading";
+import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
+import UploadedFileComponent from "../ui/uploadedFiles";
+import UploadFilesComponent from "../ui/uploadFiles";
 import { hiringTypeOptions, positionOptions } from "./utils";
-import FormFieldBase from "../ui/form-field";
-import { useToast } from "~/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import LoadingSpinner from "../ui/loading";
 
 type UpdateUserFormProps = {
-  user?: UpdateUserData;
+  user?: CreateUserData;
 };
 export default function UsersFormCreate({ user }: UpdateUserFormProps) {
   const form = useForm<CreateUserData>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      id: user?.id ?? "",
       address: user?.address,
     },
   });
@@ -46,6 +39,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
   const createUsers = api.users.createUser.useMutation();
   const updateUser = api.users.updateUser.useMutation();
   const [loading, setLoading] = useState(false);
+  const [filesList, setFilesList] = useState<FileList | null>(null);
 
   function onSubmit(values: CreateUserData) {
     setLoading(true);
@@ -104,7 +98,20 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
 
   useEffect(() => {
     if (user !== undefined) {
-      form.reset(user);
+      const replaceEmpyFieldUser = {
+        ...user,
+        pis: user.pis ?? "",
+        ctps: user.ctps ?? "",
+        typeHiring: user.typeHiring ?? "",
+        salary: user.salary ?? "",
+        workLoad: user.workLoad ?? "",
+        comment: user.comment ?? "",
+        address: user.address?.map((address) => ({
+          ...address,
+          complement: address.complement ?? "",
+        })),
+      };
+      form.reset(replaceEmpyFieldUser);
     }
   }, [form, user]);
 
@@ -150,6 +157,9 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 </TabsTrigger>
                 <TabsTrigger value="accountInfos">
                   <KeyRound className="mr-2 h-4 w-4" /> Dados de acesso
+                </TabsTrigger>
+                <TabsTrigger value="documents">
+                  <Files className="mr-2 h-4 w-4" /> Documentos
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="employeeInfos">
@@ -384,6 +394,33 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     />
                   </div>
                 </div>
+              </TabsContent>
+              <TabsContent value="documents">
+                <UploadFilesComponent
+                  filesList={filesList}
+                  getFormValue={form.getValues}
+                  setFormValue={(name, value) =>
+                    form.setValue(
+                      name as keyof CreateUserData,
+                      value as keyof CreateUserData,
+                    )
+                  }
+                  setFilesList={setFilesList}
+                  anyData={user ?? {}}
+                />
+                <Separator className="mb-5 mt-10" />
+                <UploadedFileComponent
+                  files={form.getValues("files") ?? []}
+                  filesList={filesList}
+                  setFilesList={setFilesList}
+                  getFormValue={form.getValues}
+                  setFormValue={(name, value) =>
+                    form.setValue(
+                      name as keyof CreateUserData,
+                      value as keyof CreateUserData,
+                    )
+                  }
+                />
               </TabsContent>
             </Tabs>
             <Button type="submit" className="mt-10 bg-green-500">
