@@ -10,6 +10,7 @@ type AddressType = {
     state: string;
   };
 };
+
 const AddressComponent = ({ address }: AddressType) => {
   return (
     <div className="">
