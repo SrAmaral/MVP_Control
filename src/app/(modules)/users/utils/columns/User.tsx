@@ -1,14 +1,14 @@
 "use client";
 
+import { type Role, type User } from "@prisma/client";
 import {
   CaretSortIcon,
   InfoCircledIcon,
   Pencil2Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "~/components/ui/button";
-import { User, Role } from "@prisma/client";
 interface UserWithRole extends User {
   role: Role;
 }
@@ -53,7 +53,7 @@ function ColumnUser({
         </Button>
       ),
       cell: ({ row }) => {
-        const role = row.original.role.name ?? " - ";
+        const role = row.original.role?.name ?? " - ";
         return <div className="flex items-center">{role}</div>;
       },
     },
