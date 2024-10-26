@@ -85,6 +85,8 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
     (contact) => contact.id === os.principalContact,
   );
 
+  console.log(isNewApprove);
+
   return (
     <div className="p-[70px]">
       <GenericConfirmDialog

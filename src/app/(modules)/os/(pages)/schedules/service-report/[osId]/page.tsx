@@ -39,7 +39,7 @@ export default function Page() {
   return (
     <ServiceReportView
       os={os as unknown as OSType}
-      isNewApprove={inNewApprove}
+      isNewApprove={!inNewApprove}
     />
   );
 }
