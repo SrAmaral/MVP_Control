@@ -6,6 +6,7 @@ import { OsUserView } from "~/components/Os/os-user-view";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
+import {OSType} from "~/app/(modules)/os/module/types";
 
 export default function Page() {
   const { osId } = useParams();
@@ -33,5 +34,5 @@ export default function Page() {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  return <OsUserView os={os} />;
+  return <OsUserView os={os as unknown as OSType} />;
 }

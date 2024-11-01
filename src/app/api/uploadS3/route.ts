@@ -13,6 +13,7 @@ async function handler(req: NextRequest) {
   if (req.method === 'POST') {
     const { files } = await req.json() as UploadRequest;
     const bucketName = process.env.AWS_BUCKET_NAME;
+    const region = process.env.AWS_REGION;
     if (!bucketName) {
       return NextResponse.json({ error: 'AWS_BUCKET_NAME is not defined' }, { status: 500 });
     }
@@ -33,7 +34,7 @@ async function handler(req: NextRequest) {
 
         // Faz o upload do arquivo
         const data = await s3.putObject(params);
-        const url = `https://${bucketName}.s3.amazonaws.com/${filename}`;
+        const url = `https://${bucketName}.s3.${region}.amazonaws.com/${filename}`;
         uploadedFiles.push({ filename, url, type});
       }
       return NextResponse.json({ files: uploadedFiles }, {status: 200});

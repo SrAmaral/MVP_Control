@@ -6,11 +6,14 @@ import OsFormCreate from "~/components/Os/form";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
+import {OSType} from "~/app/(modules)/os/module/types";
 
 export default function Page() {
   const { osId } = useParams();
   const router = useRouter();
   const { toast } = useToast();
+
+
 
   const {
     data: os,
@@ -33,5 +36,5 @@ export default function Page() {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  return <OsFormCreate os={os} />;
+  return <OsFormCreate os={os as unknown as OSType} />;
 }
