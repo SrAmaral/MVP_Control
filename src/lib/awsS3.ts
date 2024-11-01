@@ -6,7 +6,6 @@ const s3 = new S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
   },
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT,
 });
 
 export default s3;

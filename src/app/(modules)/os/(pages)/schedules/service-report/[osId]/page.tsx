@@ -34,7 +34,7 @@ export default function Page() {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  const inNewApprove = os?.approverName === "" && os.signatureImage === "";
+  const inNewApprove = os?.approverName === "" && os?.signatureImage === "";
 
   return (
     <ServiceReportView
