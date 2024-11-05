@@ -34,12 +34,15 @@ export default function Page() {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  const inNewApprove = os?.approverName === "" && os?.signatureImage === "";
+  const inNewApprove =
+    os?.approverName == "" ||
+    os?.signatureImage == "" ||
+    os?.approverDate == "";
 
   return (
     <ServiceReportView
       os={os as unknown as OSType}
-      isNewApprove={!inNewApprove}
+      isNewApprove={inNewApprove}
     />
   );
 }

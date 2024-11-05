@@ -51,7 +51,7 @@ export const OsCalendar = ({ events }: CalendarProps) => {
               className="flex cursor-pointer flex-col rounded-lg p-4 text-[12px] font-normal text-white hover:bg-slate-800"
               onClick={() =>
                 router.push(
-                  `/os/${eventInfo.event.extendedProps.status == "pending" ? "list" : eventInfo.event.extendedProps.status == "pendingApproval" ? "schedules" : "schedules/service-report"}/${eventInfo.event.id}`,
+                  `/os/${eventInfo.event.extendedProps.status == "pending" ? "schedules" : eventInfo.event.extendedProps.status == "pendingApproval" ? "schedules/service-report" : "schedules/service-report"}/${eventInfo.event.id}`,
                 )
               }
             >

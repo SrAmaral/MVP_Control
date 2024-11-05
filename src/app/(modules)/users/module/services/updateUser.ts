@@ -41,7 +41,7 @@ export default async function updateUser(data: CreateUserData, db: PrismaClient)
             })),
           }
         : undefined,
-      role: data.role ? { connect: { id: data.role.id } } : undefined,
+      // roleId: data.roleId ? { connect: { id: data.roleId } } : undefined,
     },
   });
 }

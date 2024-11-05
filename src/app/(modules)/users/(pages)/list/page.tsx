@@ -13,7 +13,9 @@ export default function Page() {
     <DataTable
       columns={ColumnUser({
         edit: (id) => {
-          router.push(`/users/list/${id}`);
+          router.push(`/users/list/${id}`, {
+
+          });
         },
       })}
       data={users.data ?? []}

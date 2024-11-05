@@ -44,7 +44,6 @@ async function handler(req: NextRequest) {
   } 
   else if(req.method === 'DELETE') {
     const { filename } = await req.json() as { filename: string };
-    console.log("FileName", filename)
     const bucketName = process.env.AWS_BUCKET_NAME;
     if (!bucketName) {
       return NextResponse.json({ error: 'AWS_BUCKET_NAME is not defined' }, { status: 500 });

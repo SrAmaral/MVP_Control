@@ -16,7 +16,9 @@ export default function Page() {
     data: user,
     isLoading,
     isError,
-  } = api.users.listUserById.useQuery(userId as string);
+  } = api.users.listUserById.useQuery(userId as string, {
+    staleTime: 0,
+  } );
 
   useEffect(() => {
     if (!isLoading && (isError || !user)) {

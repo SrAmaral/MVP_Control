@@ -35,9 +35,7 @@ export const CreateUserSchema = z.object({
         url: z.string().optional(),
         type: z.string().optional(),
     })).optional(),
-    role:z.object({
-        id: z.number(),
-    }),
+    roleId: z.number().nullish(),
 })
 
 export type CreateUserData = z.infer<typeof CreateUserSchema>

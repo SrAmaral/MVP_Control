@@ -135,28 +135,28 @@ export default function OsFormCreate({ os }: osFormType) {
           "users",
           selectedUsers.map((user) => ({
             ...user,
-            email: user.email ?? undefined,
-            contactNumber: user.contactNumber ?? undefined,
-            password: user.password ?? undefined,
-            contactEmail: user.contactEmail ?? undefined,
-            lastName: user.lastName ?? undefined,
-            rg: user.rg ?? undefined,
-            cpf: user.cpf ?? undefined,
-            pis: user.pis ?? undefined,
-            ctps: user.ctps ?? undefined,
-            typeHiring: user.typeHiring ?? undefined,
-            hiringDate: user.hiringDate ?? undefined,
-            position: user.position ?? undefined,
-            salary: user.salary ?? undefined,
-            workLoad: user.workLoad ?? undefined,
-            comment: user.comment ?? undefined,
+            email: user.email ?? "",
+            contactNumber: user.contactNumber ?? "",
+            password: user.password ?? "",
+            contactEmail: user.contactEmail ?? "",
+            lastName: user.lastName ?? "",
+            rg: user.rg ?? "",
+            cpf: user.cpf ?? "",
+            pis: user.pis ?? "",
+            ctps: user.ctps ?? "",
+            typeHiring: user.typeHiring ?? "",
+            hiringDate: user.hiringDate ?? "",
+            position: user.position ?? "",
+            salary: user.salary ?? "",
+            workLoad: user.workLoad ?? "",
+            comment: user.comment ?? "",
             address: user.address.map((addr) => ({
               ...addr,
-              complement: addr.complement ?? undefined,
-              neighborhood: addr.neighborhood ?? undefined,
-              zipCode: addr.zipCode ?? undefined,
+              complement: addr.complement ?? "",
+              neighborhood: addr.neighborhood ?? "",
+              zipCode: addr.zipCode ?? "",
             })),
-            role: user.role ? { id: user.role.id } : undefined,
+            roleId: user?.role?.id ?? undefined,
           })),
         );
       }
@@ -336,6 +336,17 @@ export default function OsFormCreate({ os }: osFormType) {
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
               Salvar
+            </Button>
+            <Button
+              type="button"
+              className="ml-10 mt-10"
+              onClick={() =>
+                router.push(
+                  `/os/${form.getValues("status") == "pending" ? "schedules" : form.getValues("status") == "pendingApproval" ? "schedules/service-report" : "schedules/service-report"}/${form.getValues("id")}`,
+                )
+              }
+            >
+              Visualizar relatorio de OS
             </Button>
           </form>
         </Form>

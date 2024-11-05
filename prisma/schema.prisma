@@ -94,6 +94,16 @@ model OS {
   createdAt          DateTime? @default(now())
   updatedAt          DateTime? @updatedAt()
   logicalDeleted     Boolean   @default(false)
+  files              OsFiles[]
+}
+
+model OsFiles {
+  id       Int    @id() @default(autoincrement())
+  filename String
+  url      String
+  type     String
+  osId     String
+  os       OS     @relation(fields: [osId], references: [id])
 }
 
 model Client {

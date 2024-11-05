@@ -124,18 +124,24 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
   }, [form.formState.errors]);
 
   const [hiringType, setHiringType] = useState("");
-  const [roleType, setRoleType] = useState();
-  const [positionType, setPositionType] = useState();
+  const [roleType, setRoleType] = useState<number | undefined>();
+  const [positionType, setPositionType] = useState("");
 
   useEffect(() => {
     form.setValue("typeHiring", hiringType);
     if (roleType !== undefined) {
-      form.setValue("role.id", roleType);
+      form.setValue("roleId", roleType);
     }
     if (positionType !== undefined) {
       form.setValue("position", positionType);
     }
   }, [form, hiringType, roleType, positionType]);
+
+  useEffect(() => {
+    setHiringType(user?.typeHiring ?? "");
+    setRoleType(user?.roleId ?? undefined);
+    setPositionType(user?.position ?? "");
+  }, [user, roleType]);
 
   return (
     <div className="p-10">

@@ -18,7 +18,13 @@ export const osSchema = z.object({
   updatedAt: z.coerce.date().nullish(),
   logicalDeleted: z.boolean().optional(),
   client: clientSchema,
-  users: z.array(CreateUserSchema)
+  users: z.array(CreateUserSchema),
+  files: z.array(z.object({
+    id: z.number().optional(),
+    filename: z.string().optional(),
+    url: z.string().optional(),
+    type: z.string().optional(),
+})).optional(),
 });
 
 export type OSType = z.infer<typeof osSchema>;

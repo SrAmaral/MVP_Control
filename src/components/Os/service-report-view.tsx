@@ -20,6 +20,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import UploadedFileComponent from "../ui/uploadedFiles";
 import AddressComponent from "./address-details";
 import Signature from "./signature";
 
@@ -36,6 +37,7 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<string>("");
   const [approverName, setApproverName] = useState<string | null>(null);
+  const [filesList, setFilesList] = useState<FileList | null>(null);
   const form = useForm<z.infer<typeof osSchema>>({
     resolver: zodResolver(osSchema),
     defaultValues: {
@@ -84,8 +86,6 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
   const principalContact = os?.client.contacts.find(
     (contact) => contact.id === os.principalContact,
   );
-
-  console.log(isNewApprove);
 
   return (
     <div className="p-[70px]">
@@ -175,12 +175,27 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
       </div>
       <Separator />
       <Form {...form}>
-        <div className="flex justify-between">
+        <div className="mt-10 flex justify-between">
           <span className="text-2xl font-bold">Relatorio do Serviço</span>
           <span>Data de realização: {formatDate(os?.realizedDate ?? "")}</span>
         </div>
         <div className="col-span-12 grid">
-          <p className="mt-5">{os?.serviceDescription}</p>
+          <p className="mb-5 mt-5">{os?.serviceDescription}</p>
+          <Separator />
+          <div className="mb-5">
+            <UploadedFileComponent
+              files={form.getValues("files") ?? []}
+              filesList={filesList}
+              setFilesList={setFilesList}
+              getFormValue={form.getValues}
+              setFormValue={(name, value) =>
+                form.setValue(
+                  name as keyof z.infer<typeof osSchema>,
+                  value as keyof z.infer<typeof osSchema>,
+                )
+              }
+            />
+          </div>
         </div>
         <Separator className="mt-10" />
         <div className="mt-10">

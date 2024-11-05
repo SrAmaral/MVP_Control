@@ -13,6 +13,8 @@ import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { Separator } from "../ui/separator";
 import { Textarea } from "../ui/textarea";
+import UploadedFileComponent from "../ui/uploadedFiles";
+import UploadFilesComponent from "../ui/uploadFiles";
 import AddressComponent from "./address-details";
 
 type OsUserViewProps = {
@@ -23,6 +25,7 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [filesList, setFilesList] = useState<FileList | null>(null);
   const form = useForm<z.infer<typeof osSchema>>({
     resolver: zodResolver(osSchema),
     defaultValues: {},
@@ -144,6 +147,30 @@ export const OsUserView = ({ os }: OsUserViewProps) => {
               }}
             />
           </div>
+          <UploadFilesComponent
+            filesList={filesList}
+            setFilesList={setFilesList}
+            getFormValue={form.getValues}
+            setFormValue={(name, value) =>
+              form.setValue(
+                name as keyof z.infer<typeof osSchema>,
+                value as keyof z.infer<typeof osSchema>,
+              )
+            }
+            anyData={os ?? {}}
+          />
+          <UploadedFileComponent
+            files={form.getValues("files") ?? []}
+            filesList={filesList}
+            setFilesList={setFilesList}
+            getFormValue={form.getValues}
+            setFormValue={(name, value) =>
+              form.setValue(
+                name as keyof z.infer<typeof osSchema>,
+                value as keyof z.infer<typeof osSchema>,
+              )
+            }
+          />
           <Button
             type="button"
             onClick={() => onSubmit(form.getValues())}
