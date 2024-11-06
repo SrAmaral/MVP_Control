@@ -15,4 +15,4 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
-    entrypoint: sh -c "PORT=3000 npm run start"
+    entrypoint: sh -c "PORT=${RUN_PORT} npm run start"
