@@ -26,6 +26,7 @@ export const updateOs = publicProcedure.input(osSchema).mutation(({ctx:{db},inpu
     return osService.OsUpdate(input,db)
 })
 
+
 export const deleteOs = publicProcedure.input(z.string()).mutation(({ctx:{db},input}) => {
     return osService.OsDelete(input,db)
 })
@@ -36,6 +37,6 @@ export const osRouter = createTRPCRouter({
     listOs,
     listOsById,
     updateOs,
-    deleteOs
+    deleteOs,
   });
   

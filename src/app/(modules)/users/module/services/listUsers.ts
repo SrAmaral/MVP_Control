@@ -4,7 +4,8 @@ export function listUsers(db: PrismaClient) {
     return db.user.findMany({
         include: {
             address: true,
-            role: true
+            role: true,
+            files: true
         }
         });
 }
@@ -16,7 +17,8 @@ export function listUserById(id: string, db: PrismaClient) {
         },
         include: {
             address: true,
-            role: true
+            role: true,
+            files: true
         }
     });
 }

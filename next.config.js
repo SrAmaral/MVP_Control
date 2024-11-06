@@ -6,6 +6,22 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'zeldassetsdb.s3.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'zeldassetsdb.s3.us-east-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

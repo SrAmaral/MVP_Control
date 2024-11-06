@@ -77,17 +77,33 @@ model UserAddress {
 }
 
 model OS {
-  id             String    @id() @default(cuid())
-  scheduleDate   String
-  description    String
-  deadline       String
-  status         String    @default("pending")
-  users          User[]
-  client         Client    @relation(fields: [clientId], references: [id])
-  clientId       String
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt()
-  logicalDeleted Boolean   @default(false)
+  id                 String    @id() @default(cuid())
+  scheduleDate       String
+  description        String
+  serviceDescription String?   @default("")
+  deadline           String
+  realizedDate       String?   @default("")
+  approverName       String?   @default("")
+  approverDate       String?   @default("")
+  signatureImage     String?   @default("")
+  status             String    @default("pending")
+  users              User[]
+  client             Client    @relation(fields: [clientId], references: [id])
+  principalContact   String    @default("")
+  clientId           String
+  createdAt          DateTime? @default(now())
+  updatedAt          DateTime? @updatedAt()
+  logicalDeleted     Boolean   @default(false)
+  files              OsFiles[]
+}
+
+model OsFiles {
+  id       Int    @id() @default(autoincrement())
+  filename String
+  url      String
+  type     String
+  osId     String
+  os       OS     @relation(fields: [osId], references: [id])
 }
 
 model Client {

@@ -6,10 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
 interface GenericConfirmDialogProps {
   onConfirm?: () => void;
@@ -21,6 +18,7 @@ interface GenericConfirmDialogProps {
   textCancel?: string;
   title: string;
   description: string;
+  buttonConfirmStyle?: string;
 }
 
 export default function GenericConfirmDialog({
@@ -33,6 +31,7 @@ export default function GenericConfirmDialog({
   title,
   description,
   onCancel,
+  buttonConfirmStyle,
 }: GenericConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -43,10 +42,14 @@ export default function GenericConfirmDialog({
         </DialogHeader>
         {bodyChildren && <div className="grid gap-4 py-4">{bodyChildren}</div>}
         <DialogFooter>
-          <Button variant="ghost" onClick={onCancel}>
+          <Button type="button" variant="ghost" onClick={onCancel}>
             {textCancel ?? "Cancelar"}
           </Button>
-          <Button type="submit" onClick={onConfirm}>
+          <Button
+            type="button"
+            onClick={onConfirm}
+            className={buttonConfirmStyle}
+          >
             {textConfirm ?? "Confirmar"}
           </Button>
         </DialogFooter>

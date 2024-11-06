@@ -4,7 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
@@ -12,12 +12,6 @@ import { osSchema, type OSType } from "~/app/(modules)/os/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { cn } from "~/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { ComboBoxComponent } from "../ui/combo-box/comboBox";
@@ -27,6 +21,7 @@ import { Label } from "../ui/label";
 import LoadingSpinner from "../ui/loading";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
+import ClientDataAccordion from "./client-details";
 
 type osFormType = {
   os?: OSType;
@@ -40,6 +35,7 @@ export default function OsFormCreate({ os }: osFormType) {
   const [deadline, setDeadline] = useState<Date | null>(null);
   const [formValues, setFormValues] = useState<OSType | undefined>(undefined);
   const [clientSelected, setClientSelected] = useState<string>();
+  const [contactSelected, setContactSelected] = useState<string>();
   const [userSelected, setUserSelected] = useState<
     (string | number)[] | undefined
   >(undefined);
@@ -55,7 +51,10 @@ export default function OsFormCreate({ os }: osFormType) {
     if (deadline !== null) {
       form.setValue("deadline", deadline.toISOString());
     }
-  }, [schedulingDate, deadline]);
+    if (contactSelected !== undefined) {
+      form.setValue("principalContact", contactSelected);
+    }
+  }, [schedulingDate, deadline, contactSelected, form]);
 
   useEffect(() => {
     if (os !== undefined) {
@@ -63,7 +62,7 @@ export default function OsFormCreate({ os }: osFormType) {
       setSchedulingDate(new Date(os?.scheduleDate));
       setDeadline(new Date(os?.deadline));
       setUserSelected(
-        os.users.map((user) =>
+        os?.users.map((user) =>
           user.id !== undefined ? user.id.toString() : "",
         ),
       );
@@ -71,12 +70,35 @@ export default function OsFormCreate({ os }: osFormType) {
     }
   }, [form, os]);
 
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const date = searchParams.get("date");
+
+    if (!!date) {
+      setSchedulingDate(new Date(date.replaceAll("-", "/")));
+    }
+  }, [searchParams]);
+
   const clients = api.clients.listClient.useQuery();
   const clientOptions = clients.data?.map((client) => ({
     id: client.id,
     value: client.fantasyName,
     label: client.fantasyName,
   }));
+
+  const selectClient = api.clients.listClientById.useQuery(
+    clientSelected ?? "",
+  );
+
+  const contactOptions = selectClient.data?.contacts.map((contact) => ({
+    id: contact.id,
+    value: `${contact.name} - ${contact.email}`,
+    label: `${contact.name} - ${contact.email}`,
+  }));
+
+  useEffect(() => {
+    setContactSelected(os?.principalContact);
+  }, [selectClient.data]);
 
   const users = api.users.listUsers.useQuery();
   const usersOptions = users.data?.map((user) => ({
@@ -113,28 +135,28 @@ export default function OsFormCreate({ os }: osFormType) {
           "users",
           selectedUsers.map((user) => ({
             ...user,
-            email: user.email ?? undefined,
-            contactNumber: user.contactNumber ?? undefined,
-            password: user.password ?? undefined,
-            contactEmail: user.contactEmail ?? undefined,
-            lastName: user.lastName ?? undefined,
-            rg: user.rg ?? undefined,
-            cpf: user.cpf ?? undefined,
-            pis: user.pis ?? undefined,
-            ctps: user.ctps ?? undefined,
-            typeHiring: user.typeHiring ?? undefined,
-            hiringDate: user.hiringDate ?? undefined,
-            position: user.position ?? undefined,
-            salary: user.salary ?? undefined,
-            workLoad: user.workLoad ?? undefined,
-            comment: user.comment ?? undefined,
+            email: user.email ?? "",
+            contactNumber: user.contactNumber ?? "",
+            password: user.password ?? "",
+            contactEmail: user.contactEmail ?? "",
+            lastName: user.lastName ?? "",
+            rg: user.rg ?? "",
+            cpf: user.cpf ?? "",
+            pis: user.pis ?? "",
+            ctps: user.ctps ?? "",
+            typeHiring: user.typeHiring ?? "",
+            hiringDate: user.hiringDate ?? "",
+            position: user.position ?? "",
+            salary: user.salary ?? "",
+            workLoad: user.workLoad ?? "",
+            comment: user.comment ?? "",
             address: user.address.map((addr) => ({
               ...addr,
-              complement: addr.complement ?? undefined,
-              neighborhood: addr.neighborhood ?? undefined,
-              zipCode: addr.zipCode ?? undefined,
+              complement: addr.complement ?? "",
+              neighborhood: addr.neighborhood ?? "",
+              zipCode: addr.zipCode ?? "",
             })),
-            role: user.role ? { id: user.role.id } : undefined,
+            roleId: user?.role?.id ?? undefined,
           })),
         );
       }
@@ -145,7 +167,6 @@ export default function OsFormCreate({ os }: osFormType) {
   const createOs = api.os.createOs.useMutation();
   const updateOs = api.os.updateOs.useMutation();
   function onSubmit(values: OSType) {
-    console.log(values);
     if (os !== undefined) {
       updateOs.mutate(values, {
         onSuccess: () => {
@@ -194,28 +215,6 @@ export default function OsFormCreate({ os }: osFormType) {
       console.groupEnd();
     }
   }, [form.formState.errors]);
-
-  type AddressType = {
-    address: {
-      streetType: string;
-      street: string;
-      number: string;
-      complement: string;
-      zipCode: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-    };
-  };
-  const AddressComponent = ({ address }: AddressType) => {
-    return (
-      <div className="">
-        {address?.streetType} {address?.street}, {address?.number} -{" "}
-        {address?.complement} - cep: {address?.zipCode} - bairro:{" "}
-        {address?.neighborhood} - {address?.city} - {address?.state}
-      </div>
-    );
-  };
 
   return (
     <div className="p-10">
@@ -303,6 +302,19 @@ export default function OsFormCreate({ os }: osFormType) {
                   state={clientSelected}
                 />
               </div>
+              {formValues?.client && (
+                <div className="col-span-4 grid">
+                  <Label className="mb-4">Contato principal do cliente</Label>
+                  <ComboBoxComponent
+                    options={contactOptions}
+                    className=""
+                    placeholder="Contato"
+                    setState={setContactSelected}
+                    state={contactSelected}
+                  />
+                </div>
+              )}
+
               <div className="col-span-4 grid">
                 <Label className="mb-4">Funcionarios associados a OS</Label>
                 <ComboBoxMultiple
@@ -316,83 +328,25 @@ export default function OsFormCreate({ os }: osFormType) {
               <div className="col-span-4 grid" />
 
               {formValues?.client && (
-                <div className="col-span-12 mb-5">
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>
-                        Dados do cliente associado a OS
-                      </AccordionTrigger>
-                      <AccordionContent className="pl-3">
-                        <div className="col-span-12 mt-5">
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Nome Fantasia :</Label>
-                            <div className="">
-                              {formValues?.client.fantasyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Razão Social :</Label>
-                            <div className="">
-                              {formValues?.client.companyName}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Email de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactEmail}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">
-                              Numero de contato principal :
-                            </Label>
-                            <div className="">
-                              {formValues?.client.contactNumber}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">CNPJ :</Label>
-                            <div className="">{formValues?.client.cnpj}</div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Endereço :</Label>
-                            <div className="">
-                              <AddressComponent
-                                address={formValues.client.clientAddress}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex items-center gap-2 bg-slate-100 pb-2 pl-2 pt-2">
-                            <Label className="">Data de abertura :</Label>
-                            <div className="">
-                              {formValues?.client.openedData}
-                            </div>
-                          </div>
-                          <div className="col-span-3 flex flex-col gap-2 pb-2 pl-2 pt-2">
-                            <Label className="">Contatos cadastrados:</Label>
-                            {formValues?.client?.contacts?.map(
-                              (contact, id) => (
-                                <div
-                                  key={contact.id}
-                                  className={`ml-5 pl-2 ${id / 2 !== 0 ? "bg-slate-100" : ""}`}
-                                >
-                                  contato {id + 1} : {contact.name} -{" "}
-                                  {contact.email} - {contact.phoneNumber}
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
+                <ClientDataAccordion
+                  client={formValues.client}
+                  contactPrincipal={contactSelected}
+                />
               )}
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
               Salvar
+            </Button>
+            <Button
+              type="button"
+              className="ml-10 mt-10"
+              onClick={() =>
+                router.push(
+                  `/os/${form.getValues("status") == "pending" ? "schedules" : form.getValues("status") == "pendingApproval" ? "schedules/service-report" : "schedules/service-report"}/${form.getValues("id")}`,
+                )
+              }
+            >
+              Visualizar relatorio de OS
             </Button>
           </form>
         </Form>

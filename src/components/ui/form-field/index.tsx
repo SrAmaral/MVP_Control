@@ -8,6 +8,8 @@ interface FormFieldBaseProps<T extends FieldValues> {
   name: Path<T>;
   formControlRef?: React.Ref<HTMLInputElement>;
   placeholder?: string;
+  classNameInput?: string;
+  typeInput?: string;
 }
 
 function FormFieldBase<T extends FieldValues>({
@@ -16,6 +18,8 @@ function FormFieldBase<T extends FieldValues>({
   name,
   placeholder,
   formControlRef,
+  classNameInput,
+  typeInput,
 }: FormFieldBaseProps<T>) {
   return (
     <Controller
@@ -25,7 +29,12 @@ function FormFieldBase<T extends FieldValues>({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl ref={formControlRef}>
-            <Input placeholder={placeholder} {...field} />
+            <Input
+              placeholder={placeholder}
+              {...field}
+              className={classNameInput}
+              type={typeInput}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

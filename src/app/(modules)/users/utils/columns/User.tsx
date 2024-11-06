@@ -1,9 +1,14 @@
 "use client";
 
-import { CaretSortIcon, InfoCircledIcon, Pencil1Icon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
-import { ColumnDef } from "@tanstack/react-table";
+import { type Role, type User } from "@prisma/client";
+import {
+  CaretSortIcon,
+  InfoCircledIcon,
+  Pencil2Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "~/components/ui/button";
-import { User, Role } from "@prisma/client";
 interface UserWithRole extends User {
   role: Role;
 }
@@ -14,32 +19,28 @@ interface columnUserProps {
   info?: (id: string) => void;
 }
 
-function ColumnUser(
-  { erase, edit, info }: columnUserProps = {}  
-): ColumnDef<User>[] {
+function ColumnUser({
+  erase,
+  edit,
+  info,
+}: columnUserProps = {}): ColumnDef<User>[] {
   const columns: ColumnDef<UserWithRole>[] = [
     {
       accessorKey: "firstName",
-      header: () => (
-        <div>
-          Nome
-          
-        </div>
-      ),
+      header: () => <div>Nome</div>,
       cell: ({ row }) => {
         const firstName = row.getValue("firstName") ?? "";
-        const lastName = row.getAllCells().some(cell => cell.column.id === "lastName")
-          ? row.getValue("lastName") ?? ""
+        const lastName = row
+          .getAllCells()
+          .some((cell) => cell.column.id === "lastName")
+          ? (row.getValue("lastName") ?? "")
           : ""; // Se não existir, retorna uma string vazia
-    
+
         const name = firstName + " " + lastName;
-        return (
-          <div>{name}</div>
-        )        
+        return <div>{name}</div>;
       },
     },
     {
-      
       accessorKey: "role",
       header: ({ column }) => (
         <Button
@@ -52,14 +53,11 @@ function ColumnUser(
         </Button>
       ),
       cell: ({ row }) => {
-        const role = row.original.role.name ?? " - ";
-        return (
-          <div className="items-center flex"
-          >{role}</div>
-        )
-      }
+        const role = row.original.role?.name ?? " - ";
+        return <div className="flex items-center">{role}</div>;
+      },
     },
-    
+
     {
       accessorKey: "email",
       header: ({ column }) => (
@@ -73,11 +71,11 @@ function ColumnUser(
       ),
       cell: ({ row }) => (
         <div className="lowercase">{row.getValue("email")}</div>
-      ), 
+      ),
     },
     {
       accessorKey: "contactNumber",
-      header: ({column}) => (
+      header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -87,22 +85,35 @@ function ColumnUser(
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-center"
-        >{row.getValue("contactNumber") || " - "}</div>
+        <div className="text-center">
+          {row.getValue("contactNumber") || " - "}
+        </div>
       ),
-
     },
     {
       accessorKey: "Ações",
       enableHiding: true,
-      header: () => (
-        <div className="text-center">Ações</div>
-      ),
+      header: () => <div className="text-center">Ações</div>,
       cell: ({ row }) => (
         <div className="flex justify-between space-x-2">
-          <TrashIcon className="h-5 w-5 cursor-pointer" onClick={() => erase?.(row.original.id)} />
-          <Pencil2Icon className="h-5 w-5 cursor-pointer" onClick={() => edit?.(row.original.id)} />
-          <InfoCircledIcon className="h-5 w-5 cursor-pointer" onClick={() => info?.(row.original.id)} />
+          {erase && (
+            <TrashIcon
+              className="h-5 w-5 cursor-pointer"
+              onClick={() => erase?.(row.original.id)}
+            />
+          )}
+          {edit && (
+            <Pencil2Icon
+              className="h-5 w-5 cursor-pointer"
+              onClick={() => edit?.(row.original.id)}
+            />
+          )}
+          {info && (
+            <InfoCircledIcon
+              className="h-5 w-5 cursor-pointer"
+              onClick={() => info?.(row.original.id)}
+            />
+          )}
         </div>
       ),
     },

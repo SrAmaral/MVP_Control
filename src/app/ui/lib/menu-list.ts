@@ -1,5 +1,6 @@
 import {
   BookUser,
+  Calendar,
   ClipboardList,
   LayoutDashboardIcon,
   LayoutGrid,
@@ -139,6 +140,13 @@ export function getMenuList(pathname: string): Group[] {
               title:"Cadastro de OS",
               active: pathname === "/os/create",
               icon: ClipboardList
+            },
+            {
+              href: "/os/schedules",
+              label: "Calendario",
+              title:"Calendario de OS",
+              active: pathname === "/os/schedules",
+              icon: Calendar
             }
           ]
         }

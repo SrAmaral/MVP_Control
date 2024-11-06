@@ -1,0 +1,47 @@
+/* .custom-calendar .fc-toolbar {
+  @apply rounded-lg bg-white p-4;
+}
+
+.custom-calendar .fc-view-harness {
+  @apply rounded-lg bg-white p-4;
+}
+
+.custom-calendar .fc-button {
+  @apply rounded-lg px-4 py-2 text-white transition-colors duration-300;
+  background: theme("colors.foreground");
+  &:hover {
+    background: theme("colors.background");
+    color: theme("colors.foreground");
+  }
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background: theme("colors.foreground");
+    color: theme("colors.background");
+  }
+}
+
+.custom-calendar .fc-button-active {
+  background: theme("colors.background") !important;
+  color: theme("colors.foreground") !important;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:hover {
+    background: theme("colors.foreground") !important;
+    color: theme("colors.background") !important;
+  }
+} */
+
+.custom-calendar .fc-h-event {
+  background: none;
+  border: none;
+}
+
+.custom-calendar .fc-daygrid-day-frame {
+  cursor: pointer;
+}

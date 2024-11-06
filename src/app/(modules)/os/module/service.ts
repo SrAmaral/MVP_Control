@@ -20,8 +20,16 @@ export const OsCreate = async (data: OSType, db: PrismaClient) => {
             id: user.id ?? ""
           }))
         }
-      })
-      ,
+      }),
+      files: osData.files
+        ? {
+            create: osData.files.map((file) => ({
+              filename: file.filename ?? "",
+              url: file.url ?? "",
+              type: file.type ?? "",
+            })),
+          }
+        : undefined
     },
     include: {
       client: true,
@@ -40,7 +48,8 @@ export const OsList = async (db: PrismaClient) => {
       },
       include: {
         client: true,
-        users: true
+        users: true,
+        files: true
       }
     })
   } catch (error) {
@@ -57,8 +66,9 @@ export const OsListById = async (id: string, db: PrismaClient) => {
         }
       },
       include: {
-        client: true,
-        users: true
+        client: {include: {clientAddress: true, contacts: true}},
+        users: {include: {address: true, files: true}},
+        files: true
       }
     })
   } catch (error) {
@@ -67,16 +77,26 @@ export const OsListById = async (id: string, db: PrismaClient) => {
 }
 
 
-export const OsUpdate = async ( data: OSType, db: PrismaClient) => {
-  const {client, users , ...osData } = data;
-  console.log(users)
+export const OsUpdate = async (data: OSType, db: PrismaClient) => {
+  const { client, users, id, ...osData } = data;
+
+  const existingFiles = await db.osFiles.findMany({
+    where: {
+      osId: data.id,
+    },
+  });
+
+  const newFiles = osData.files?.filter(
+    (file) => !existingFiles.some((existingFile) => existingFile.id === file.id)
+  );
 
   const os = await db.oS.update({
     where: {
-      id: osData.id
+      id: id
     },
     data: {
       ...osData,
+      serviceDescription: osData.serviceDescription ?? "",
       ...(client && {
         client: {
           connect: {
@@ -90,7 +110,19 @@ export const OsUpdate = async ( data: OSType, db: PrismaClient) => {
             id: user.id ?? ""
           }))
         }
-      })
+      }),
+      files: {
+        deleteMany: {
+          osId: data.id,
+          id: { notIn: (data.files ?? []).map((file) => file.id).filter((id): id is number => id !== undefined) },
+        },
+        create: newFiles?.map((file) => ({
+          filename: file.filename ?? "",
+          url: file.url ?? "",
+          type: file.type ?? "",
+          ...file,
+        })),
+      },
     },
     include: {
       client: true,
@@ -121,5 +153,5 @@ export const osService = {
   OsList,
   OsListById,
   OsUpdate,
-  OsDelete
+  OsDelete,
   };
