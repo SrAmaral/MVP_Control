@@ -3,7 +3,7 @@ services:
     build:
       context: .
     ports:
-      - "3000:3000"
+      - "${RUN_PORT}:${RUN_PORT}"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
@@ -15,4 +15,4 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
-    entrypoint: sh -c "PORT=3000 npm run start"
+    entrypoint: sh -c "PORT=${RUN_PORT} npm run start"
