@@ -8,6 +8,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
@@ -16,8 +17,9 @@ import {
   clientSchema,
   type ClientType,
   type CNPJRequestType,
-} from "~/app/(modules)/clients/module/types";
+} from "~/app/(loggedArea)/(modules)/clients/module/types";
 import { api } from "~/core/trpc/callers/react";
+import { useToast } from "~/hooks/use-toast";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -28,12 +30,10 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { useToast } from "~/hooks/use-toast";
 import FormFieldBase from "../ui/form-field";
+import { Input } from "../ui/input";
 import LoadingSpinner from "../ui/loading";
-import { useRouter } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 type UpdateClientFormProps = {
   client?: ClientType;

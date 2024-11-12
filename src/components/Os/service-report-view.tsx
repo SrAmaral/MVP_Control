@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
-import { osSchema, type OSType } from "~/app/(modules)/os/module/types";
+import {
+  osSchema,
+  type OSType,
+} from "~/app/(loggedArea)/(modules)/os/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { formatDate, resolveOsStatus } from "~/lib/utils";

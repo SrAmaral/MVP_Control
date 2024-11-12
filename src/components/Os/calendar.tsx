@@ -4,7 +4,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useRouter } from "next/navigation";
-import { type OSType } from "~/app/(modules)/os/module/types";
+import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
 import { resolveOsStatus } from "~/lib/utils";
 
 type CalendarProps = {

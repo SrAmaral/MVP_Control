@@ -9,7 +9,7 @@ import { withMask } from "use-mask-input";
 import {
   type CreateUserData,
   CreateUserSchema,
-} from "~/app/(modules)/users/module/types";
+} from "~/app/(loggedArea)/(modules)/users/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { Button } from "../ui/button";

@@ -1,4 +1,4 @@
-import { type OSType } from "~/app/(modules)/os/module/types";
+import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
 import { cn } from "~/lib/utils"; // Utility to handle conditional classes
 import {
   Accordion,

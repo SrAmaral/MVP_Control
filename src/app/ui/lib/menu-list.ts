@@ -91,10 +91,10 @@ export function getMenuList(pathname: string): Group[] {
           icon: Users,
           submenus: [
             {
-              href: "/users/dashboard",
+              href: "/users",
               label: "Dashboad",
               title:"Dashboard dos usuarios",
-              active: pathname === "/users/dashboard",
+              active: pathname === "/users",
               icon: LayoutDashboardIcon
             },
             {
@@ -121,10 +121,10 @@ export function getMenuList(pathname: string): Group[] {
           title:"Ordem de Serviço",
           submenus: [
             {
-              href: "/os/dashboard",
+              href: "/os",
               label: "Dashboad",
               title:"Dashboard das OS",
-              active: pathname === "/os/dashboard",
+              active: pathname === "/os",
               icon: LayoutDashboardIcon
             },
             {

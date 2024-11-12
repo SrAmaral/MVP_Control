@@ -2,18 +2,16 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import OsFormCreate from "~/components/Os/form";
+import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
+import { ServiceReportView } from "~/components/Os/service-report-view";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
-import {OSType} from "~/app/(modules)/os/module/types";
 
 export default function Page() {
   const { osId } = useParams();
   const router = useRouter();
   const { toast } = useToast();
-
-
 
   const {
     data: os,
@@ -36,5 +34,15 @@ export default function Page() {
     return <LoadingSpinner className="h-[calc(100vh-70px)]" />;
   }
 
-  return <OsFormCreate os={os as unknown as OSType} />;
+  const inNewApprove =
+    os?.approverName == "" ||
+    os?.signatureImage == "" ||
+    os?.approverDate == "";
+
+  return (
+    <ServiceReportView
+      os={os as unknown as OSType}
+      isNewApprove={inNewApprove}
+    />
+  );
 }

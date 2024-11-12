@@ -1,6 +1,6 @@
-import { clientsRouter } from "~/app/(modules)/clients/module/router";
-import { osRouter } from "~/app/(modules)/os/module/router";
-import { usersRouter } from "~/app/(modules)/users/module/router";
+import { clientsRouter } from "~/app/(loggedArea)/(modules)/clients/module/router";
+import { osRouter } from "~/app/(loggedArea)/(modules)/os/module/router";
+import { usersRouter } from "~/app/(loggedArea)/(modules)/users/module/router";
 import { createCallerFactory, createTRPCRouter } from "~/core/trpc/trpc";
 
 /**
