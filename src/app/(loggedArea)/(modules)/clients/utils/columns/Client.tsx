@@ -1,15 +1,14 @@
 "use client";
 
+import { type Client } from "@prisma/client";
 import {
   CaretSortIcon,
   InfoCircledIcon,
-  Pencil1Icon,
   Pencil2Icon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "~/components/ui/button";
-import { Client } from "@prisma/client";
 
 interface columnUserProps {
   erase?: (id: string) => void;
@@ -24,19 +23,19 @@ function ColumnClient({
 }: columnUserProps = {}): ColumnDef<Client>[] {
   const columns: ColumnDef<Client>[] = [
     {
-      accessorKey: "fantasyName",
+      accessorKey: "companyName",
       header: ({ column }) => (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="text-left"
         >
-          Nome Fantasia
+          Nome da Empresa
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-left">{row.getValue("fantasyName")}</div>
+        <div className="text-left">{row.getValue("companyName")}</div>
       ),
     },
     {

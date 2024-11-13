@@ -73,9 +73,10 @@ export function updateCLient(data: ClientType, db: PrismaClient) {
 
       contacts: data.contacts
         ? {
-            update: data.contacts.map((contact) => ({
+            upsert: data.contacts.map((contact) => ({
               where: { id: contact.id },
-              data: { ...contact },
+              create: { ...contact },
+              update: { ...contact },
             })),
           }
         : undefined,

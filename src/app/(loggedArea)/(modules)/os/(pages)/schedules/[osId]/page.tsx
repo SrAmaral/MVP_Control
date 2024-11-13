@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { type OSType } from "~/app/dashboard/(modules)/os/module/types";
+import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
 import { OsUserView } from "~/components/Os/os-user-view";
 import LoadingSpinner from "~/components/ui/loading";
 import { api } from "~/core/trpc/callers/react";

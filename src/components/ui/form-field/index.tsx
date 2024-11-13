@@ -1,4 +1,9 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import {
+  type Control,
+  Controller,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../form";
 import { Input } from "../input";
 
@@ -10,6 +15,7 @@ interface FormFieldBaseProps<T extends FieldValues> {
   placeholder?: string;
   classNameInput?: string;
   typeInput?: string;
+  disabled?: boolean;
 }
 
 function FormFieldBase<T extends FieldValues>({
@@ -20,6 +26,7 @@ function FormFieldBase<T extends FieldValues>({
   formControlRef,
   classNameInput,
   typeInput,
+  disabled = false,
 }: FormFieldBaseProps<T>) {
   return (
     <Controller
@@ -34,6 +41,7 @@ function FormFieldBase<T extends FieldValues>({
               {...field}
               className={classNameInput}
               type={typeInput}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />

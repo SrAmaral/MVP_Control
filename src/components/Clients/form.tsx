@@ -46,7 +46,6 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      id: client?.id ?? "",
       contacts: [
         {
           name: "",
@@ -81,7 +80,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         })
         .then((data: CNPJRequestType) => {
           if (Object.keys(data).length !== 1) {
-            setFindingCNPJ("");
+            setFindingCNPJ("CNPJ encontrado!");
             form.setValue("fantasyName", data["NOME FANTASIA"]);
             form.setValue("companyName", data["RAZAO SOCIAL"]);
             form.setValue("cnaeCode", data["CNAE PRINCIPAL CODIGO"]);
@@ -231,6 +230,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       formControl={form.control}
                       name="fantasyName"
                       placeholder="Nome Fantasia"
+                      disabled={findingCNPJ === "CNPJ encontrado!"}
                     />
                   </div>
                   <div className="col-span-6 grid">
@@ -239,6 +239,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       formControl={form.control}
                       name="companyName"
                       placeholder="Nome da Empresa"
+                      disabled={findingCNPJ === "CNPJ encontrado!"}
                     />
                   </div>
                   <div className="col-span-6 grid">

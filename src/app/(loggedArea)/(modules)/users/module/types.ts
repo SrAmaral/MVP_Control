@@ -31,9 +31,9 @@ export const CreateUserSchema = z.object({
     })).optional(),
     files: z.array(z.object({
         id: z.number().optional(),
-        filename: z.string().optional(),
-        url: z.string().optional(),
-        type: z.string().optional(),
+        filename: z.string(),
+        url: z.string(),
+        type: z.string(),
     })).optional(),
     roleId: z.number().nullish(),
 })
