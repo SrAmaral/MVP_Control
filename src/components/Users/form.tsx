@@ -5,7 +5,9 @@ import { BookUser, Files, KeyRound, MapPinnedIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast as sonner } from "sonner";
 import { withMask } from "use-mask-input";
+import { type CEPResponseType } from "~/app/(loggedArea)/(modules)/clients/module/types";
 import {
   type CreateUserData,
   CreateUserSchema,
@@ -96,6 +98,37 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
     };
   });
 
+  const cepWatch = form.watch("address.0.zipCode");
+
+  useEffect(() => {
+    if (cepWatch?.replace(/\D/g, "").length === 8) {
+      fetch(`https://viacep.com.br/ws/${cepWatch.replace(/\D/g, "")}/json/`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data: CEPResponseType) => {
+          form.setValue(
+            "address.0.streetType",
+            data.logradouro.split(" ")[0] ?? "",
+          );
+          form.setValue(
+            "address.0.street",
+            data.logradouro.split(" ").slice(1).join(" "),
+          );
+          form.setValue("address.0.neighborhood", data.bairro);
+          form.setValue("address.0.city", data.localidade);
+          form.setValue("address.0.state", data.uf);
+          form.setValue("address.0.complement", data.complemento);
+          form.setValue("address.0.number", data.unidade);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [cepWatch, form]);
+
   useEffect(() => {
     if (user !== undefined) {
       const replaceEmpyFieldUser = {
@@ -117,9 +150,12 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
 
   useEffect(() => {
     if (Object.keys(form.formState.errors).length !== 0) {
-      console.group("Form Errors");
-      console.log(form.formState.errors);
-      console.groupEnd();
+      sonner("Campos obrigatorio", {
+        description: `Um ou mais campos obrigatórios não foram preenchidos!`,
+      });
+      // console.group("Form Errors");
+      // console.log(form.formState.errors);
+      // console.groupEnd();
     }
   }, [form.formState.errors]);
 
@@ -153,18 +189,30 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Tabs defaultValue="employeeInfos" className="">
               <TabsList className="h-46 flex flex-col space-y-2 rounded-md p-2 sm:flex lg:h-12 lg:flex-row lg:items-center lg:justify-start lg:space-x-4 lg:space-y-0">
-                <TabsTrigger value="employeeInfos">
+                <TabsTrigger
+                  value="employeeInfos"
+                  className={`flex items-center justify-center md:justify-start ${Object.keys(form.formState.errors).length > 0 && "border-b-4 border-red-500"}`}
+                >
                   <BookUser className="mr-2 h-4 w-4" />
                   Informações do Funcionario
                 </TabsTrigger>
-                <TabsTrigger value="hiringInfos">
+                <TabsTrigger
+                  value="hiringInfos"
+                  className={`flex items-center justify-center md:justify-start ${form.formState.errors.hiringDate || form.formState.errors.typeHiring || form.formState.errors.position ? "border-b-4 border-red-500" : ""}`}
+                >
                   <MapPinnedIcon className="mr-2 h-4 w-4" /> Dados da
                   Contratação
                 </TabsTrigger>
-                <TabsTrigger value="address">
+                <TabsTrigger
+                  value="address"
+                  className={`flex items-center justify-center md:justify-start ${form.formState.errors.address && "border-b-4 border-red-500"}`}
+                >
                   <MapPinnedIcon className="mr-2 h-4 w-4" /> Endereço
                 </TabsTrigger>
-                <TabsTrigger value="accountInfos">
+                <TabsTrigger
+                  value="accountInfos"
+                  className={`flex items-center justify-center md:justify-start ${form.formState.errors.email || form.formState.errors.password || form.formState.errors.roleId ? "border-b-4 border-red-500" : ""}`}
+                >
                   <KeyRound className="mr-2 h-4 w-4" /> Dados de acesso
                 </TabsTrigger>
                 <TabsTrigger value="documents">
@@ -180,6 +228,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="firstName"
                       placeholder="Nome"
                     />
+                    {form.formState.errors.firstName && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
@@ -188,6 +241,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="lastName"
                       placeholder="Sobrenome"
                     />
+                    {form.formState.errors.lastName && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
@@ -197,6 +255,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="RG"
                       formControlRef={withMask("99.999.999-9")}
                     />
+                    {form.formState.errors.rg && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
@@ -206,6 +269,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="CPF"
                       formControlRef={withMask("999.999.999-99")}
                     />
+                    {form.formState.errors.cpf && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
@@ -233,6 +301,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Número para Contato"
                       formControlRef={withMask("(99) 99999-9999")}
                     />
+                    {form.formState.errors.contactNumber && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid sm:col-span-6">
                     <FormFieldBase
@@ -241,6 +314,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="contactEmail"
                       placeholder="Email para Contato"
                     />
+                    {form.formState.errors.contactEmail && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
@@ -254,6 +332,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Data de Contratação"
                       formControlRef={withMask("99/99/9999")}
                     />
+                    {form.formState.errors.hiringDate && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid md:col-span-4">
                     <ComboBoxComponent
@@ -263,6 +346,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       setState={setHiringType}
                       state={hiringType}
                     />
+                    {form.formState.errors.typeHiring && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid md:col-span-4">
                     <ComboBoxComponent
@@ -272,6 +360,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       setState={setPositionType}
                       state={positionType}
                     />
+                    {form.formState.errors.position && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid md:col-span-6">
                     <FormFieldBase
@@ -308,11 +401,31 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                 <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 lg:grid-cols-12">
                   <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
+                      label="CEP"
+                      formControl={form.control}
+                      name="address.0.zipCode"
+                      placeholder="CEP"
+                      formControlRef={withMask("99999-999")}
+                    />
+                    {form.formState.errors.address?.[0]?.zipCode && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
+                  </div>
+                  <div className="lg:col-span-8"></div>
+                  <div className="col-span-12 grid lg:col-span-4">
+                    <FormFieldBase
                       label="Tipo de Longradouro"
                       formControl={form.control}
                       name="address.0.streetType"
                       placeholder="Tipo de Longradouro"
                     />
+                    {form.formState.errors.address?.[0]?.streetType && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid lg:col-span-8">
                     <FormFieldBase
@@ -321,6 +434,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="address.0.street"
                       placeholder="Logradouro"
                     />
+                    {form.formState.errors.address?.[0]?.street && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid lg:col-span-2">
                     <FormFieldBase
@@ -329,6 +447,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="address.0.number"
                       placeholder="Número"
                     />
+                    {form.formState.errors.address?.[0]?.number && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid lg:col-span-5">
                     <FormFieldBase
@@ -345,6 +468,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="address.0.neighborhood"
                       placeholder="Bairro"
                     />
+                    {form.formState.errors.address?.[0]?.neighborhood && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
@@ -353,6 +481,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="address.0.city"
                       placeholder="Cidade"
                     />
+                    {form.formState.errors.address?.[0]?.city && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 grid lg:col-span-4">
                     <FormFieldBase
@@ -361,15 +494,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="address.0.state"
                       placeholder="Estado"
                     />
-                  </div>
-                  <div className="col-span-12 grid lg:col-span-4">
-                    <FormFieldBase
-                      label="CEP"
-                      formControl={form.control}
-                      name="address.0.zipCode"
-                      placeholder="CEP"
-                      formControlRef={withMask("99999-999")}
-                    />
+                    {form.formState.errors.address?.[0]?.state && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
@@ -383,6 +512,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       name="email"
                       placeholder="Email para Contato"
                     />
+                    {form.formState.errors.email && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <FormFieldBase
@@ -392,6 +526,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       placeholder="Senha"
                       typeInput="password"
                     />
+                    {form.formState.errors.password && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <ComboBoxComponent
@@ -401,6 +540,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                       setState={setRoleType}
                       state={roleType}
                     />
+                    {form.formState.errors.roleId && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
@@ -433,7 +577,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
               </TabsContent>
             </Tabs>
             <Button type="submit" className="mt-10 bg-green-500">
-              Salvar
+              {user ? "Atualizar Dados" : "Criar Funcionário"}
             </Button>
           </form>
         </Form>

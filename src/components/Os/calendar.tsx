@@ -15,7 +15,10 @@ export const OsCalendar = ({ events }: CalendarProps) => {
   const router = useRouter();
   const resolveEvents = events?.map((event) => {
     return {
-      title: event.client.fantasyName,
+      title:
+        event.client.fantasyName.length > 0
+          ? event.client.fantasyName
+          : event.client.companyName,
       start: event.scheduleDate,
       allDay: true,
       description: event.description,

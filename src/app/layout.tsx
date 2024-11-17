@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
+import { Toaster as Sonner } from "sonner";
 import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/core/trpc/callers/react";
 
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
+        <Sonner />
         <Toaster />
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>

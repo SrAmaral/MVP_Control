@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { withMask } from "use-mask-input";
 import { type z } from "zod";
 import {
+  type CEPResponseType,
   clientSchema,
   type ClientType,
   type CNPJRequestType,
@@ -35,6 +36,8 @@ import { Input } from "../ui/input";
 import LoadingSpinner from "../ui/loading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
+import { toast as sonner } from "sonner";
+
 type UpdateClientFormProps = {
   client?: ClientType;
 };
@@ -46,13 +49,8 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      contacts: [
-        {
-          name: "",
-          email: "",
-          phoneNumber: "",
-        },
-      ],
+      id: client?.id ?? "",
+      contacts: [],
     },
   });
 
@@ -66,6 +64,37 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
       form.reset(client);
     }
   }, [form, client]);
+
+  const cepWatch = form.watch("clientAddress.zipCode");
+
+  useEffect(() => {
+    if (cepWatch?.replace(/\D/g, "").length === 8) {
+      fetch(`https://viacep.com.br/ws/${cepWatch.replace(/\D/g, "")}/json/`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data: CEPResponseType) => {
+          form.setValue(
+            "clientAddress.streetType",
+            data.logradouro.split(" ")[0] ?? "",
+          );
+          form.setValue(
+            "clientAddress.street",
+            data.logradouro.split(" ").slice(1).join(" "),
+          );
+          form.setValue("clientAddress.neighborhood", data.bairro);
+          form.setValue("clientAddress.city", data.localidade);
+          form.setValue("clientAddress.state", data.uf);
+          form.setValue("clientAddress.complement", data.complemento);
+          form.setValue("clientAddress.number", data.unidade);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [cepWatch, form]);
 
   useEffect(() => {
     if (cnpjWatch?.replace(/\D/g, "").length === 14 && !client?.id) {
@@ -158,9 +187,12 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
 
   useEffect(() => {
     if (Object.keys(form.formState.errors).length !== 0) {
-      console.group("Form Errors");
-      console.log(form.formState.errors);
-      console.groupEnd();
+      sonner("Campos obrigatorio", {
+        description: `Um ou mais campos obrigatórios não foram preenchidos!`,
+      });
+      // console.group("Form Errors");
+      // console.log(form.formState.errors);
+      // console.groupEnd();
     }
   }, [form.formState.errors]);
 
@@ -173,14 +205,14 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
               <TabsList className="flex h-32 flex-col space-y-2 rounded-md p-2 md:h-12 md:flex-row md:items-center md:justify-start md:space-x-4 md:space-y-0">
                 <TabsTrigger
                   value="companyInfos"
-                  className="flex items-center justify-center md:justify-start"
+                  className={`flex items-center justify-center md:justify-start ${Object.keys(form.formState.errors).length > 0 && "border-b-4 border-red-500"}`}
                 >
                   <InfoIcon className="mr-2 h-4 w-4" />
                   Informações da Empresa
                 </TabsTrigger>
                 <TabsTrigger
                   value="address"
-                  className="flex items-center justify-center md:justify-start"
+                  className={`flex items-center justify-center md:justify-start ${form.formState.errors.clientAddress && "border-b-4 border-red-500"}`}
                 >
                   <MapPinnedIcon className="mr-2 h-4 w-4" />
                   Endereço
@@ -218,7 +250,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                           >
                             {findingCNPJ}
                           </FormDescription>
-                          <FormMessage />
+                          {form.formState.errors.cnpj && (
+                            <p className="mt-1 text-sm text-red-600">
+                              Campo orbigatorio!
+                            </p>
+                          )}
                         </FormItem>
                       )}
                     />
@@ -232,6 +268,12 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Nome Fantasia"
                       disabled={findingCNPJ === "CNPJ encontrado!"}
                     />
+                    <FormMessage />
+                    {form.formState.errors.fantasyName && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <FormFieldBase
@@ -241,6 +283,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Nome da Empresa"
                       disabled={findingCNPJ === "CNPJ encontrado!"}
                     />
+                    {form.formState.errors.companyName && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <FormFieldBase
@@ -267,6 +314,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Número para Contato"
                       formControlRef={withMask("(99) 99999-9999")}
                     />
+                    {form.formState.errors.contactNumber && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <FormFieldBase
@@ -275,6 +327,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="contactEmail"
                       placeholder="Email para Contato"
                     />
+                    {form.formState.errors.contactEmail && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-6 grid">
                     <FormFieldBase
@@ -284,11 +341,31 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       placeholder="Data de Abertura"
                       formControlRef={withMask("99/99/9999")}
                     />
+                    {form.formState.errors.openedData && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
               <TabsContent value="address">
                 <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-6 md:grid-cols-12">
+                  <div className="col-span-12 md:col-span-4">
+                    <FormFieldBase
+                      label="CEP"
+                      formControl={form.control}
+                      name="clientAddress.zipCode"
+                      placeholder="CEP"
+                      formControlRef={withMask("99999-999")}
+                    />
+                    {form.formState.errors.clientAddress?.zipCode && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
+                  </div>
+                  <div className="md:col-span-8"></div>
                   <div className="col-span-12 md:col-span-3">
                     <FormFieldBase
                       label="Tipo de Longradouro"
@@ -296,6 +373,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.streetType"
                       placeholder="Tipo de Longradouro"
                     />
+                    {form.formState.errors.clientAddress?.streetType && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 md:col-span-9">
                     <FormFieldBase
@@ -304,6 +386,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.street"
                       placeholder="Longradouro"
                     />
+                    {form.formState.errors.clientAddress?.street && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 md:col-span-2">
                     <FormFieldBase
@@ -312,6 +399,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.number"
                       placeholder="Numero"
                     />
+                    {form.formState.errors.clientAddress?.number && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 md:col-span-5">
                     <FormFieldBase
@@ -328,6 +420,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.neighborhood"
                       placeholder="Bairro"
                     />
+                    {form.formState.errors.clientAddress?.neighborhood && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 md:col-span-4">
                     <FormFieldBase
@@ -336,6 +433,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.city"
                       placeholder="Cidade"
                     />
+                    {form.formState.errors.clientAddress?.city && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-12 md:col-span-4">
                     <FormFieldBase
@@ -344,15 +446,11 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
                       name="clientAddress.state"
                       placeholder="Estado"
                     />
-                  </div>
-                  <div className="col-span-12 md:col-span-4">
-                    <FormFieldBase
-                      label="CEP"
-                      formControl={form.control}
-                      name="clientAddress.zipCode"
-                      placeholder="CEP"
-                      formControlRef={withMask("99999-999")}
-                    />
+                    {form.formState.errors.clientAddress?.state && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Campo orbigatorio!
+                      </p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
@@ -433,7 +531,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
               </TabsContent>
             </Tabs>
             <Button type="submit" className="mt-10 bg-green-500">
-              Salvar
+              {client ? "Atualizar Cliente" : "Criar Cliente"}
             </Button>
           </form>
         </Form>

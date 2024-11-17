@@ -12,9 +12,9 @@ export const CreateUserSchema = z.object({
     ctps: z.string().optional(),
     contactNumber: z.string(),
     contactEmail: z.string(),
-    typeHiring: z.string(),
+    typeHiring: z.string().nonempty(),
     hiringDate: z.string(),
-    position: z.string(),
+    position: z.string().nonempty(),
     salary: z.string().optional(),
     workLoad: z.string().optional(),
     comment: z.string().optional(),
@@ -28,14 +28,14 @@ export const CreateUserSchema = z.object({
         city: z.string(),
         state: z.string(),
         zipCode: z.string(),
-    })).optional(),
+    })),
     files: z.array(z.object({
         id: z.number().optional(),
         filename: z.string(),
         url: z.string(),
         type: z.string(),
     })).optional(),
-    roleId: z.number().nullish(),
+    roleId: z.number().min(1),
 })
 
 export type CreateUserData = z.infer<typeof CreateUserSchema>
