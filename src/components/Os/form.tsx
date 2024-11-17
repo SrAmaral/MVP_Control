@@ -8,7 +8,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
-import { osSchema, type OSType } from "~/app/(modules)/os/module/types";
+import {
+  osSchema,
+  type OSType,
+} from "~/app/(loggedArea)/(modules)/os/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { cn } from "~/lib/utils";
@@ -82,8 +85,10 @@ export default function OsFormCreate({ os }: osFormType) {
   const clients = api.clients.listClient.useQuery();
   const clientOptions = clients.data?.map((client) => ({
     id: client.id,
-    value: client.fantasyName,
-    label: client.fantasyName,
+    value:
+      client.fantasyName.length > 0 ? client.fantasyName : client.companyName,
+    label:
+      client.fantasyName.length > 0 ? client.fantasyName : client.companyName,
   }));
 
   const selectClient = api.clients.listClientById.useQuery(
@@ -335,19 +340,21 @@ export default function OsFormCreate({ os }: osFormType) {
               )}
             </div>
             <Button type="submit" className="mt-10 bg-green-500">
-              Salvar
+              {os ? "Atualizar OS" : "Criar OS"}
             </Button>
-            <Button
-              type="button"
-              className="ml-10 mt-10"
-              onClick={() =>
-                router.push(
-                  `/os/${form.getValues("status") == "pending" ? "schedules" : form.getValues("status") == "pendingApproval" ? "schedules/service-report" : "schedules/service-report"}/${form.getValues("id")}`,
-                )
-              }
-            >
-              Visualizar relatorio de OS
-            </Button>
+            {os && (
+              <Button
+                type="button"
+                className="ml-10 mt-10"
+                onClick={() =>
+                  router.push(
+                    `/os/${form.getValues("status") == "pending" ? "schedules" : form.getValues("status") == "pendingApproval" ? "schedules/service-report" : "schedules/service-report"}/${form.getValues("id")}`,
+                  )
+                }
+              >
+                Visualizar relatorio de OS
+              </Button>
+            )}
           </form>
         </Form>
       ) : (

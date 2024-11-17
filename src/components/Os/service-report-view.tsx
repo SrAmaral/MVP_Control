@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
-import { osSchema, type OSType } from "~/app/(modules)/os/module/types";
+import {
+  osSchema,
+  type OSType,
+} from "~/app/(loggedArea)/(modules)/os/module/types";
 import { api } from "~/core/trpc/callers/react";
 import { useToast } from "~/hooks/use-toast";
 import { formatDate, resolveOsStatus } from "~/lib/utils";
@@ -146,7 +149,11 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
         <div className="mt-5 flex flex-col gap-2">
           <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Nome Fantasia</span>
-            <span className="text-1 font-light">{os?.client.fantasyName}</span>
+            <span className="text-1 font-light">
+              {os?.client.fantasyName && os?.client.fantasyName.length > 0
+                ? os?.client.fantasyName
+                : os?.client.companyName}
+            </span>
           </div>
           <div className="flex justify-between gap-5">
             <span className="text-1 font-semibold">Endereço</span>

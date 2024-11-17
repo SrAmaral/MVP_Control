@@ -1,10 +1,11 @@
+import bcrypt from "bcrypt";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {usersService } from "~/app/(modules)/users/module/service"
+import { usersService } from "~/app/(loggedArea)/(modules)/users/module/service";
 import { db } from "./db";
 
 /**
@@ -56,14 +57,17 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null;
         }
-        const user = usersService.checkCredentials(credentials.email, credentials.password,db);
-        if (user !== null) {
+        const user = await usersService.checkCredentials(credentials.email, db);
+        if (user?.password && await bcrypt.compare(credentials.password, user.password)) {
           return { ...user };
         }
         return null;
       },
     }),
   ],
+  pages: {
+    signIn: "/auth/signin",
+  }
 };
 
 /**

@@ -1,19 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-} from "./breadcrumb";
-import { ContentLayout } from "./content-layout";
-import PlaceholderContent from "./placeholder-content";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { findActiveLabel } from "~/app/ui/lib/menu-list";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "./breadcrumb";
+import { ContentLayout } from "./content-layout";
+import PlaceholderContent from "./placeholder-content";
 
 interface LayoutProps {
   children?: React.ReactNode;

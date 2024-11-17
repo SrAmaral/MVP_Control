@@ -1,4 +1,4 @@
-import { type OSType } from "~/app/(modules)/os/module/types";
+import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
 import { cn } from "~/lib/utils"; // Utility to handle conditional classes
 import {
   Accordion,
@@ -32,7 +32,11 @@ const ClientDataAccordion: React.FC<ClientDataAccordionProps> = ({
                 )}
               >
                 <Label>Nome Fantasia:</Label>
-                <div>{client.fantasyName}</div>
+                <div>
+                  {client.fantasyName.length > 0
+                    ? client.fantasyName
+                    : client.companyName}
+                </div>
               </div>
               <div className="col-span-3 flex items-center gap-2 rounded-lg pb-2 pl-2 pt-2">
                 <Label>Razão Social:</Label>
