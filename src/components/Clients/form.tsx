@@ -49,7 +49,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
-      id: client?.id ?? "",
+      id: client?.id ?? undefined,
       contacts: [],
     },
   });
