@@ -18,7 +18,7 @@ RUN npx zenstack generate
 RUN npm run build
 
 # Specify port app runs on
-EXPOSE 3000
+EXPOSE 3004
 
 # Command to run the app
 CMD ["npm", "start"]

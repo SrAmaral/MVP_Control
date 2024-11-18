@@ -161,7 +161,7 @@ export default function OsFormCreate({ os }: osFormType) {
               neighborhood: addr.neighborhood ?? "",
               zipCode: addr.zipCode ?? "",
             })),
-            roleId: user?.role?.id ?? undefined,
+            roleId: user?.role?.id ?? 0,
           })),
         );
       }
@@ -279,9 +279,25 @@ export default function OsFormCreate({ os }: osFormType) {
                     <Calendar
                       mode="single"
                       selected={deadline ?? undefined}
-                      onSelect={(day) => setDeadline(day ?? null)}
+                      onSelect={(day) => {
+                        if (day && schedulingDate && day >= schedulingDate) {
+                          setDeadline(day);
+                        } else {
+                          toast({
+                            title:
+                              "Data Limite deve ser maior ou igual à Data de Agendamento",
+                            variant: "error",
+                          });
+                        }
+                      }}
+                      disabled={schedulingDate === null}
                       initialFocus
                     />
+                    {schedulingDate === null && (
+                      <p className="mb-5 text-center text-muted-foreground text-red-400">
+                        Selecione a Data de Agendamento
+                      </p>
+                    )}
                   </PopoverContent>
                 </Popover>
               </div>
@@ -301,7 +317,7 @@ export default function OsFormCreate({ os }: osFormType) {
                 <Label className="mb-4">Cliente associado a OS</Label>
                 <ComboBoxComponent
                   options={clientOptions}
-                  className=""
+                  className="truncate"
                   placeholder="Cliente"
                   setState={setClientSelected}
                   state={clientSelected}
