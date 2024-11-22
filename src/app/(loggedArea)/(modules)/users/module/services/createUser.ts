@@ -7,8 +7,13 @@ export default async function createUser(data: CreateUserData,db:PrismaClient) {
   return await db.user.create({
     data: {
       ...userData,
+      pis: userData.pis ?? "",
+      ctps: userData.ctps ?? "",
+      salary: userData.salary ?? "",
+      workLoad: userData.workLoad ?? "",
+      comment: userData.comment ?? "",
       address: address
-        ? { create: data.address }
+        ? { create: {...data.address,} }
         : undefined,
       password: await bcrypt.hash(data.password, 10),
       files: {
