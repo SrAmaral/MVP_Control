@@ -107,7 +107,7 @@ export const OsUpdate = async (data: OSType, db: PrismaClient) => {
       ...(users && {
         users: {
           set: users.map((user) => ({
-            id: user.id ?? ""
+            id: user.id ?? "",
           }))
         }
       }),

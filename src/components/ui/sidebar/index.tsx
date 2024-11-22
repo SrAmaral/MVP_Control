@@ -1,6 +1,6 @@
-import { PanelsTopLeft } from "lucide-react";
 import Link from "next/link";
 
+import Image from "next/image";
 import { cn } from "~/lib/utils";
 import { useSidebarToggle } from "../../../app/ui/hooks/use-sidebar-toggle";
 import { useStore } from "../../../app/ui/hooks/use-store";
@@ -30,18 +30,17 @@ export function Sidebar() {
           variant="link"
           asChild
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="mr-1 h-6 w-6" />
-            <h1
-              className={cn(
-                "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
-                sidebar?.isOpen === false
-                  ? "hidden -translate-x-96 opacity-0"
-                  : "translate-x-0 opacity-100",
-              )}
-            >
-              Brand
-            </h1>
+          <Link href="/" className="mb-5 mt-10 flex items-center gap-2">
+            {sidebar?.isOpen ? (
+              <Image
+                src="/logo_marca.png"
+                alt="logo"
+                width={200}
+                height={100}
+              />
+            ) : (
+              <Image src="/logo.png" alt="logo" width={40} height={40} />
+            )}
           </Link>
         </Button>
         <Menu isOpen={sidebar?.isOpen} />

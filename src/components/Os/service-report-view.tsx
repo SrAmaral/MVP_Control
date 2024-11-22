@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PanelsTopLeft } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -108,8 +107,12 @@ export const ServiceReportView = ({ os, isNewApprove }: OsUserViewProps) => {
       />
       <div className="mb-10 flex flex-row justify-between">
         <div className="flex flex-col">
-          <PanelsTopLeft className="mb-4 mr-1 h-12 w-12" />
-          <span className="mb-4 text-2xl font-extrabold">Zeld Brasil LTDA</span>
+          <Image
+            src="/logo_marca.png"
+            width={200}
+            height={100}
+            alt="Logo Marca da empresa"
+          />
           <span className="text-1 font-extralight">Endereço da empresa</span>
           <span className="text-1 font-extralight">Colocado aqui</span>
         </div>

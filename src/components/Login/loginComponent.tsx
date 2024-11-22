@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -43,6 +44,9 @@ export default function LoginFormComponent() {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-10 rounded-[15px] border-[1px] border-gray-400 bg-neutral-50 p-16 antialiased shadow-lg"
       >
+        <div className="flex justify-center">
+          <Image src="/logo_marca.png" alt="Logo" width={200} height={200} />
+        </div>
         <div className="flex flex-col gap-5">
           <Label htmlFor="email">Email</Label>
           <Input
