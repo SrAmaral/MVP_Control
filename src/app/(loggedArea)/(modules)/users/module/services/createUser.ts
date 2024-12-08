@@ -2,7 +2,7 @@ import { type PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { type CreateUserData } from "../types";
 
-export default async function createUser(data: CreateUserData,db:PrismaClient) {
+export default async function createUser(data: CreateUserData, db: PrismaClient) {
   const { address, roleId, files, ...userData } = data;
   return await db.user.create({
     data: {
@@ -13,20 +13,22 @@ export default async function createUser(data: CreateUserData,db:PrismaClient) {
       workLoad: userData.workLoad ?? "",
       comment: userData.comment ?? "",
       address: address
-        ? { create: {...data.address,} }
+        ? { create: { ...address } }
         : undefined,
       password: await bcrypt.hash(data.password, 10),
-      files: {
-        create: files?.map((file) => ({
-          ...file,
-          user: {
-            connect: {
-              id: data.id,
-            },
-          },
-      }))
-    },
-      roleId: data.roleId ?? undefined,
+      files: files
+        ? {
+            create: files.map((file) => ({
+              ...file,
+              user: {
+                connect: {
+                  id: data.id,
+                },
+              },
+            })),
+          }
+        : undefined,
+      roleId: roleId ?? undefined,
     },
     include: {
       address: true,

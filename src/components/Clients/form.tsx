@@ -151,6 +151,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
             title: "Cliente atualizado com sucesso!",
             variant: "success",
           });
+          router.push("/clients/list");
         },
         onError: (error) => {
           toast({
@@ -160,7 +161,6 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         },
         onSettled: () => {
           setLoading(false);
-          router.push("/clients/list");
         },
       });
     } else {
@@ -170,6 +170,7 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
             title: "Cliente criado com sucesso!",
             variant: "success",
           });
+          router.push("/clients/list");
         },
         onError: (error) => {
           toast({
@@ -179,7 +180,6 @@ export default function ClientsFormCreate({ client }: UpdateClientFormProps) {
         },
         onSettled: () => {
           setLoading(false);
-          router.push("/clients/list");
         },
       });
     }

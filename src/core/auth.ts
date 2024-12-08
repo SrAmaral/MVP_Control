@@ -58,9 +58,14 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
         const user = await usersService.checkCredentials(credentials.email, db);
-        if (user?.password && await bcrypt.compare(credentials.password, user.password)) {
+        if (!user?.password) {
+          return null;
+        }
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
+        if (passwordMatch) {
           return { ...user };
         }
+        
         return null;
       },
     }),

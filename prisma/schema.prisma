@@ -13,18 +13,18 @@ generator client {
 }
 
 model User {
-  id            String        @id() @default(cuid())
-  email         String?       @unique()
+  id            String       @id() @default(cuid())
+  email         String?      @unique()
   password      String?
-  role          Role?         @relation(fields: [roleId], references: [id])
+  role          Role?        @relation(fields: [roleId], references: [id])
   roleId        Int?
   firstName     String
   lastName      String?
   rg            String?
-  cpf           String?       @unique()
+  cpf           String?      @unique()
   pis           String?
   ctps          String?
-  address       UserAddress[]
+  address       UserAddress?
   contactNumber String?
   contactEmail  String?
   typeHiring    String?
@@ -34,8 +34,8 @@ model User {
   workLoad      String?
   comment       String?
   files         UserFile[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt()
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt()
   oS            OS[]
 }
 
@@ -72,8 +72,8 @@ model UserAddress {
   city         String
   state        String
   zipCode      String?
-  userId       String
-  user         User    @relation(fields: [userId], references: [id])
+  user         User?   @relation(fields: [userId], references: [id])
+  userId       String? @unique()
 }
 
 model OS {

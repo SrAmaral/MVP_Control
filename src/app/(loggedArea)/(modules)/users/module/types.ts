@@ -18,7 +18,7 @@ export const CreateUserSchema = z.object({
     salary: z.string().optional(),
     workLoad: z.string().optional(),
     comment: z.string().optional(),
-    address:z.array(z.object({
+    address:z.object({
         id: z.number().optional(),
         streetType: z.string(),
         street: z.string(),
@@ -28,7 +28,7 @@ export const CreateUserSchema = z.object({
         city: z.string(),
         state: z.string(),
         zipCode: z.string(),
-    })),
+    }).optional(),
     files: z.array(z.object({
         id: z.number().optional(),
         filename: z.string(),
