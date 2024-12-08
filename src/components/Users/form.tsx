@@ -54,6 +54,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
               title: "Usuário atualizado com sucesso!",
               variant: "success",
             });
+            router.push("/users/list");
           },
           onError: (error) => {
             toast({
@@ -63,7 +64,6 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
           },
           onSettled: () => {
             setLoading(false);
-            router.push("/users/list");
           },
         },
       );
@@ -74,6 +74,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
             title: "Usuário criado com sucesso!",
             variant: "success",
           });
+          router.push("/users/list");
         },
         onError: (error) => {
           toast({
@@ -83,7 +84,6 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
         },
         onSettled: () => {
           setLoading(false);
-          router.push("/users/list");
         },
       });
     }
@@ -98,7 +98,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
     };
   });
 
-  const cepWatch = form.watch("address.0.zipCode");
+  const cepWatch = form.watch("address.zipCode");
 
   useEffect(() => {
     if (cepWatch?.replace(/\D/g, "").length === 8) {
@@ -110,18 +110,18 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
         })
         .then((data: CEPResponseType) => {
           form.setValue(
-            "address.0.streetType",
+            "address.streetType",
             data.logradouro.split(" ")[0] ?? "",
           );
           form.setValue(
-            "address.0.street",
+            "address.street",
             data.logradouro.split(" ").slice(1).join(" "),
           );
-          form.setValue("address.0.neighborhood", data.bairro);
-          form.setValue("address.0.city", data.localidade);
-          form.setValue("address.0.state", data.uf);
-          form.setValue("address.0.complement", data.complemento);
-          form.setValue("address.0.number", data.unidade);
+          form.setValue("address.neighborhood", data.bairro);
+          form.setValue("address.city", data.localidade);
+          form.setValue("address.state", data.uf);
+          form.setValue("address.complement", data.complemento);
+          form.setValue("address.number", data.unidade);
         })
         .catch((error) => {
           console.log(error);
@@ -139,10 +139,16 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
         salary: user.salary ?? "",
         workLoad: user.workLoad ?? "",
         comment: user.comment ?? "",
-        address: user.address?.map((address) => ({
-          ...address,
-          complement: address.complement ?? "",
-        })),
+        address: user.address ?? {
+          zipCode: "",
+          streetType: "",
+          street: "",
+          number: "",
+          complement: "",
+          neighborhood: "",
+          city: "",
+          state: "",
+        },
       };
       form.reset(replaceEmpyFieldUser);
     }
@@ -403,11 +409,11 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="CEP"
                       formControl={form.control}
-                      name="address.0.zipCode"
+                      name="address.zipCode"
                       placeholder="CEP"
                       formControlRef={withMask("99999-999")}
                     />
-                    {form.formState.errors.address?.[0]?.zipCode && (
+                    {form.formState.errors.address?.zipCode && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -418,10 +424,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Tipo de Longradouro"
                       formControl={form.control}
-                      name="address.0.streetType"
+                      name="address.streetType"
                       placeholder="Tipo de Longradouro"
                     />
-                    {form.formState.errors.address?.[0]?.streetType && (
+                    {form.formState.errors.address?.streetType && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -431,10 +437,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Logradouro"
                       formControl={form.control}
-                      name="address.0.street"
+                      name="address.street"
                       placeholder="Logradouro"
                     />
-                    {form.formState.errors.address?.[0]?.street && (
+                    {form.formState.errors.address?.street && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -444,10 +450,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Número"
                       formControl={form.control}
-                      name="address.0.number"
+                      name="address.number"
                       placeholder="Número"
                     />
-                    {form.formState.errors.address?.[0]?.number && (
+                    {form.formState.errors.address?.number && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -457,7 +463,7 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Complemento"
                       formControl={form.control}
-                      name="address.0.complement"
+                      name="address.complement"
                       placeholder="Complemento"
                     />
                   </div>
@@ -465,10 +471,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Bairro"
                       formControl={form.control}
-                      name="address.0.neighborhood"
+                      name="address.neighborhood"
                       placeholder="Bairro"
                     />
-                    {form.formState.errors.address?.[0]?.neighborhood && (
+                    {form.formState.errors.address?.neighborhood && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -478,10 +484,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Cidade"
                       formControl={form.control}
-                      name="address.0.city"
+                      name="address.city"
                       placeholder="Cidade"
                     />
-                    {form.formState.errors.address?.[0]?.city && (
+                    {form.formState.errors.address?.city && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
@@ -491,10 +497,10 @@ export default function UsersFormCreate({ user }: UpdateUserFormProps) {
                     <FormFieldBase
                       label="Estado"
                       formControl={form.control}
-                      name="address.0.state"
+                      name="address.state"
                       placeholder="Estado"
                     />
-                    {form.formState.errors.address?.[0]?.state && (
+                    {form.formState.errors.address?.state && (
                       <p className="mt-1 text-sm text-red-600">
                         Campo orbigatorio!
                       </p>
