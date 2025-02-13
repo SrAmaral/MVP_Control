@@ -21,10 +21,10 @@ export default async function updateUser(data: CreateUserData, db: PrismaClient)
       ...data,
       address: data.address
         ? {
-            update: data.address.map((address) => ({
-              where: { id: address.id },
-              data: { ...address },
-            })),
+            update: {
+              where: { id: data.address.id },
+              data: { ...data.address },
+            },
           }
         : undefined,
       files: newFiles
