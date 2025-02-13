@@ -3,7 +3,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { type Session } from "next-auth";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { type OSType } from "~/app/(loggedArea)/(modules)/os/module/types";
 import { resolveOsStatus } from "~/lib/utils";
 
@@ -35,6 +38,18 @@ export const OsCalendar = ({ events }: CalendarProps) => {
     };
   });
 
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    getSession()
+      .then((session) => {
+        setSession(session);
+      })
+      .catch((error) => {
+        console.error("Failed to get session:", error);
+      });
+  }, []);
+
   return (
     <>
       <div className="custom-calendar container">
@@ -48,7 +63,10 @@ export const OsCalendar = ({ events }: CalendarProps) => {
           }}
           locale={ptBrLocale}
           events={resolveEvents}
-          dateClick={(date) => router.push(`/os/create/?date=${date.dateStr}`)}
+          dateClick={(date) =>
+            session?.user.role === "Administrador" &&
+            router.push(`/os/create/?date=${date.dateStr}`)
+          }
           eventContent={(eventInfo) => (
             <div
               className="flex cursor-pointer flex-col rounded-lg p-4 text-[12px] font-normal text-white hover:bg-slate-800"

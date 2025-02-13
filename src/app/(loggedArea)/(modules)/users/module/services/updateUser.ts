@@ -1,4 +1,5 @@
 import { type PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { type CreateUserData } from "../types";
 
 export default async function updateUser(data: CreateUserData, db: PrismaClient) {
@@ -19,6 +20,7 @@ export default async function updateUser(data: CreateUserData, db: PrismaClient)
     },
     data: {
       ...data,
+      password: await bcrypt.hash(data.password, 10),
       address: data.address
         ? {
             update: {
