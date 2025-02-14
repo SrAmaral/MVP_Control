@@ -4,7 +4,9 @@ import { Ellipsis, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { signOut } from "next-auth/react";
+import { type Session } from "next-auth";
+import { getSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { cn } from "~/lib/utils";
 import { getMenuList } from "../../../app/ui/lib/menu-list";
 import { Button } from "../button";
@@ -24,6 +26,28 @@ interface MenuProps {
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
+
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    getSession()
+      .then((session) => {
+        setSession(session);
+      })
+      .catch((error) => {
+        console.error("Failed to get session:", error);
+      });
+  }, []);
+
+  function isShowMenu(roles: string[] | undefined) {
+    if (roles?.includes("All")) {
+      return true;
+    }
+    if (roles?.includes(session?.user?.role ?? "")) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -52,7 +76,10 @@ export function Menu({ isOpen }: MenuProps) {
                 <p className="pb-2"></p>
               )}
               {menus.map(
-                ({ href, label, icon: Icon, active, submenus }, index) =>
+                (
+                  { href, label, icon: Icon, active, submenus, roles },
+                  index,
+                ) =>
                   submenus.length === 0 ? (
                     <div className="w-full" key={index}>
                       <TooltipProvider disableHoverableContent>
@@ -91,20 +118,23 @@ export function Menu({ isOpen }: MenuProps) {
                       </TooltipProvider>
                     </div>
                   ) : (
-                    <div className="w-full" key={index}>
-                      <CollapseMenuButton
-                        icon={Icon}
-                        label={label}
-                        active={active}
-                        submenus={submenus}
-                        isOpen={isOpen}
-                      />
-                    </div>
+                    isShowMenu(roles) && (
+                      <div className="w-full" key={index}>
+                        <CollapseMenuButton
+                          icon={Icon}
+                          label={label}
+                          active={active}
+                          submenus={submenus}
+                          isOpen={isOpen}
+                          userRole={session?.user?.role}
+                        />
+                      </div>
+                    )
                   ),
               )}
             </li>
           ))}
-          <li className="flex w-full grow items-end">
+          <li className="flex h-10 w-full items-end py-56">
             <TooltipProvider disableHoverableContent>
               <Tooltip delayDuration={10}>
                 <TooltipTrigger asChild>

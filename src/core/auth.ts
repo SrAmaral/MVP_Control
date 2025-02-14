@@ -18,15 +18,14 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role?: string | null;
       // ...other properties
       // role: UserRole;
-    } & DefaultSession["user"];
+    }
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -40,8 +39,13 @@ export const authOptions: NextAuthOptions = {
       return { ...token, ...user };
     },
     session: async ({ session, token }) => {
+      const userId = token.sub ?? "";
+      const userData = await usersService.listUserById(userId, db);
       if (session?.user) {
         session.user.id = token.sub ?? "";
+        session.user.name = userData?.firstName ?? "";
+        session.user.email = userData?.email ?? "";
+        session.user.role = userData?.role?.name ?? "";
       }
       return session;
     },

@@ -4,7 +4,6 @@ import {
   ClipboardList,
   LayoutDashboardIcon,
   LayoutGrid,
-  Settings,
   TableProperties,
   Tag,
   User,
@@ -19,6 +18,7 @@ type Submenu = {
   active: boolean;
   title?: string;
   icon?: LucideIcon;
+  roles?: string[];
 };
 
 type Menu = {
@@ -28,6 +28,7 @@ type Menu = {
   title?: string
   icon: LucideIcon
   submenus: Submenu[];
+  roles?: string[];
 };
 
 type Group = {
@@ -59,27 +60,31 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/clients"),
           icon: User,
           title:"Clientes",
+          roles: ["Administrador"],
           submenus: [
             {
               href: "/clients",
               label: "Dashboad",
               title:"Dashboard de clientes",
               active: pathname === "/clients",
-              icon: LayoutDashboardIcon
+              icon: LayoutDashboardIcon,
+              roles: ["Administrador"],
             },
             {
               href: "/clients/list",
               label: "Listagem",
               title:"Listagem dos clientes",
               active: pathname === "/clients/list",
-              icon: BookUser
+              icon: BookUser,
+              roles: ["Administrador"],
             },
             {
               href: "/clients/create",
               label: "Cadastro",
               title:"Cadastro de cliente",
               active: pathname === "/clients/create",
-              icon: UserRoundPlus
+              icon: UserRoundPlus,
+              roles: ["Administrador"],
             }
           ]
         },
@@ -89,27 +94,31 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/users"),
           title:"Funcionários",
           icon: Users,
+          roles: ["Administrador"],
           submenus: [
             {
               href: "/users",
               label: "Dashboad",
               title:"Dashboard dos usuarios",
               active: pathname === "/users",
-              icon: LayoutDashboardIcon
+              icon: LayoutDashboardIcon,
+              roles: ["Administrador"],
             },
             {
               href: "/users/list",
               label: "Listagem",
               title:"Listagem dos usuarios",
               active: pathname === "/users/list",
-              icon: BookUser
+              icon: BookUser,
+              roles: ["Administrador"],
             },
             {
               href: "/users/create",
               label: "Cadastro",
               title:"Cadastro dos usuarios",
               active: pathname === "/users/create",
-              icon: UserRoundPlus
+              icon: UserRoundPlus,
+              roles: ["Administrador"],
             }
           ]
         },
@@ -119,51 +128,57 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/os"),
           icon: Tag,
           title:"Ordem de Serviço",
+          roles: ["All"],
           submenus: [
             {
               href: "/os",
               label: "Dashboad",
               title:"Dashboard das OS",
               active: pathname === "/os",
-              icon: LayoutDashboardIcon
+              icon: LayoutDashboardIcon,
+              roles: ["All"],
             },
             {
               href: "/os/list",
               label: "Listagem",
               title:"Listagem das OS",
               active: pathname === "/os/list",
-              icon: TableProperties
+              icon: TableProperties,
+              roles: ["All"],
             },
             {
               href: "/os/create",
               label: "Cadastro",
               title:"Cadastro de OS",
               active: pathname === "/os/create",
-              icon: ClipboardList
+              icon: ClipboardList,
+              roles: ["Administrador"],
             },
             {
               href: "/os/schedules",
               label: "Calendario",
               title:"Calendario de OS",
               active: pathname === "/os/schedules",
-              icon: Calendar
+              icon: Calendar,
+              roles: ["All"],
             }
           ]
         }
       ]
     },
-    {
-      groupLabel: "",
-      menus: [
-        {
-          href: "/account",
-          label: "Conta",
-          active: pathname.includes("/account"),
-          icon: Settings,
-          submenus: []
-        }
-      ]
-    }
+    // {
+    //   groupLabel: "",
+    //   menus: [
+    //     {
+    //       href: "/account",
+    //       label: "Conta",
+    //       active: pathname.includes("/account"),
+    //       icon: Settings,
+    //       roles: ["Administrador"],
+    //       submenus: []
+    //     }
+    //   ]
+    // }
   ];
 }
 

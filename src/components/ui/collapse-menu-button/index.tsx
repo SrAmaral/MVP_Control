@@ -2,11 +2,13 @@
 
 import { ChevronDown, Dot, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { cn } from "~/lib/utils";
 
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
+import { type Session } from "next-auth";
+import { getSession } from "next-auth/react";
 import { Button } from "../button";
 import {
   Collapsible,
@@ -33,6 +35,7 @@ type Submenu = {
   label: string;
   active: boolean;
   icon?: LucideIcon;
+  roles?: string[];
 };
 
 interface CollapseMenuButtonProps {
@@ -41,6 +44,7 @@ interface CollapseMenuButtonProps {
   active: boolean;
   submenus: Submenu[];
   isOpen: boolean | undefined;
+  userRole: string | null | undefined;
 }
 
 export function CollapseMenuButton({
@@ -49,9 +53,32 @@ export function CollapseMenuButton({
   active,
   submenus,
   isOpen,
+  userRole,
 }: CollapseMenuButtonProps) {
   const isSubmenuActive = submenus.some((submenu) => submenu.active);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
+
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    getSession()
+      .then((session) => {
+        setSession(session);
+      })
+      .catch((error) => {
+        console.error("Failed to get session:", error);
+      });
+  }, []);
+
+  function isShowMenu(roles: string[] | undefined) {
+    if (roles?.includes("All")) {
+      return true;
+    }
+    if (roles?.includes(session?.user?.role ?? "")) {
+      return true;
+    }
+    return false;
+  }
 
   return isOpen ? (
     <Collapsible
@@ -100,33 +127,36 @@ export function CollapseMenuButton({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-        {submenus.map(({ href, label, active, icon: iconComponent }, index) => (
-          <Button
-            key={index}
-            variant={active ? "secondary" : "ghost"}
-            className="mb-1 h-10 w-full justify-start"
-            asChild
-          >
-            <Link href={href || "/"}>
-              <span className="ml-2 mr-4">
-                {!!iconComponent
-                  ? React.createElement(iconComponent, { size: 18 })
-                  : React.createElement(Dot, { size: 18 })}
-              </span>
-
-              <p
-                className={cn(
-                  "max-w-[170px] truncate",
-                  isOpen
-                    ? "translate-x-0 opacity-100"
-                    : "-translate-x-96 opacity-0",
-                )}
+        {submenus.map(
+          ({ href, label, active, icon: iconComponent, roles }, index) =>
+            isShowMenu(roles) && (
+              <Button
+                key={index}
+                variant={active ? "secondary" : "ghost"}
+                className="mb-1 h-10 w-full justify-start"
+                asChild
               >
-                {label}
-              </p>
-            </Link>
-          </Button>
-        ))}
+                <Link href={href || "/"}>
+                  <span className="ml-2 mr-4">
+                    {!!iconComponent
+                      ? React.createElement(iconComponent, { size: 18 })
+                      : React.createElement(Dot, { size: 18 })}
+                  </span>
+
+                  <p
+                    className={cn(
+                      "max-w-[170px] truncate",
+                      isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "-translate-x-96 opacity-0",
+                    )}
+                  >
+                    {label}
+                  </p>
+                </Link>
+              </Button>
+            ),
+        )}
       </CollapsibleContent>
     </Collapsible>
   ) : (
